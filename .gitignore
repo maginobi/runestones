@@ -10,6 +10,7 @@
 /[Ll]ogs/
 /[Mm]emoryCaptures/
 /[Aa]ssets/
+/[Aa]ssetBundles/
 
 # Visual Studio cache directory
 .vs/
