@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7431B68B-2963-4137-96E8-FA6FF2C630C1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Runestones</RootNamespace>
+    <AssemblyName>Runestones</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>libs\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="assembly_guiutils">
+      <HintPath>libs\assembly_guiutils.dll</HintPath>
+    </Reference>
+    <Reference Include="assembly_utils">
+      <HintPath>libs\assembly_utils.dll</HintPath>
+    </Reference>
+    <Reference Include="assembly_valheim">
+      <HintPath>libs\assembly_valheim.dll</HintPath>
+    </Reference>
+    <Reference Include="BepInEx">
+      <HintPath>libs\BepInEx.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine">
+      <HintPath>libs\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AnimationModule">
+      <HintPath>libs\UnityEngine.AnimationModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule">
+      <HintPath>libs\UnityEngine.AssetBundleModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>libs\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>..\Astroviking\Astroviking\libs\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="InventoryExt.cs" />
+    <Compile Include="PieceTableExt.cs" />
+    <Compile Include="RuneEffects\BeeRuneEffect.cs" />
+    <Compile Include="RuneEffects\AnimateRuneEffect.cs" />
+    <Compile Include="RuneEffects\HouseRuneEffect.cs" />
+    <Compile Include="RuneEffects\ReviveRuneEffect.cs" />
+    <Compile Include="RuneEffects\WallRuneEffect.cs" />
+    <Compile Include="RuneEffects\TransmuteRuneEffect.cs" />
+    <Compile Include="RuneEffects\FeatherRuneEffect.cs" />
+    <Compile Include="RuneEffects\IceRuneEffect.cs" />
+    <Compile Include="RuneEffects\FireRuneEffect.cs" />
+    <Compile Include="RuneEffects\WeatherRuneEffect.cs" />
+    <Compile Include="SERegistrar.cs" />
+    <Compile Include="RuneEffects\CurseRuneEffect.cs" />
+    <Compile Include="RuneEffects\HearthRuneEffect.cs" />
+    <Compile Include="RuneDiscovery.cs" />
+    <Compile Include="RuneDB.cs" />
+    <Compile Include="RuneEffects\ForceRuneEffect.cs" />
+    <Compile Include="RuneEffect.cs" />
+    <Compile Include="StaffAttack.cs" />
+    <Compile Include="ItemHelper.cs" />
+    <Compile Include="RuneLoader.cs" />
+    <Compile Include="Rune.cs" />
+    <Compile Include="Staff.cs" />
+    <Compile Include="RunestonesMod.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AssetBundles\runestones" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
