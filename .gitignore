@@ -35,7 +35,8 @@ bld/
 
 # Unity imports
 [Ll]ibs/
-[Aa]ssetBundles/
+[Aa]sset[Bb]undles/
+[Pp]roperties/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
