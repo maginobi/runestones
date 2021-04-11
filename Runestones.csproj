@@ -66,19 +66,32 @@
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>libs\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.ParticleSystemModule">
+      <HintPath>libs\UnityEngine.ParticleSystemModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.PhysicsModule">
       <HintPath>..\Astroviking\Astroviking\libs\UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InventoryExt.cs" />
+    <Compile Include="MagicProjectile.cs" />
+    <Compile Include="PersistentAoe.cs" />
     <Compile Include="PieceTableExt.cs" />
     <Compile Include="RuneEffects\BeeRuneEffect.cs" />
     <Compile Include="RuneEffects\AnimateRuneEffect.cs" />
+    <Compile Include="RuneEffects\CharmRuneEffect.cs" />
+    <Compile Include="RuneEffects\FarmRuneEffect.cs" />
+    <Compile Include="RuneEffects\QuakeRuneEffect.cs" />
+    <Compile Include="RuneEffects\HealRuneEffect.cs" />
     <Compile Include="RuneEffects\HouseRuneEffect.cs" />
     <Compile Include="RuneEffects\ReviveRuneEffect.cs" />
+    <Compile Include="RuneEffects\FearRuneEffect.cs" />
+    <Compile Include="RuneEffects\SunderRuneEffect.cs" />
+    <Compile Include="RuneEffects\SlowRuneEffect.cs" />
+    <Compile Include="RuneEffects\IndexRuneEffect.cs" />
+    <Compile Include="RuneEffects\AlchemyRuneEffect.cs" />
     <Compile Include="RuneEffects\WallRuneEffect.cs" />
-    <Compile Include="RuneEffects\TransmuteRuneEffect.cs" />
     <Compile Include="RuneEffects\FeatherRuneEffect.cs" />
     <Compile Include="RuneEffects\IceRuneEffect.cs" />
     <Compile Include="RuneEffects\FireRuneEffect.cs" />

@@ -8,10 +8,10 @@ using UnityEngine;
 
 namespace Runestones.RuneEffects
 {
-    class CurseRuneEffect : RuneEffect
+    public class CurseRuneEffect : RuneEffect
     {
         const string hitVfxName = "vfx_lox_groundslam";
-        const string curseVfxName = "vfx_Wet";
+        public const string curseVfxName = "vfx_Wet";
 
         public void DoMagicAttack(Attack baseAttack)
         {
@@ -48,7 +48,7 @@ namespace Runestones.RuneEffects
                 m_modifyAttackSkill = Skills.SkillType.All;
                 m_damageModifier = 0.1f;
                 m_startEffects = new EffectList();
-                //This vfx is not getting applied properly
+
                 var vfxPrefab = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == curseVfxName select prefab).FirstOrDefault();
                 m_startEffects.m_effectPrefabs = new EffectList.EffectData[] { new EffectList.EffectData { m_prefab = vfxPrefab, m_enabled = true, m_attach = true, m_scale = true } };
             }

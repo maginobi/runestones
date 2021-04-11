@@ -13,7 +13,6 @@ namespace Runestones.RuneEffects
         const string beeName = "QueenBee";
         public void DoMagicAttack(Attack baseAttack)
         {
-            //Spawn skeleton
             var character = baseAttack.GetCharacter();
             var aoePrefab = ZNetScene.instance.GetPrefab(aoeName);
             var aoe = GameObject.Instantiate(aoePrefab, character.transform.position + Vector3.up, character.transform.rotation);

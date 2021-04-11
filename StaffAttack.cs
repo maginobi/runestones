@@ -47,12 +47,17 @@ namespace Runestones
             typeof(Attack).GetMethod("ProjectileAttackTriggered", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(baseAttack, null);
         }
 
-        public static void GetAttackDir(this Attack baseAttack, out Transform originJoint, out Vector3 attackDir)
+        public static Vector3 BetterAttackDir(this Attack baseAttack)
         {
-            object[] outResults = new object[] { null, null };
-            typeof(Attack).GetMethod("GetMeleeAttackDir", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(baseAttack, outResults);
-            originJoint = (Transform)outResults[0];
-            attackDir = (Vector3)outResults[1];
+            Transform origin = baseAttack.GetAttackOrigin();
+            Vector3 result = origin.forward;
+            result.y = baseAttack.GetCharacter().GetAimDir(origin.position).y;
+            return result.normalized;
+        }
+
+        public static Transform GetAttackOrigin(this Attack baseAttack)
+        {
+            return (Transform)typeof(Attack).GetMethod("GetAttackOrigin", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(baseAttack, null);
         }
 
         public static void DoMagicAttack(Attack baseAttack)

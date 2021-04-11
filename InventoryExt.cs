@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 namespace Runestones
@@ -7,25 +8,20 @@ namespace Runestones
     {
         public static void RemoveItems(this Inventory inventory, string itemName, int amount)
         {
-            var foundIndices = new List<int>();
             for (int i = 0; i < inventory.GetAllItems().Count; i++)
             {
-                if (inventory.GetItem(i).m_shared.m_name == itemName)
-                    foundIndices.Add(i);
-            }
-            foreach (var index in foundIndices)
-            {
-                if (amount > 0)
+                if (inventory.GetItem(i).m_shared.m_name == itemName && amount > 0)
                 {
-                    var stackSize = inventory.GetItem(index).m_stack;
+                    var stackSize = inventory.GetItem(i).m_stack;
                     if (amount - stackSize >= 0)
                     {
                         amount -= stackSize;
-                        inventory.RemoveItem(index);
+                        inventory.RemoveItem(i);
+                        i--;
                     }
                     else
                     {
-                        inventory.GetItem(index).m_stack -= amount;
+                        inventory.GetItem(i).m_stack -= amount;
                         amount = 0;
                     }
                 }
@@ -56,6 +52,11 @@ namespace Runestones
                 }
                 ZNetScene.instance.Destroy(tempObj);
             }
+        }
+
+        public static Vector2i FindEmptySlot(this Inventory inventory, bool topFirst)
+        {
+            return (Vector2i)typeof(Inventory).GetMethod("FindEmptySlot", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(inventory, new object[] { topFirst });
         }
     }
 }

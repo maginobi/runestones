@@ -18,6 +18,8 @@ namespace Runestones.RuneEffects
             baseAttack.m_useCharacterFacing = true;
             baseAttack.m_useCharacterFacingYAim = true;
             baseAttack.m_launchAngle = -baseAttack.m_projectileAccuracy/2;
+            baseAttack.m_attackHeight = 1.5f;
+            baseAttack.m_attackRange = 1;
             baseAttack.DoProjectileAttack();
         }
     }
