@@ -69,12 +69,19 @@
     <Reference Include="UnityEngine.ParticleSystemModule">
       <HintPath>libs\UnityEngine.ParticleSystemModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>..\Astroviking\Astroviking\libs\UnityEngine.PhysicsModule.dll</HintPath>
+    <Reference Include="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libs\UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RuneEffects\DarknessRuneEffect.cs" />
+    <Compile Include="RuneEffects\WardRuneEffect.cs" />
+    <Compile Include="RuneEffects\LightRuneEffect.cs" />
+    <Compile Include="RuneEffects\TimberRuneEffect.cs" />
+    <Compile Include="RuneQuality.cs" />
     <Compile Include="InventoryExt.cs" />
+    <Compile Include="MagicContainer.cs" />
     <Compile Include="MagicProjectile.cs" />
     <Compile Include="PersistentAoe.cs" />
     <Compile Include="PieceTableExt.cs" />
@@ -82,6 +89,8 @@
     <Compile Include="RuneEffects\AnimateRuneEffect.cs" />
     <Compile Include="RuneEffects\CharmRuneEffect.cs" />
     <Compile Include="RuneEffects\FarmRuneEffect.cs" />
+    <Compile Include="RuneEffects\TeleportRuneEffect.cs" />
+    <Compile Include="RuneEffects\PocketRuneEffect.cs" />
     <Compile Include="RuneEffects\QuakeRuneEffect.cs" />
     <Compile Include="RuneEffects\HealRuneEffect.cs" />
     <Compile Include="RuneEffects\HouseRuneEffect.cs" />
@@ -91,6 +100,7 @@
     <Compile Include="RuneEffects\SlowRuneEffect.cs" />
     <Compile Include="RuneEffects\IndexRuneEffect.cs" />
     <Compile Include="RuneEffects\AlchemyRuneEffect.cs" />
+    <Compile Include="RuneEffects\BoatRuneEffect.cs" />
     <Compile Include="RuneEffects\WallRuneEffect.cs" />
     <Compile Include="RuneEffects\FeatherRuneEffect.cs" />
     <Compile Include="RuneEffects\IceRuneEffect.cs" />

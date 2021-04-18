@@ -20,6 +20,8 @@ namespace Runestones
             ObjectDB.instance.m_StatusEffects.Add(ScriptableObject.CreateInstance<SunderRuneEffect.SE_Sunder>());
             ObjectDB.instance.m_StatusEffects.Add(ScriptableObject.CreateInstance<CharmRuneEffect.SE_Charm>());
             ObjectDB.instance.m_StatusEffects.Add(ScriptableObject.CreateInstance<FearRuneEffect.SE_Fear>());
+            ObjectDB.instance.m_StatusEffects.Add(ScriptableObject.CreateInstance<LightRuneEffect.SE_Light>());
+            ObjectDB.instance.m_StatusEffects.Add(ScriptableObject.CreateInstance<DarknessRuneEffect.SE_DarknessStealth>());
         }
     }
 }

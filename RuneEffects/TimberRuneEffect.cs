@@ -7,20 +7,21 @@ using UnityEngine;
 
 namespace Runestones.RuneEffects
 {
-    class IceRuneEffect : RuneEffect
+    class TimberRuneEffect : RuneEffect
     {
-        const string projectileName = "hatchling_cold_projectile";
+        const string projectileName = "gdking_root_projectile";
         public override void DoMagicAttack(Attack baseAttack)
         {
             baseAttack.m_attackType = Attack.AttackType.Projectile;
-            baseAttack.m_attackProjectile = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == projectileName select prefab).FirstOrDefault();
-            baseAttack.m_projectileAccuracy = 7.5f;
+            baseAttack.m_attackProjectile = ZNetScene.instance.GetPrefab(projectileName);
+            baseAttack.m_projectileAccuracy = 0;
             baseAttack.m_useCharacterFacing = true;
             baseAttack.m_useCharacterFacingYAim = true;
-            baseAttack.m_launchAngle = -baseAttack.m_projectileAccuracy/2;
             baseAttack.m_attackHeight = 1.5f;
             baseAttack.m_attackRange = 1;
+            baseAttack.GetWeapon().m_shared.m_damages.m_chop = 9999;
             baseAttack.DoProjectileAttack();
+            baseAttack.GetWeapon().m_shared.m_damages.m_chop = 0;
         }
     }
 }

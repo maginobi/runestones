@@ -19,7 +19,7 @@ namespace Runestones.RuneEffects
         private const string magicBedDesc = "magic_bed";
         private const float magicBedExposureAllowed = 0.65f;
 
-        public void DoMagicAttack(Attack baseAttack)
+        public override void DoMagicAttack(Attack baseAttack)
         {
             var player = baseAttack.GetCharacter() as Player;
             bool origPlaceCost = false;

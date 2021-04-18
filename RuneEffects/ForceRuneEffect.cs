@@ -6,7 +6,7 @@ namespace Runestones.RuneEffects
 {
     public class ForceRuneEffect : RuneEffect
     {
-        public void DoMagicAttack(Attack baseAttack)
+        public override void DoMagicAttack(Attack baseAttack)
         {
             Debug.Log("Force rune attack begins");
             baseAttack.m_attackType = Attack.AttackType.Horizontal;

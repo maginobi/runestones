@@ -11,7 +11,7 @@ namespace Runestones.RuneEffects
     {
         const string aoeName = "bee_aoe";
         const string beeName = "QueenBee";
-        public void DoMagicAttack(Attack baseAttack)
+        public override void DoMagicAttack(Attack baseAttack)
         {
             var character = baseAttack.GetCharacter();
             var aoePrefab = ZNetScene.instance.GetPrefab(aoeName);

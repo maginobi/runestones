@@ -10,7 +10,7 @@
         public string alertMessage = null;
         public int ratio = 2;
         public bool reversible = false;
-        public void DoMagicAttack(Attack baseAttack)
+        public override void DoMagicAttack(Attack baseAttack)
         {
             var inventory = baseAttack.GetCharacter().GetInventory();
             var itemACount = 0;

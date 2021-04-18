@@ -11,15 +11,19 @@ namespace Runestones.RuneEffects
     public class FarmRuneEffect : RuneEffect
     {
         const string aoeName = "shaman_heal_aoe";
-        public void DoMagicAttack(Attack baseAttack)
+        public override void DoMagicAttack(Attack baseAttack)
         {
             var aoePrefab = GameObject.Instantiate(ZNetScene.instance.GetPrefab(aoeName));
             GameObject.Destroy(aoePrefab.GetComponent<Aoe>());
+            
             aoePrefab.AddComponent<FarmAoe>();
             var particles = aoePrefab.GetComponentInChildren<ParticleSystem>().main;
             particles.duration = 10/3f;
             particles.simulationSpeed = 1/3f;
             particles.loop = true;
+
+            aoePrefab.GetComponent<ZNetView>().SetPersistent(true);
+
             var project = new MagicProjectile
             {
                 m_spawnOnHit = aoePrefab,

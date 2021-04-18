@@ -22,7 +22,7 @@ namespace Runestones.RuneEffects
             }
         }
 
-        public void DoMagicAttack(Attack baseAttack)
+        public override void DoMagicAttack(Attack baseAttack)
         {
             var player = baseAttack.GetCharacter();
             var lookDir = (Quaternion)typeof(Character).GetField("m_lookYaw", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(player);

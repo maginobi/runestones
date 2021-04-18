@@ -10,21 +10,37 @@ namespace Runestones
         public string Name;
         public string Desc;
         public int AssetIndex;
-        public RuneEffect Effect;
+        public Type EffectClass;
+        public RuneEffect _FixedEffect = null;
+        public RuneEffect Effect
+        {
+            get
+            {
+                if (_FixedEffect != null)
+                    return _FixedEffect;
+                else
+                {
+                    RuneEffect result = (RuneEffect)EffectClass.GetConstructor(Type.EmptyTypes).Invoke(Type.EmptyTypes);
+                    result._Quality = Quality;
+                    return result;
+                }
+            }
+        }
+
         public Dictionary<string, int> SimpleRecipe;
-        public string Quality;
+        public RuneQuality Quality;
         public GameObject prefab;
         public Recipe Recipe;
         public string DiscoveryToken;
 
         public string GetName()
         {
-            return $"{Quality ?? ""} \"{Name}\" Rune".Trim();
+            return $"{(Quality==RuneQuality.Common ? "" : Quality.ToString())} \"{Name}\" Rune".Trim();
         }
 
         public string GetToken()
         {
-            return $"${Quality ?? ""}{Name}Rune";
+            return $"${(Quality == RuneQuality.Common ? "" : Quality.ToString())}{Name}Rune";
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Runestones.RuneEffects
     public class ReviveRuneEffect : RuneEffect
     {
         static Dictionary<Skills.SkillType, float> localLastDeathSkills = new Dictionary<Skills.SkillType, float>();
-        public void DoMagicAttack(Attack baseAttack)
+        public override void DoMagicAttack(Attack baseAttack)
         {
             var player = (Player)baseAttack.GetCharacter();
             if (player == Player.m_localPlayer)

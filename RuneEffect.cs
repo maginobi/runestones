@@ -1,7 +1,8 @@
 ﻿namespace Runestones
 {
-    public interface RuneEffect
+    public abstract class RuneEffect
     {
-        void DoMagicAttack(Attack baseAttack);
+        public RuneQuality _Quality;
+        public abstract void DoMagicAttack(Attack baseAttack);
     }
 }

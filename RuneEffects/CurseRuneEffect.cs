@@ -13,7 +13,7 @@ namespace Runestones.RuneEffects
         const string hitVfxName = "vfx_lox_groundslam";
         public const string curseVfxName = "vfx_Wet";
 
-        public void DoMagicAttack(Attack baseAttack)
+        public override void DoMagicAttack(Attack baseAttack)
         {
             baseAttack.m_attackType = Attack.AttackType.Area;
             baseAttack.m_attackRange = 7.5f;

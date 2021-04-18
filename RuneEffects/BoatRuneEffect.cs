@@ -8,9 +8,9 @@ using UnityEngine;
 
 namespace Runestones.RuneEffects
 {
-    class WallRuneEffect : RuneEffect
+    class BoatRuneEffect : RuneEffect
     {
-        private const string wallPieceName = "$piece_stakewall";
+        private const string wallPieceName = "$ship_raft";
 
         public override void DoMagicAttack(Attack baseAttack)
         {
@@ -46,12 +46,12 @@ namespace Runestones.RuneEffects
                 typeof(Player).GetMethod("SetPlaceMode", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy).Invoke(player, new object[] { pieceTable });
                 bool success = (bool)typeof(Player).GetMethod("PlacePiece", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(player, new object[] { pieceTable.GetSelectedPiece() });
                 if (!success)
-                    throw new Exception("wall placement failed");
+                    throw new Exception("boat placement failed");
             }
             catch (Exception e)
             {
-                Debug.LogError("Wall rune effect failed:\n"+e.ToString());
-                player.PickupPrefab(RuneDB.Instance.GetRune("$WallRune").prefab);
+                Debug.LogError("Boat rune effect failed:\n"+e.ToString());
+                player.PickupPrefab(RuneDB.Instance.GetRune("$BoatRune").prefab);
             }
             finally
             {

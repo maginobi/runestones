@@ -14,7 +14,7 @@ namespace Runestones.RuneEffects
     {
         private const string vfxName = "vfx_lox_groundslam";
         private const float staggerDamage = 50;
-        public void DoMagicAttack(Attack baseAttack)
+        public override void DoMagicAttack(Attack baseAttack)
         {
             var vfxPrefab = ZNetScene.instance.GetPrefab(vfxName);
             var gameObject = GameObject.Instantiate(vfxPrefab);

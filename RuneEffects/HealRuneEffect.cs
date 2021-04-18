@@ -10,7 +10,7 @@ namespace Runestones.RuneEffects
     class HealRuneEffect : RuneEffect
     {
         const string projectileName = "shaman_heal_aoe";
-        public void DoMagicAttack(Attack baseAttack)
+        public override void DoMagicAttack(Attack baseAttack)
         {
             var project = new MagicProjectile
             {

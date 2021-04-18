@@ -11,7 +11,7 @@ namespace Runestones.RuneEffects
     {
         const string skeletonName = "Skeleton";
         const string vfxName = "vfx_skeleton_death";
-        public void DoMagicAttack(Attack baseAttack)
+        public override void DoMagicAttack(Attack baseAttack)
         {
             //Spawn skeleton
             var character = baseAttack.GetCharacter();

@@ -12,7 +12,7 @@ namespace Runestones.RuneEffects
     public class SunderRuneEffect : RuneEffect
     {
         private const string vfxName = "vfx_blob_hit";
-        public void DoMagicAttack(Attack baseAttack)
+        public override void DoMagicAttack(Attack baseAttack)
         {
             var vfxPrefab = ZNetScene.instance.GetPrefab(vfxName);
             var gameObject = GameObject.Instantiate(vfxPrefab);

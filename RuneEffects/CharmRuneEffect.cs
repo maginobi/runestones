@@ -12,7 +12,7 @@ namespace Runestones.RuneEffects
     {
         const string projectileName = "projectile_beam";
         const string charmStartVfxName = "vfx_boar_love";
-        public void DoMagicAttack(Attack baseAttack)
+        public override void DoMagicAttack(Attack baseAttack)
         {
             baseAttack.m_attackType = Attack.AttackType.Projectile;
             baseAttack.m_attackProjectile = GameObject.Instantiate(ZNetScene.instance.GetPrefab(projectileName)); //(from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == projectileName select prefab).FirstOrDefault();

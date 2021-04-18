@@ -8,7 +8,7 @@ namespace Runestones.RuneEffects
     class IndexRuneEffect : RuneEffect
     {
 
-        public void DoMagicAttack(Attack baseAttack)
+        public override void DoMagicAttack(Attack baseAttack)
         {
             var inventory = baseAttack.GetCharacter().GetInventory();
             for (int i=0; i<Math.Min(inventory.GetWidth(), inventory.GetEmptySlots()); i++)
@@ -23,7 +23,7 @@ namespace Runestones.RuneEffects
 
             List<ItemDrop.ItemData> runePrefs = (from ItemDrop.ItemData item in inventory.GetAllItems()
                                                 where item.m_shared.m_ammoType == "rune"
-                                                select item).OrderByDescending(item => 10*item.m_quality + item.m_variant).ToList();
+                                                select item).OrderByDescending(item => item.m_variant).ToList();
 
             for (int i=0; i<Math.Min(inventory.GetWidth(), inventory.GetEmptySlots()); i++)
             {

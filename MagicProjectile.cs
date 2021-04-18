@@ -10,7 +10,8 @@ namespace Runestones
 {
     public class MagicProjectile
     {
-        public GameObject m_spawnOnHit;
+        public GameObject m_spawnOnHit = null;
+        public Action<Vector3> m_actionOnHit = null;
         public float m_range = 2;
         public float m_launchAngle = 0;
         public float m_attackSpread = 90; //spread angle in degrees; equivalent to Attack.m_attackAngle for horizontal attacks
@@ -54,7 +55,15 @@ namespace Runestones
                 dirNoElev.Normalize();
                 spawnLoc = origin.position + dirNoElev * m_range;
             }
-            GameObject.Instantiate(m_spawnOnHit, spawnLoc, Quaternion.identity);
+
+            if (m_spawnOnHit != null)
+            {
+                GameObject.Instantiate(m_spawnOnHit, spawnLoc, Quaternion.identity);
+            }
+            if (m_actionOnHit != null)
+            {
+                m_actionOnHit(spawnLoc);
+            }
         }
 
     }

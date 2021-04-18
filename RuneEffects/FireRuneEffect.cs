@@ -10,7 +10,7 @@ namespace Runestones.RuneEffects
     class FireRuneEffect : RuneEffect
     {
         const string projectileName = "Imp_fireball_projectile";
-        public void DoMagicAttack(Attack baseAttack)
+        public override void DoMagicAttack(Attack baseAttack)
         {
             baseAttack.m_attackType = Attack.AttackType.Projectile;
             baseAttack.m_attackProjectile = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == projectileName select prefab).FirstOrDefault();

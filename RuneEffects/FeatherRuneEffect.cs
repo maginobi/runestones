@@ -14,7 +14,7 @@ namespace Runestones.RuneEffects
         const string featherVfxName = "fx_raven_despawn";
         const float maxFallSpeed = -5;
 
-        public void DoMagicAttack(Attack baseAttack)
+        public override void DoMagicAttack(Attack baseAttack)
         {
             baseAttack.GetCharacter().GetSEMan().AddStatusEffect("SE_Feather"); //Use code like this to add status effects to the player
         }

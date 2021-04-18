@@ -12,7 +12,7 @@ namespace Runestones.RuneEffects
     {
         private readonly Vector2Int campfireIndex = new Vector2Int(1, 0); //The piece table index for the campfire
 
-        public void DoMagicAttack(Attack baseAttack)
+        public override void DoMagicAttack(Attack baseAttack)
         {
             var player = baseAttack.GetCharacter() as Player;
             if (player == null)
