@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace Runestones
 {
@@ -26,12 +27,38 @@ namespace Runestones
                 }
             }
         }
-
-        public Dictionary<string, int> SimpleRecipe;
-        public RuneQuality Quality;
+        public List<Dictionary<string, int>> Reagents;
+        public Dictionary<string, int> SimpleRecipe
+        {
+            get
+            {
+                return RuneDB.Instance.RuneBases[(int)Quality].Concat(Reagents[(int)Quality])
+                    .GroupBy(item => item.Key)
+                    .Select(group => new KeyValuePair<string, int>(group.Key, group.Sum(item => item.Value)))
+                    .ToDictionary(item => item.Key, item => item.Value);
+            }
+        }
+        public RuneQuality Quality = RuneQuality.Common;
         public GameObject prefab;
         public Recipe Recipe;
         public string DiscoveryToken;
+
+        public Rune Clone()
+        {
+            return new Rune
+            {
+                Name = Name,
+                Desc = Desc,
+                AssetIndex = AssetIndex,
+                EffectClass = EffectClass,
+                _FixedEffect = _FixedEffect,
+                Reagents = Reagents,
+                Quality = Quality,
+                prefab = prefab,
+                Recipe = Recipe,
+                DiscoveryToken = DiscoveryToken
+            };
+        }
 
         public string GetName()
         {

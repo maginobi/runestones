@@ -33,6 +33,19 @@ namespace Runestones
             RuneContainer.SetActive(false);
             foreach (Rune rune in RuneDB.Instance.AllRunes)
             {
+                if (rune.Quality == RuneQuality.Common)
+                {
+                    for (int i = 1; i < rune.Reagents.Count; i++)
+                    {
+                        var r = rune.Clone();
+                        r.Quality = (RuneQuality)i;
+                        RuneDB.Instance.AllRunes.Add(r);
+                        RuneDB.Instance.RunesByName.Add(r.GetToken(), r);
+                    }
+                }
+            }
+            foreach (Rune rune in RuneDB.Instance.AllRunes)
+            {
                 ItemHelper.Instance.AddToken(rune.GetToken(), rune.GetName());
                 ItemHelper.Instance.AddToken(rune.GetToken()+"_Desc", rune.Desc);
             }

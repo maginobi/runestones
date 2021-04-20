@@ -10,27 +10,28 @@ namespace Runestones.RuneEffects
 {
     public class CurseRuneEffect : RuneEffect
     {
-        const string hitVfxName = "vfx_lox_groundslam";
+        const string hitVfxName = "vfx_blob_hit";
         public const string curseVfxName = "vfx_Wet";
 
         public override void DoMagicAttack(Attack baseAttack)
         {
-            baseAttack.m_attackType = Attack.AttackType.Area;
-            baseAttack.m_attackRange = 7.5f;
-            baseAttack.m_hitTerrain = true;
-            baseAttack.m_attackRayWidth = 2.5f;
+            var vfxPrefab = ZNetScene.instance.GetPrefab(hitVfxName);
+            var gameObject = GameObject.Instantiate(vfxPrefab);
+            var aoe = gameObject.AddComponent<Aoe>();
 
-            //This vfx is not getting applied properly
-            var vfxPrefab = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == hitVfxName select prefab).FirstOrDefault();
-            //vfxPrefab.transform.localScale = vfxPrefab.transform.localScale * 5;
-            var vfx = new EffectList.EffectData { m_prefab = vfxPrefab, m_enabled = true };
+            aoe.m_statusEffect = "SE_Curse";
+            aoe.m_ttl = 1;
+            aoe.m_radius = 1;
 
-            baseAttack.m_hitEffect.m_effectPrefabs  = new EffectList.EffectData[] { vfx };
-            baseAttack.GetWeapon().m_shared.m_attackStatusEffect = ObjectDB.instance.GetStatusEffect("SE_Curse");
-            baseAttack.DoAreaAttack();
-            baseAttack.GetWeapon().m_shared.m_attackStatusEffect = null;
-
-            //baseAttack.GetCharacter().GetSEMan().AddStatusEffect("SE_Curse"); //Use code like this to add status effects to the player
+            var project = new MagicProjectile
+            {
+                m_spawnOnHit = gameObject,
+                m_range = 10,
+                m_launchAngle = 0,
+                m_attackSpread = 10,
+                m_hitType = Attack.HitPointType.Average
+            };
+            project.Cast(baseAttack.GetAttackOrigin(), baseAttack.BetterAttackDir());
         }
 
         public class SE_Curse : SE_Stats
