@@ -75,6 +75,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MagicSkill.cs" />
+    <Compile Include="RuneDescriptions.cs" />
     <Compile Include="RuneEffects\DarknessRuneEffect.cs" />
     <Compile Include="RuneEffects\WardRuneEffect.cs" />
     <Compile Include="RuneEffects\LightRuneEffect.cs" />

@@ -12,6 +12,14 @@ namespace Runestones.RuneEffects
     {
         const string projectileName = "projectile_beam";
         const string charmStartVfxName = "vfx_boar_love";
+        const float baseDuration = 30;
+        public CharmRuneEffect()
+        {
+            _FlavorText = "You can catch more flies with honey than with vinegar";
+            _EffectText = new List<string> { "Charms an enemy" };
+            _RelativeStats = new Dictionary<string, Func<string>> { { "Duration", () => $"{baseDuration * _Effectiveness:F1} sec" } };
+        }
+
         public override void DoMagicAttack(Attack baseAttack)
         {
             baseAttack.m_attackType = Attack.AttackType.Projectile;
@@ -42,7 +50,7 @@ namespace Runestones.RuneEffects
                 m_tooltip = "Charmed";
                 m_startMessage = "Charmed";
                 m_time = 0;
-                m_ttl = 30;
+                m_ttl = baseDuration;
                 m_icon = (from Sprite s in Resources.FindObjectsOfTypeAll<Sprite>() where s.name == "CorpseRun" select s).FirstOrDefault();
 
                 var vfxPrefab = ZNetScene.instance.GetPrefab(charmStartVfxName);
@@ -50,10 +58,15 @@ namespace Runestones.RuneEffects
                 Debug.Log("Got charm vfx " + vfxPrefab.ToString());
             }
 
+            public override void SetAttacker(Character attacker)
+            {
+                base.SetAttacker(attacker);
+                m_ttl = baseDuration * (1 + attacker.GetSkillFactor(MagicSkill.MagicSkillDef.m_skill));
+            }
+
             public override void Setup(Character character)
             {
                 base.Setup(character);
-                Debug.Log("Setting up charm status effect");
                 originalFaction = m_character.m_faction;
                 m_character.m_faction = Character.Faction.Players;
                 typeof(BaseAI).GetMethod("SetAlerted", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(character.GetBaseAI(), new object[] { false });

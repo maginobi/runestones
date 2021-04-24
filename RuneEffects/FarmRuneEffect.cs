@@ -11,12 +11,20 @@ namespace Runestones.RuneEffects
     public class FarmRuneEffect : RuneEffect
     {
         const string aoeName = "shaman_heal_aoe";
+        const float baseDuration = 300;
+        public FarmRuneEffect()
+        {
+            _FlavorText = "Agriculture is the foundation of civilization";
+            _EffectText = new List<string> { "+100% Crop growth speed", "5m radius" };
+            _RelativeStats = new Dictionary<string, Func<string>> { { "Duration", () => $"{baseDuration * _Effectiveness :F0} sec" } };
+        }
         public override void DoMagicAttack(Attack baseAttack)
         {
             var aoePrefab = GameObject.Instantiate(ZNetScene.instance.GetPrefab(aoeName));
             GameObject.Destroy(aoePrefab.GetComponent<Aoe>());
             
-            aoePrefab.AddComponent<FarmAoe>();
+            var aoe = aoePrefab.AddComponent<FarmAoe>();
+            aoe.m_ttl = baseDuration * _Effectiveness;
             var particles = aoePrefab.GetComponentInChildren<ParticleSystem>().main;
             particles.duration = 10/3f;
             particles.simulationSpeed = 1/3f;
@@ -49,7 +57,7 @@ namespace Runestones.RuneEffects
                 m_hitEnemy = false;
                 m_skill = Skills.SkillType.None;
                 m_hitInterval = 10f;
-                m_ttl = 300;
+                m_ttl = baseDuration;
             }
 
             public override void OnHit(GameObject gameObject)

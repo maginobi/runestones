@@ -11,6 +11,11 @@ namespace Runestones.RuneEffects
     class BoatRuneEffect : RuneEffect
     {
         private const string wallPieceName = "$ship_raft";
+        public BoatRuneEffect()
+        {
+            _FlavorText = "You'll need one of these if you want to make it to Vinland";
+            _EffectText = new List<string> { "Conjures a raft" };
+        }
 
         public override void DoMagicAttack(Attack baseAttack)
         {

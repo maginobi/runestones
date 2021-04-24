@@ -12,6 +12,11 @@ namespace Runestones.RuneEffects
     public class ReviveRuneEffect : RuneEffect
     {
         static Dictionary<Skills.SkillType, float> localLastDeathSkills = new Dictionary<Skills.SkillType, float>();
+        public ReviveRuneEffect()
+        {
+            _FlavorText = "He had such a knowledge of the Dark Side, he could even keep the ones he cared about from dying";
+            _EffectText = new List<string> { "After a recent death, restores 50% of skill knowledge lost and grants +75% movement speed" };
+        }
         public override void DoMagicAttack(Attack baseAttack)
         {
             var player = (Player)baseAttack.GetCharacter();

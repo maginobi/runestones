@@ -70,10 +70,20 @@ namespace Runestones
                 if (runeName != null)
                 {
                     RuneEffect runeAttack = RuneDB.Instance.GetRune(runeName)?.Effect;
+                    runeAttack._Effectiveness = 1 + baseAttack.GetCharacter().GetSkillFactor(MagicSkill.MagicSkillDef.m_skill);
                     if (runeAttack != null)
                     {
                         Debug.Log("Found rune match");
-                        runeAttack.DoMagicAttack(baseAttack);
+                        try
+                        {
+                            runeAttack.DoMagicAttack(baseAttack);
+                            ((Player)baseAttack.GetCharacter()).RaiseSkill(MagicSkill.MagicSkillDef.m_skill, 1);
+                        }
+                        catch (Exception ex)
+                        {
+                            baseAttack.GetCharacter().PickupPrefab(RuneDB.Instance.GetRune(runeName).prefab);
+                            baseAttack.GetCharacter().Message(MessageHud.MessageType.TopLeft, ex.Message);
+                        }
                     }
                 }
             }

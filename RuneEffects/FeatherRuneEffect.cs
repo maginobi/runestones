@@ -13,10 +13,19 @@ namespace Runestones.RuneEffects
     {
         const string featherVfxName = "fx_raven_despawn";
         const float maxFallSpeed = -5;
+        const float baseDuration = 30;
+
+        public FeatherRuneEffect()
+        {
+            _FlavorText = "I'm sure Hugin can lend you some";
+            _EffectText = new List<string> { "Prevents fall damage", "Limits fall speed" };
+            _RelativeStats = new Dictionary<string, Func<string>> { { "Duration", () => $"{baseDuration * _Effectiveness:F1} sec" } };
+        }
 
         public override void DoMagicAttack(Attack baseAttack)
         {
-            baseAttack.GetCharacter().GetSEMan().AddStatusEffect("SE_Feather"); //Use code like this to add status effects to the player
+            var effect = baseAttack.GetCharacter().GetSEMan().AddStatusEffect("SE_Feather"); //Use code like this to add status effects to the player
+            effect.m_ttl = baseDuration * _Effectiveness;
         }
 
         public class SE_Feather : StatusEffect
@@ -28,7 +37,7 @@ namespace Runestones.RuneEffects
                 m_tooltip = "Fall slowly and avoid fall damage";
                 m_startMessage = "You feel light as a feather";
                 m_time = 0;
-                m_ttl = 30;
+                m_ttl = baseDuration;
                 m_icon = (from Sprite s in Resources.FindObjectsOfTypeAll<Sprite>() where s.name == "feather" select s).FirstOrDefault();
 
                 m_startEffects = new EffectList();

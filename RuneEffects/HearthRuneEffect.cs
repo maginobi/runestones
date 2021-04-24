@@ -12,6 +12,12 @@ namespace Runestones.RuneEffects
     {
         private readonly Vector2Int campfireIndex = new Vector2Int(1, 0); //The piece table index for the campfire
 
+        public HearthRuneEffect()
+        {
+            _FlavorText = "A warm fire is magic in and of itself";
+            _EffectText = new List<string> { "Conjures a campfire" };
+        }
+
         public override void DoMagicAttack(Attack baseAttack)
         {
             var player = baseAttack.GetCharacter() as Player;

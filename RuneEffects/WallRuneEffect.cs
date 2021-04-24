@@ -11,6 +11,11 @@ namespace Runestones.RuneEffects
     class WallRuneEffect : RuneEffect
     {
         private const string wallPieceName = "$piece_stakewall";
+        public WallRuneEffect()
+        {
+            _FlavorText = "Keeps out your enemies";
+            _EffectText = new List<string> { "Conjures a stakewall" };
+        }
 
         public override void DoMagicAttack(Attack baseAttack)
         {

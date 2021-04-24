@@ -10,6 +10,12 @@ namespace Runestones.RuneEffects
     class TimberRuneEffect : RuneEffect
     {
         const string projectileName = "gdking_root_projectile";
+        public TimberRuneEffect()
+        {
+            _FlavorText = "Give me six hours to chop down a tree and I will spend the first four sharpening the axe - Abraham Lincoln";
+            _EffectText = new List<string> { "Fells trees" };
+        }
+
         public override void DoMagicAttack(Attack baseAttack)
         {
             baseAttack.m_attackType = Attack.AttackType.Projectile;

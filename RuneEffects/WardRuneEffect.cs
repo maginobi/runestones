@@ -14,7 +14,13 @@ namespace Runestones.RuneEffects
     {
         private const string forcefieldName = "ForceField";
         private const float size = 5;
-        private const float ttl = 30;
+        private const float baseDuration = 30;
+        public WardRuneEffect()
+        {
+            _FlavorText = "With \u00C6gishjalmur, the staff of protection, no power will be a match for your own";
+            _EffectText = new List<string> { "Creates a powerful ward", "Bars all monsters from entering", "2.5m radius" };
+            _RelativeStats = new Dictionary<string, Func<string>> { { "Duration", () => $"{baseDuration * _Effectiveness} sec" } };
+        }
 
         public override void DoMagicAttack(Attack baseAttack)
         {
@@ -23,7 +29,7 @@ namespace Runestones.RuneEffects
             var sphere = GameObject.Instantiate(forcefieldPrefab, player.GetCenterPoint(), Quaternion.identity);
             sphere.transform.localScale = new Vector3(size, size, size);
             var timeout = sphere.AddComponent<TimedDestruction>();
-            timeout.m_timeout = ttl;
+            timeout.m_timeout = baseDuration * _Effectiveness;
             timeout.Trigger();
         }
 

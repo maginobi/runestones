@@ -12,18 +12,25 @@ namespace Runestones.RuneEffects
     public class SunderRuneEffect : RuneEffect
     {
         private const string vfxName = "vfx_blob_hit";
+        public const float baseDuration = 30;
+        public SunderRuneEffect()
+        {
+            _FlavorText = "No armor is without cracks";
+            _EffectText = new List<string> { "Removes enemy resistances to physical damage", "1m radius" };
+            _RelativeStats = new Dictionary<string, Func<string>> { { "Duration", () => $"{baseDuration * _Effectiveness :F1} sec" } };
+        }
         public override void DoMagicAttack(Attack baseAttack)
         {
             var vfxPrefab = ZNetScene.instance.GetPrefab(vfxName);
             var gameObject = GameObject.Instantiate(vfxPrefab);
-            gameObject.AddComponent<SunderAoe>();
+            var aoe = gameObject.AddComponent<SunderAoe>();
 
             var propertyInfo = typeof(Aoe).GetField("m_owner", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
             if (propertyInfo != null)
             {
-                propertyInfo.SetValue(gameObject.GetComponent<SunderAoe>(), baseAttack.GetCharacter());
-                Debug.Log($"Found field, new value: {propertyInfo.GetValue(gameObject.GetComponent<SunderAoe>())}");
-                Debug.Log($"Flags: {gameObject.GetComponent<SunderAoe>().m_hitOwner}, {gameObject.GetComponent<SunderAoe>().m_hitSame}, {gameObject.GetComponent<SunderAoe>().m_hitFriendly}");
+                propertyInfo.SetValue(aoe, baseAttack.GetCharacter());
+                Debug.Log($"Found field, new value: {propertyInfo.GetValue(aoe)}");
+                Debug.Log($"Flags: {aoe.m_hitOwner}, {aoe.m_hitSame}, {aoe.m_hitFriendly}");
             }
             else
                 Debug.Log("did not find owner property");
@@ -67,11 +74,17 @@ namespace Runestones.RuneEffects
                 m_tooltip = "Weak to physical damage";
                 m_startMessage = "Defenses reduced";
                 m_time = 0;
-                m_ttl = 30;
+                m_ttl = baseDuration;
                 m_icon = (from Sprite s in Resources.FindObjectsOfTypeAll<Sprite>() where s.name == "CorpseRun" select s).FirstOrDefault();
                 
                 var vfxPrefab = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == CurseRuneEffect.curseVfxName select prefab).FirstOrDefault();
                 m_startEffects.m_effectPrefabs = new EffectList.EffectData[] { new EffectList.EffectData { m_prefab = vfxPrefab, m_enabled = true, m_attach = true, m_scale = true } };
+            }
+            public override void SetAttacker(Character attacker)
+            {
+                base.SetAttacker(attacker);
+                float effectiveness = (1 + attacker.GetSkillFactor(MagicSkill.MagicSkillDef.m_skill));
+                m_ttl = baseDuration * effectiveness;
             }
 
             public override void ModifyDamageMods(ref DamageModifiers modifiers)

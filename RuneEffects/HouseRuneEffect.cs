@@ -18,6 +18,11 @@ namespace Runestones.RuneEffects
         private const float bedDisplacement = 4;
         private const string magicBedDesc = "magic_bed";
         private const float magicBedExposureAllowed = 0.65f;
+        public HouseRuneEffect()
+        {
+            _FlavorText = "Home is where ya put yer feet up";
+            _EffectText = new List<string> { "Conjures a small lean-to" };
+        }
 
         public override void DoMagicAttack(Attack baseAttack)
         {

@@ -7,6 +7,11 @@ namespace Runestones.RuneEffects
 {
     class IndexRuneEffect : RuneEffect
     {
+        public IndexRuneEffect()
+        {
+            _FlavorText = "Knowledge is power";
+            _EffectText = new List<string> { "Rearranges your hotkeys for quick and easy spellcasting" };
+        }
 
         public override void DoMagicAttack(Attack baseAttack)
         {

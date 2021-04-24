@@ -14,10 +14,19 @@ namespace Runestones.RuneEffects
     public class DarknessRuneEffect : RuneEffect
     {
         public const float size = 10;
-        public const float ttl = 30;
+        public const float baseDuration = 30;
+        public const float baseStealth = -0.25f;
+        public DarknessRuneEffect()
+        {
+            _FlavorText = "\u266AHello darkness my old friend\u266A";
+            _EffectText = new List<string> { "Darkens an area, making stealth easier", $"{size/2}m radius" };
+            _RelativeStats = new Dictionary<string, Func<string>> { { "Stealth Buff", () => $"+{-(baseStealth * _Effectiveness) :P1}"},
+                                                                    { "Duration", () => $"{baseDuration * _Effectiveness :F1} sec" } };
+        }
 
         public override void DoMagicAttack(Attack baseAttack)
         {
+            var ttl = baseDuration * _Effectiveness;
             var player = baseAttack.GetCharacter();
             GameObject gameObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             gameObject.transform.position = player.GetCenterPoint();
@@ -26,10 +35,12 @@ namespace Runestones.RuneEffects
             collider.isTrigger = true;
             var material = gameObject.GetComponent<Renderer>().material;
             material.SetTransparent();
-            material.SetColor("_Color", new Color(0, 0, 0, 0.7f));
+            material.SetColor("_Color", new Color(0, 0, 0, 0.65f));
             var darkZone = gameObject.AddComponent<EnvZone>();
             darkZone.m_environment = "Darkness";
             var darkAoe = gameObject.AddComponent<AoeDarknessStealth>();
+            typeof(Aoe).GetField("m_owner", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(darkAoe, baseAttack.GetCharacter());
+            darkAoe.m_ttl = ttl;
             darkAoe.Invoke("OnStop", ttl);
             var timeout = gameObject.AddComponent<TimedDestruction>();
             timeout.m_timeout = ttl;
@@ -64,7 +75,6 @@ namespace Runestones.RuneEffects
         {
             public AoeDarknessStealth()
             {
-                m_ttl = DarknessRuneEffect.ttl;
                 m_statusEffect = "SE_DarknessStealth";
                 m_radius = DarknessRuneEffect.size / 2;
                 m_useTriggers = true;
@@ -86,6 +96,12 @@ namespace Runestones.RuneEffects
                 m_tooltip = "+25% Stealth";
                 m_icon = Sprite.Create((from Texture2D s in Resources.FindObjectsOfTypeAll<Texture2D>() where s.name == "space" select s).FirstOrDefault(), new Rect(256, 256, 256, 256), new Vector2());
                 m_stealthModifier = -0.25f;
+            }
+
+            public override void SetAttacker(Character attacker)
+            {
+                base.SetAttacker(attacker);
+                m_stealthModifier = baseStealth * (1 + attacker.GetSkillFactor(MagicSkill.MagicSkillDef.m_skill));
             }
 
             public override bool IsDone()

@@ -27,34 +27,35 @@ namespace Runestones
             return newInv;
         }
 
-        public static void OpenMagicInventory(InventoryGui inventoryGui)
+        public static void OpenMagicInventory(InventoryGui inventoryGui, int width, int height)
         {
             Player player = Player.m_localPlayer;
             if ((bool)player)
             {
+                ZNetView nview = (ZNetView)typeof(Player).GetField("m_nview", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy).GetValue(player);
+                Debug.Log($"ZNetView: {nview}");
+                long playerID = nview.GetZDO().GetLong("playerID");
+                Debug.Log($"Player id: {playerID}");
+
                 if (player.gameObject.GetComponent<MagicInventory.MagicContainer>() is MagicInventory.MagicContainer magicContainer)
                 {
-                    inventoryGui.Show(magicContainer);
+                    GameObject.Destroy(magicContainer);
                 }
-                else
+
+                MagicInventory.AllContainers.TryGetValue(playerID, out var magicInventory);
+                Debug.Log($"Container: {magicInventory}");
+                if (magicInventory == null)
                 {
-                    ZNetView nview = (ZNetView)typeof(Player).GetField("m_nview", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy).GetValue(player);
-                    Debug.Log($"ZNetView: {nview}");
-                    long playerID = nview.GetZDO().GetLong("playerID");
-                    Debug.Log($"Player id: {playerID}");
-                    MagicInventory.AllContainers.TryGetValue(playerID, out var magicInventory);
+                    magicInventory = MagicInventory.Create(playerID);
                     Debug.Log($"Container: {magicInventory}");
-                    if (magicInventory == null)
-                    {
-                        magicInventory = MagicInventory.Create(playerID);
-                        Debug.Log($"Container: {magicInventory}");
-                    }
-                    magicContainer = player.gameObject.AddComponent<MagicInventory.MagicContainer>();
-                    typeof(Container).GetField("m_inventory", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy).SetValue(magicContainer, magicInventory);
-                    Action onContainerChanged = () => typeof(Container).GetMethod("OnContainerChanged", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(magicContainer, null);
-                    magicInventory.m_onChanged = (Action)Delegate.Combine(magicInventory.m_onChanged, onContainerChanged);
-                    inventoryGui.Show(magicContainer);
                 }
+                magicContainer = player.gameObject.AddComponent<MagicInventory.MagicContainer>();
+                magicContainer.m_width = width;
+                magicContainer.m_height = height;
+                typeof(Container).GetField("m_inventory", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy).SetValue(magicContainer, magicInventory);
+                Action onContainerChanged = () => typeof(Container).GetMethod("OnContainerChanged", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(magicContainer, null);
+                magicInventory.m_onChanged = (Action)Delegate.Combine(magicInventory.m_onChanged, onContainerChanged);
+                inventoryGui.Show(magicContainer);
             }
         }
 

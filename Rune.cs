@@ -9,7 +9,13 @@ namespace Runestones
     class Rune
     {
         public string Name;
-        public string Desc;
+        public string Desc
+        {
+            get
+            {
+                return Effect.GetDescription();
+            }
+        }
         public int AssetIndex;
         public Type EffectClass;
         public RuneEffect _FixedEffect = null;
@@ -48,7 +54,6 @@ namespace Runestones
             return new Rune
             {
                 Name = Name,
-                Desc = Desc,
                 AssetIndex = AssetIndex,
                 EffectClass = EffectClass,
                 _FixedEffect = _FixedEffect,

@@ -7,10 +7,18 @@ namespace Runestones.RuneEffects
 {
     class LightRuneEffect : RuneEffect
     {
+        const float baseDuration = 60;
+        public LightRuneEffect()
+        {
+            _FlavorText = "Let there be light";
+            _EffectText = new List<string> { "Conjures orbs of light", "Doubles stealth difficulty" };
+            _RelativeStats = new Dictionary<string, Func<string>> { { "Duration", () => $"{baseDuration * _Effectiveness :F1} sec" } };
+        }
         
         public override void DoMagicAttack(Attack baseAttack)
         {
-            baseAttack.GetCharacter().GetSEMan().AddStatusEffect("SE_Runestones_Light");
+            var effect = baseAttack.GetCharacter().GetSEMan().AddStatusEffect("SE_Runestones_Light");
+            effect.m_ttl = baseDuration * _Effectiveness;
         }
 
         public static GameObject ConstructGameObject()
@@ -59,7 +67,7 @@ namespace Runestones.RuneEffects
                 m_tooltip = "Stealth difficulty increased 100%";
                 m_startMessage = "Let there be light";
                 m_time = 0;
-                m_ttl = 60;
+                m_ttl = baseDuration;
                 m_icon = Sprite.Create((from Texture2D s in Resources.FindObjectsOfTypeAll<Texture2D>() where s.name == "bam2" select s).FirstOrDefault(), new Rect(0,0,256,256), new Vector2());
                 Debug.Log($"light status effect icon: {m_icon}");
                 m_startEffects = new EffectList();

@@ -11,6 +11,11 @@ namespace Runestones.RuneEffects
     {
         const string aoeName = "bee_aoe";
         const string beeName = "QueenBee";
+        public BeeRuneEffect()
+        {
+            _FlavorText = "My God, it's full of bees...";
+            _EffectText = new List<string> { "Summons a swarm of angry bees, bee careful", "Generates a Queen Bee item" };
+        }
         public override void DoMagicAttack(Attack baseAttack)
         {
             var character = baseAttack.GetCharacter();

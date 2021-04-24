@@ -13,12 +13,19 @@ namespace Runestones.RuneEffects
     public class QuakeRuneEffect : RuneEffect
     {
         private const string vfxName = "vfx_lox_groundslam";
-        private const float staggerDamage = 50;
+        private const float baseStaggerDamage = 50;
+        public QuakeRuneEffect()
+        {
+            _FlavorText = "The earth shook whenever the venom fell on Loki's face";
+            _EffectText = new List<string> { "Stagger enemies at range", "10m range", "5m radius", "Duration: 10 sec" };
+            _RelativeStats = new Dictionary<string, Func<string>> { { "Stagger Power", () => $"{baseStaggerDamage * _Effectiveness}" } };
+        }
         public override void DoMagicAttack(Attack baseAttack)
         {
             var vfxPrefab = ZNetScene.instance.GetPrefab(vfxName);
             var gameObject = GameObject.Instantiate(vfxPrefab);
-            gameObject.AddComponent<QuakeAoe>();
+            var aoe = (QuakeAoe)gameObject.AddComponent<QuakeAoe>();
+            aoe.staggerDamage = baseStaggerDamage * _Effectiveness;
             gameObject.GetComponent<TimedDestruction>().m_timeout = 10;
             var particles = gameObject.GetComponent<ParticleSystem>().main;
             particles.loop = true;
@@ -47,6 +54,7 @@ namespace Runestones.RuneEffects
 
         public class QuakeAoe : PersistentAoe
         {
+            public float staggerDamage = baseStaggerDamage;
             public QuakeAoe() : base()
             {
                 m_useAttackSettings = false;

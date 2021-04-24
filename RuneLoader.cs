@@ -47,7 +47,6 @@ namespace Runestones
             foreach (Rune rune in RuneDB.Instance.AllRunes)
             {
                 ItemHelper.Instance.AddToken(rune.GetToken(), rune.GetName());
-                ItemHelper.Instance.AddToken(rune.GetToken()+"_Desc", rune.Desc);
             }
             ItemHelper.Instance.OnAllItemsLoaded(AfterLoad);
         }

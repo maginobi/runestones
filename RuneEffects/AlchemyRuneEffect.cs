@@ -1,4 +1,7 @@
-﻿namespace Runestones.RuneEffects
+﻿using System.Collections.Generic;
+using System.Text;
+
+namespace Runestones.RuneEffects
 {
     class AlchemyRuneEffect : RuneEffect
     {
@@ -10,6 +13,18 @@
         public string alertMessage = null;
         public int ratio = 2;
         public bool reversible = false;
+
+        public AlchemyRuneEffect()
+        {
+            _FlavorText = "Is this really an equivalent exchange?";
+        }
+
+        public override string GetDescription()
+        {
+            _EffectText = new List<string> { $"Converts {itemAPrefabName} {(reversible ? "<" : "" + "")}=> {itemBPrefabName} (ratio {ratio}:1)" };
+            return base.GetDescription();
+        }
+
         public override void DoMagicAttack(Attack baseAttack)
         {
             var inventory = baseAttack.GetCharacter().GetInventory();

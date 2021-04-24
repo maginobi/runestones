@@ -11,6 +11,14 @@ namespace Runestones.RuneEffects
     {
         const string skeletonName = "Skeleton";
         const string vfxName = "vfx_skeleton_death";
+        const float baseBaseDuration = 60;
+        public AnimateRuneEffect()
+        {
+            _FlavorText = "\u266AYou can necromance if you want to\u266A";
+            _EffectText = new List<string>{ "Summons a friendly skeleton", "-25% Health regen" };
+            _RelativeStats = new Dictionary<string, Func<string>> { { "Duration", ()=>$"{baseBaseDuration*_Effectiveness:F1} sec" } };
+        }
+
         public override void DoMagicAttack(Attack baseAttack)
         {
             //Spawn skeleton
@@ -26,18 +34,21 @@ namespace Runestones.RuneEffects
             GameObject.Instantiate(vfx, spawnPos, spawnRot);
 
             //Apply status effect
+            SE_Necromancer statusEffect;
             if (!character.GetSEMan().HaveStatusEffect("SE_Necromancer"))
-                ((SE_Necromancer)character.GetSEMan().AddStatusEffect("SE_Necromancer")).minionList.Add(skeleton);
+                statusEffect = (SE_Necromancer)character.GetSEMan().AddStatusEffect("SE_Necromancer");
             else
-                ((SE_Necromancer)character.GetSEMan().GetStatusEffect("SE_Necromancer")).minionList.Add(skeleton);
+                statusEffect = (SE_Necromancer)character.GetSEMan().GetStatusEffect("SE_Necromancer");
+            statusEffect.minionList.Add(skeleton);
+            statusEffect.baseDurationSec = baseBaseDuration * _Effectiveness;
         }
 
         public class SE_Necromancer : SE_Stats
         {
             public List<GameObject> minionList = new List<GameObject>();
             private const int skeleMaxHealth = 40;
-            private const float baseDurationSec = 120;
-            public float degenRate = skeleMaxHealth/baseDurationSec;
+            public float baseDurationSec = baseBaseDuration;
+            public float degenRate = skeleMaxHealth/baseBaseDuration;
             public SE_Necromancer() : base()
             {
                 name = "SE_Necromancer";

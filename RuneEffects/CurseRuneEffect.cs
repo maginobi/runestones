@@ -12,6 +12,16 @@ namespace Runestones.RuneEffects
     {
         const string hitVfxName = "vfx_blob_hit";
         public const string curseVfxName = "vfx_Wet";
+        public const float baseDuration = 60;
+        public const float baseDamageMod = 0.75f;
+
+        public CurseRuneEffect()
+        {
+            _FlavorText = "Revenge is a dish best served with raspberries";
+            _EffectText = new List<string> { "Reduces enemy damage dealt", "1m radius" };
+            _RelativeStats = new Dictionary<string, Func<string>> { { "Damage", () => $"-{1-(baseDamageMod / _Effectiveness) :P1}"},
+                                                                    { "Duration", () => $"{baseDuration * _Effectiveness :F1} sec" } };
+        }
 
         public override void DoMagicAttack(Attack baseAttack)
         {
@@ -22,6 +32,7 @@ namespace Runestones.RuneEffects
             aoe.m_statusEffect = "SE_Curse";
             aoe.m_ttl = 1;
             aoe.m_radius = 1;
+            typeof(Aoe).GetField("m_owner", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(aoe, baseAttack.GetCharacter());
 
             var project = new MagicProjectile
             {
@@ -44,19 +55,21 @@ namespace Runestones.RuneEffects
                 m_startMessage = "You have been cursed";
                 m_time = 0;
                 m_repeatInterval = 60;
-                m_ttl = 120;
+                m_ttl = baseDuration;
                 m_icon = (from Sprite s in Resources.FindObjectsOfTypeAll<Sprite>() where s.name == "jackoturnip" select s).FirstOrDefault();
                 m_modifyAttackSkill = Skills.SkillType.All;
-                m_damageModifier = 0.1f;
+                m_damageModifier = 0.75f;
                 m_startEffects = new EffectList();
 
                 var vfxPrefab = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == curseVfxName select prefab).FirstOrDefault();
                 m_startEffects.m_effectPrefabs = new EffectList.EffectData[] { new EffectList.EffectData { m_prefab = vfxPrefab, m_enabled = true, m_attach = true, m_scale = true } };
             }
-
-            override public void ModifySpeed(ref float speed)
+            public override void SetAttacker(Character attacker)
             {
-                speed = 1f * speed;
+                base.SetAttacker(attacker);
+                float effectiveness = (1 + attacker.GetSkillFactor(MagicSkill.MagicSkillDef.m_skill));
+                m_ttl = baseDuration * effectiveness;
+                m_damageModifier = baseDamageMod / effectiveness;
             }
         }
     }
