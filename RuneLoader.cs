@@ -2,6 +2,7 @@
 using HarmonyLib;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
@@ -10,6 +11,9 @@ namespace Runestones
     class RuneLoader
     {
         private const string PrefabPath = "Assets/PrefabInstance/Rune.prefab";
+        private const string AncientBackPath = "Assets/Runestones/AncientRuneBack.png";
+        private const string DarkBackPath = "Assets/Runestones/DarkRuneBack.png";
+        private const int AssetOffset = 35;
         private static RuneLoader _instance;
         public static RuneLoader Instance
         {
@@ -28,9 +32,11 @@ namespace Runestones
         private RuneLoader()
         {
             BaseRunePrefab = RunestonesMod.GetLoadedAssets().LoadAsset<GameObject>(PrefabPath);
+            BuildIcons();
             RuneContainer = new GameObject("RuneContainer");
             GameObject.DontDestroyOnLoad(RuneContainer);
             RuneContainer.SetActive(false);
+            List<Rune> upgrades = new List<Rune>();
             foreach (Rune rune in RuneDB.Instance.AllRunes)
             {
                 if (rune.Quality == RuneQuality.Common)
@@ -39,16 +45,45 @@ namespace Runestones
                     {
                         var r = rune.Clone();
                         r.Quality = (RuneQuality)i;
-                        RuneDB.Instance.AllRunes.Add(r);
-                        RuneDB.Instance.RunesByName.Add(r.GetToken(), r);
+                        r.AssetIndex = rune.AssetIndex + AssetOffset * i;
+                        upgrades.Add(r);
                     }
                 }
+            }
+            foreach (Rune r in upgrades)
+            {
+                RuneDB.Instance.AllRunes.Add(r);
+                RuneDB.Instance.RunesByName.Add(r.GetToken(), r);
             }
             foreach (Rune rune in RuneDB.Instance.AllRunes)
             {
                 ItemHelper.Instance.AddToken(rune.GetToken(), rune.GetName());
             }
             ItemHelper.Instance.OnAllItemsLoaded(AfterLoad);
+        }
+
+        private void BuildIcons()
+        {
+            var icons = BaseRunePrefab.GetComponent<ItemDrop>().m_itemData.m_shared.m_icons;
+            var AncientBack = RunestonesMod.GetLoadedAssets().LoadAsset<Sprite>(AncientBackPath).texture;
+            var DarkBack = RunestonesMod.GetLoadedAssets().LoadAsset<Sprite>(DarkBackPath).texture;
+            var newIcons = new Sprite[icons.Length * 3];
+            for (int i=0; i<icons.Length; i++)
+            {
+                var orig_tex = icons[i].texture;
+                var ancient_tex = new Texture2D(64, 64, TextureFormat.RGBA32, false);
+                var dark_tex = new Texture2D(64, 64, TextureFormat.RGBA32, false);
+
+                ancient_tex.SetPixels(orig_tex.GetPixels().Zip(AncientBack.GetPixels(), (p1, p2) => p1.a >= p2.a ? p1 : p2).ToArray());
+                dark_tex.SetPixels(orig_tex.GetPixels().Zip(DarkBack.GetPixels(), (p1, p2) => p1.a >= p2.a ? p1 : p2).ToArray());
+                ancient_tex.Apply();
+                dark_tex.Apply();
+
+                newIcons[i] = icons[i];
+                newIcons[i + AssetOffset] = Sprite.Create(ancient_tex, new Rect(0, 0, 64, 64), new Vector2(32, 32));
+                newIcons[i + 2 * AssetOffset] = Sprite.Create(dark_tex, new Rect(0, 0, 64, 64), new Vector2(32, 32));
+            }
+            BaseRunePrefab.GetComponent<ItemDrop>().m_itemData.m_shared.m_icons = newIcons;
         }
 
         public static void AfterLoad()

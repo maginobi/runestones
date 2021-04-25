@@ -42,7 +42,13 @@ namespace Runestones
             new Rune { Name = "Index", EffectClass = typeof(IndexRuneEffect), DiscoveryToken = "$lore_blackforest_random06", AssetIndex = 12, Reagents = new List < Dictionary < string, int > > { new Dictionary < string, int > { { "GreydwarfEye", 1 }, { "Thistle", 1 } } } }, //rearranges hotkeys for easier spellcasting, inventory effect
             new Rune { Name = "FinalPlaceHolder1", EffectClass = typeof(LightRuneEffect), DiscoveryToken = "$lore_blackforest_random07", AssetIndex = 13, Reagents = new List < Dictionary < string, int > > { new Dictionary < string, int > { { "Raspberry", 5 }, { "GreydwarfEye", 5 } } } },
             // Swamp runes
-            new Rune { Name = "Animate", EffectClass = typeof(AnimateRuneEffect), DiscoveryToken = "$lore_swamp_random01", AssetIndex = 14, Reagents = new List < Dictionary < string, int > > { new Dictionary < string, int > { { "BoneFragments", 5 }, { "Ruby", 1 } } } },
+            new Rune { Name = "Animate", EffectClass = typeof(AnimateRuneEffect), DiscoveryToken = "$lore_swamp_random01", AssetIndex = 14, Reagents =
+                    new List < Dictionary < string, int > > {
+                        new Dictionary < string, int > { { "BoneFragments", 5 }, { "Ruby", 1 } },
+                        new Dictionary < string, int > { { "BoneFragments", 5 }, { "Ruby", 2 }, { "TrophySkeleton", 1 } },
+                        new Dictionary < string, int > { { "Entrails", 10 }, { "Ruby", 3 }, { "WitheredBone", 1 } }
+                    }
+                },
             new Rune { Name = "FinalPlaceHolder2", EffectClass = typeof(LightRuneEffect), DiscoveryToken = "$lore_swamp_random02", AssetIndex = 15,  Reagents = new List < Dictionary < string, int > > { new Dictionary < string, int > { { "Raspberry", 5 }, { "GreydwarfEye", 5 } } } },
             new Rune { Name = "Fear", EffectClass = typeof(FearRuneEffect), DiscoveryToken = "$lore_swamp_random03", AssetIndex = 16, Reagents = new List < Dictionary < string, int > > { new Dictionary < string, int > { { "TrophyBlob", 1 }, { "GreydwarfEye", 3 } } } }, //requires aoe
             new Rune { Name = "FinalPlaceHolder3", EffectClass = typeof(LightRuneEffect), DiscoveryToken = "$lore_swamp_random04", AssetIndex = 17,  Reagents = new List < Dictionary < string, int > > { new Dictionary < string, int > { { "Raspberry", 5 }, { "GreydwarfEye", 5 } } } },

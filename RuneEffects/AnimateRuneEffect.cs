@@ -10,13 +10,16 @@ namespace Runestones.RuneEffects
     public class AnimateRuneEffect : RuneEffect
     {
         const string skeletonName = "Skeleton";
+        const string draugrName = "Draugr";
         const string vfxName = "vfx_skeleton_death";
         const float baseBaseDuration = 60;
         public AnimateRuneEffect()
         {
             _FlavorText = "\u266AYou can necromance if you want to\u266A";
             _EffectText = new List<string>{ "Summons a friendly skeleton", "-25% Health regen" };
-            _RelativeStats = new Dictionary<string, Func<string>> { { "Duration", ()=>$"{baseBaseDuration*_Effectiveness:F1} sec" } };
+            _QualityEffectText[RuneQuality.Ancient] = new List<string> { "+200% Duration" };
+            _QualityEffectText[RuneQuality.Dark] = new List<string> { "Summons a Draugr instead" };
+            _RelativeStats = new Dictionary<string, Func<string>> { { "Duration", ()=>$"{baseBaseDuration*_Effectiveness * (_Quality==RuneQuality.Ancient ? 3 : 1) :F1} sec" } };
         }
 
         public override void DoMagicAttack(Attack baseAttack)
@@ -25,7 +28,7 @@ namespace Runestones.RuneEffects
             var character = baseAttack.GetCharacter();
             var spawnPos = character.transform.position + character.transform.forward * 2f;
             var spawnRot = character.transform.rotation;
-            var skeletonPrefab = ZNetScene.instance.GetPrefab(skeletonName);
+            var skeletonPrefab = ZNetScene.instance.GetPrefab( _Quality==RuneQuality.Dark ? draugrName : skeletonName );
             var skeleton = GameObject.Instantiate(skeletonPrefab, spawnPos, spawnRot);
             skeleton.GetComponent<Humanoid>().m_faction = Character.Faction.Players;
 
@@ -40,15 +43,14 @@ namespace Runestones.RuneEffects
             else
                 statusEffect = (SE_Necromancer)character.GetSEMan().GetStatusEffect("SE_Necromancer");
             statusEffect.minionList.Add(skeleton);
-            statusEffect.baseDurationSec = baseBaseDuration * _Effectiveness;
+            statusEffect.baseDurationSec = baseBaseDuration * _Effectiveness * (_Quality == RuneQuality.Ancient ? 3 : 1);
         }
 
         public class SE_Necromancer : SE_Stats
         {
             public List<GameObject> minionList = new List<GameObject>();
-            private const int skeleMaxHealth = 40;
             public float baseDurationSec = baseBaseDuration;
-            public float degenRate = skeleMaxHealth/baseBaseDuration;
+            public float degenRate = 1/baseBaseDuration;
             public SE_Necromancer() : base()
             {
                 name = "SE_Necromancer";
@@ -77,10 +79,10 @@ namespace Runestones.RuneEffects
                         continue;
                     }
                     var skele = minion.GetComponent<Humanoid>();
-                    HitData hit = new HitData { m_damage = new HitData.DamageTypes { m_damage = degenRate * dt } };
+                    HitData hit = new HitData { m_damage = new HitData.DamageTypes { m_damage = degenRate * skele.GetMaxHealth() * dt } };
                     skele.ApplyDamage(hit, false, false);
                     if (skele != null)
-                        sortedHealth.Add(skele.GetHealth());
+                        sortedHealth.Add(skele.GetHealthPercentage());
                 }
                 int index = 0;
                 float totalDamage = 0;
@@ -105,7 +107,7 @@ namespace Runestones.RuneEffects
             private float CalcDegen(int numMinions)
             {
                 // 1 skele: base rate,   2 skele: 2x rate,   3 skele: 4x rate,   4 skele: 8x rate
-                return (float)(skeleMaxHealth / baseDurationSec * Math.Pow(2, numMinions-1)); 
+                return (float)(Math.Pow(2, numMinions-1) / baseDurationSec); 
             }
         }
     }
