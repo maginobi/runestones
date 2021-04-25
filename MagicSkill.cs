@@ -46,4 +46,29 @@ namespace Runestones
                 __result = true;
         }
     }
+
+    [HarmonyPatch(typeof(Skills), "CheatRaiseSkill")]
+    public static class MagicSkillCheatRaisePatch
+    {
+        public static void Postfix(Skills __instance, string name, float value)
+        {
+            if (name == MagicSkill.skillName)
+            {
+                Skills.Skill skill = (Skills.Skill)typeof(Skills).GetMethod("GetSkill", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(__instance, new object[] { MagicSkill.MagicSkillDef.m_skill });
+                skill.m_level += value;
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(Skills), "CheatResetSkill")]
+    public static class MagicSkillCheatResetPatch
+    {
+        public static void Postfix(Skills __instance, string name)
+        {
+            if (name == MagicSkill.skillName)
+            {
+                __instance.ResetSkill(MagicSkill.MagicSkillDef.m_skill);
+            }
+        }
+    }
 }

@@ -16,7 +16,31 @@ namespace Runestones
         public long PlayerID;
         public const string PocketContainerPath = "";
 
-        MagicInventory() : base("Pocket", (from Sprite s in Resources.FindObjectsOfTypeAll<Sprite>() where s.name == "chest_bkg" select s).FirstOrDefault(), 3, 2) { }
+        public int Width
+        {
+            get
+            {
+                return (int)typeof(Inventory).GetField("m_width", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy).GetValue(this);
+            }
+            set
+            {
+                typeof(Inventory).GetField("m_width", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy).SetValue(this, value);
+            }
+        }
+
+        public int Height
+        {
+            get
+            {
+                return (int)typeof(Inventory).GetField("m_height", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy).GetValue(this);
+            }
+            set
+            {
+                typeof(Inventory).GetField("m_height", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy).SetValue(this, value);
+            }
+        }
+
+        MagicInventory() : base("Pocket", (from Sprite s in Resources.FindObjectsOfTypeAll<Sprite>() where s.name == "chest_bkg" select s).FirstOrDefault(), 6, 3) { }
 
         MagicInventory(string arg1, Sprite arg2, int arg3, int arg4) : base(arg1, arg2, arg3, arg4) { }
 
@@ -37,9 +61,11 @@ namespace Runestones
                 long playerID = nview.GetZDO().GetLong("playerID");
                 Debug.Log($"Player id: {playerID}");
 
-                if (player.gameObject.GetComponent<MagicInventory.MagicContainer>() is MagicInventory.MagicContainer magicContainer)
+                MagicContainer magicContainer = player.gameObject.GetComponent<MagicInventory.MagicContainer>();
+                bool newContainer = magicContainer == null;
+                if (newContainer)
                 {
-                    GameObject.Destroy(magicContainer);
+                    magicContainer = player.gameObject.AddComponent<MagicInventory.MagicContainer>();
                 }
 
                 MagicInventory.AllContainers.TryGetValue(playerID, out var magicInventory);
@@ -49,14 +75,30 @@ namespace Runestones
                     magicInventory = MagicInventory.Create(playerID);
                     Debug.Log($"Container: {magicInventory}");
                 }
-                magicContainer = player.gameObject.AddComponent<MagicInventory.MagicContainer>();
-                magicContainer.m_width = width;
-                magicContainer.m_height = height;
+                magicInventory.Width = width;
+                magicInventory.Height = height;
                 typeof(Container).GetField("m_inventory", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy).SetValue(magicContainer, magicInventory);
-                Action onContainerChanged = () => typeof(Container).GetMethod("OnContainerChanged", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(magicContainer, null);
-                magicInventory.m_onChanged = (Action)Delegate.Combine(magicInventory.m_onChanged, onContainerChanged);
+
+                if (newContainer)
+                {
+                    Action onContainerChanged = () => typeof(Container).GetMethod("OnContainerChanged", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(magicContainer, null);
+                    magicInventory.m_onChanged = (Action)Delegate.Combine(magicInventory.m_onChanged, onContainerChanged);
+                }
+
                 inventoryGui.Show(magicContainer);
             }
+        }
+
+        public List<ItemDrop.ItemData> GetAllItemsOverride()
+        {
+            List<ItemDrop.ItemData> result = new List<ItemDrop.ItemData>();
+            List<ItemDrop.ItemData> orig_inv = (List<ItemDrop.ItemData>)typeof(Inventory).GetField("m_inventory", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy).GetValue(this);
+            foreach (ItemDrop.ItemData item in orig_inv)
+            {
+                if (item.m_gridPos.x < Width && item.m_gridPos.y < Height)
+                    result.Add(item);
+            }
+            return result;
         }
 
         public void LoadOverride()
@@ -80,6 +122,21 @@ namespace Runestones
         }
 
         public class MagicContainer : Container { }
+    }
+
+    [HarmonyPatch(typeof(Inventory), "GetAllItems", new Type[] { })]
+    public static class GetAllItemsOverride
+    {
+        // This patch allows item hiding without exceptions
+        public static bool Prefix(Inventory __instance, ref List<ItemDrop.ItemData> __result)
+        {
+            if (__instance is MagicInventory magicInventory)
+            {
+                __result = magicInventory.GetAllItemsOverride();
+                return false;
+            }
+            return true;
+        }
     }
 
     [HarmonyPatch(typeof(Inventory), "Save")]
