@@ -38,12 +38,18 @@ namespace Runestones.RuneEffects
 
             //Apply status effect
             SE_Necromancer statusEffect;
+            float assignedDuration = baseBaseDuration * _Effectiveness * (_Quality == RuneQuality.Ancient ? 3 : 1);
             if (!character.GetSEMan().HaveStatusEffect("SE_Necromancer"))
+            {
                 statusEffect = (SE_Necromancer)character.GetSEMan().AddStatusEffect("SE_Necromancer");
+                statusEffect.baseDurationSec = assignedDuration;
+            }
             else
+            {
                 statusEffect = (SE_Necromancer)character.GetSEMan().GetStatusEffect("SE_Necromancer");
+                statusEffect.baseDurationSec = (statusEffect.baseDurationSec + assignedDuration) / 2;
+            }
             statusEffect.minionList.Add(skeleton);
-            statusEffect.baseDurationSec = baseBaseDuration * _Effectiveness * (_Quality == RuneQuality.Ancient ? 3 : 1);
         }
 
         public class SE_Necromancer : SE_Stats

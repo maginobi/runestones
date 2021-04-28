@@ -16,15 +16,20 @@ namespace Runestones.RuneEffects
         {
             _FlavorText = "Agriculture is the foundation of civilization";
             _EffectText = new List<string> { "+100% Crop growth speed", "5m radius" };
-            _RelativeStats = new Dictionary<string, Func<string>> { { "Duration", () => $"{baseDuration * _Effectiveness :F0} sec" } };
+            _QualityEffectText[RuneQuality.Ancient] = new List<string> { "+100% more growth speed (stacks additively)" };
+            _QualityEffectText[RuneQuality.Dark] = new List<string> { "+100% radius", "+100% Duration" };
+            _RelativeStats = new Dictionary<string, Func<string>> { { "Duration", () => $"{baseDuration * _Effectiveness * (_Quality == RuneQuality.Dark ? 2 : 1) :F0} sec" } };
         }
         public override void DoMagicAttack(Attack baseAttack)
         {
             var aoePrefab = GameObject.Instantiate(ZNetScene.instance.GetPrefab(aoeName));
+            if (_Quality == RuneQuality.Dark)
+                aoePrefab.transform.localScale = 2 * aoePrefab.transform.localScale;
             GameObject.Destroy(aoePrefab.GetComponent<Aoe>());
             
             var aoe = aoePrefab.AddComponent<FarmAoe>();
-            aoe.m_ttl = baseDuration * _Effectiveness;
+            aoe.m_ttl = baseDuration * _Effectiveness * (_Quality == RuneQuality.Dark ? 2 : 1);
+            aoe.m_accelerationFactor = _Quality == RuneQuality.Ancient ? 2 : 1;
             var particles = aoePrefab.GetComponentInChildren<ParticleSystem>().main;
             particles.duration = 10/3f;
             particles.simulationSpeed = 1/3f;
@@ -46,6 +51,7 @@ namespace Runestones.RuneEffects
         }
         public class FarmAoe : PersistentAoe
         {
+            public float m_accelerationFactor = 1;
             public FarmAoe() : base()
             {
                 m_useAttackSettings = false;
@@ -69,7 +75,7 @@ namespace Runestones.RuneEffects
                     if (plantView.GetZDO() != null && plantView.IsOwner())
                     {
                         var currentPlantTime = new DateTime(plantView.GetZDO().GetLong("plantTime", ZNet.instance.GetTime().Ticks));
-                        var newPlantTime = currentPlantTime.AddSeconds(-m_hitInterval);
+                        var newPlantTime = currentPlantTime.AddSeconds(-m_hitInterval*m_accelerationFactor);
                         plantView.GetZDO().Set("plantTime", newPlantTime.Ticks);
                     }
                 }

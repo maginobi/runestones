@@ -11,18 +11,39 @@ namespace Runestones.RuneEffects
     {
         const string aoeName = "bee_aoe";
         const string beeName = "QueenBee";
+        const float baseDamage = 30;
         public BeeRuneEffect()
         {
             _FlavorText = "My God, it's full of bees...";
-            _EffectText = new List<string> { "Summons a swarm of angry bees, bee careful", "Generates a Queen Bee item" };
+            _EffectText = new List<string> { "Summons a swarm of angry bees, bee careful", "Generates a Queen Bee item"};
+            _QualityEffectText[RuneQuality.Ancient] = new List<string> { "-50% Damage" };
+            _QualityEffectText[RuneQuality.Dark] = new List<string> { "Summon bees at targeted location instead of on self", "10m range" };
         }
         public override void DoMagicAttack(Attack baseAttack)
         {
             var character = baseAttack.GetCharacter();
             var aoePrefab = ZNetScene.instance.GetPrefab(aoeName);
-            var aoe = GameObject.Instantiate(aoePrefab, character.transform.position + Vector3.up, character.transform.rotation);
-            aoe.GetComponent<Aoe>().m_damage.m_poison = 30;
-            GameObject.Instantiate(ZNetScene.instance.GetPrefab(beeName), character.transform.position + Vector3.up, character.transform.rotation);
+            GameObject aoe;
+            if (_Quality == RuneQuality.Dark)
+            {
+                var project = new MagicProjectile
+                {
+                    m_spawnOnHit = aoePrefab,
+                    m_range = 10,
+                    m_launchAngle = 0,
+                    m_attackSpread = 0,
+                    m_hitType = Attack.HitPointType.Average
+                };
+                project.Cast(baseAttack.GetAttackOrigin(), baseAttack.BetterAttackDir());
+                aoe = project.InstantiatedObject;
+            }
+            else
+            {
+                aoe = GameObject.Instantiate(aoePrefab, character.transform.position, character.transform.rotation);
+            }
+            aoe.GetComponent<Aoe>().m_damage.m_poison = baseDamage * (_Quality == RuneQuality.Ancient ? 0.5f : 1);
+            aoe.transform.position = aoe.transform.position + Vector3.up;
+            GameObject.Instantiate(ZNetScene.instance.GetPrefab(beeName), aoe.transform.position, aoe.transform.rotation);
         }
     }
 }

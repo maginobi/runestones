@@ -10,11 +10,13 @@ namespace Runestones.RuneEffects
 {
     class BoatRuneEffect : RuneEffect
     {
-        private const string wallPieceName = "$ship_raft";
+        private List<string> pieceList = new List<string> { "$ship_raft", "$ship_karve", "$ship_longship" };
         public BoatRuneEffect()
         {
             _FlavorText = "You'll need one of these if you want to make it to Vinland";
             _EffectText = new List<string> { "Conjures a raft" };
+            _QualityEffectText[RuneQuality.Ancient] = new List<string> { "Conjures a Karve instead" };
+            _QualityEffectText[RuneQuality.Dark] = new List<string> { "Conjures a Longship instead" };
         }
 
         public override void DoMagicAttack(Attack baseAttack)
@@ -37,7 +39,7 @@ namespace Runestones.RuneEffects
 
                 //Select piece
                 int category = -1;
-                Vector2Int pieceIndex = pieceTable.GetPieceIndexVec(wallPieceName, ref category);
+                Vector2Int pieceIndex = pieceTable.GetPieceIndexVec(pieceList[(int)_Quality], ref category);
                 pieceTable.SetCategory(category);
                 pieceTable.SetSelected(pieceIndex);
 

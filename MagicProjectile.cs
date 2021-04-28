@@ -19,6 +19,8 @@ namespace Runestones
         public Attack.HitPointType m_hitType = Attack.HitPointType.Average;
         const float degInterval = 4;
 
+        public GameObject InstantiatedObject;
+
         public void Cast(Transform origin, Vector3 direction)
         {
             Vector3 attackOrigin = origin.position + origin.forward * m_attackOffset.x + origin.up * m_attackOffset.y + origin.right * m_attackOffset.z;
@@ -58,7 +60,7 @@ namespace Runestones
 
             if (m_spawnOnHit != null)
             {
-                GameObject.Instantiate(m_spawnOnHit, spawnLoc, Quaternion.identity);
+                InstantiatedObject = GameObject.Instantiate(m_spawnOnHit, spawnLoc, Quaternion.identity);
             }
             if (m_actionOnHit != null)
             {
