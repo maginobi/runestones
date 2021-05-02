@@ -22,6 +22,8 @@ namespace Runestones.RuneEffects
         {
             _FlavorText = "Home is where ya put yer feet up";
             _EffectText = new List<string> { "Conjures a small lean-to" };
+            _QualityEffectText[RuneQuality.Ancient] = new List<string> { "Conjures a larger house" };
+            _QualityEffectText[RuneQuality.Dark] = new List<string> { "Conjures a furnished log cabin" };
         }
 
         public override void DoMagicAttack(Attack baseAttack)
@@ -35,47 +37,21 @@ namespace Runestones.RuneEffects
             }
             try
             {
-                //Spawn location structure
-                var pos = player.transform.position;
-                var rot = player.GetLookYaw() * Quaternion.Euler(0, 90, 0);
-                var getLocationMethods = typeof(ZoneSystem).GetMethods(BindingFlags.NonPublic | BindingFlags.Instance);
-                var method = (from MethodInfo m in getLocationMethods where m.Name == "GetLocation" && m.GetParameters().Any(param => param.ParameterType == typeof(string)) select m).FirstOrDefault();
-                if (method == null)
-                    throw new NullReferenceException("Could not find ZoneSystem.GetLocation method");
-                ZoneSystem.ZoneLocation location = (ZoneSystem.ZoneLocation)method.Invoke(ZoneSystem.instance, new object[] { houseLocationName });
-                //m_didZoneTest = true;
-                List<GameObject> spawnedGhostObjects = new List<GameObject>();
-                typeof(ZoneSystem).GetMethod("SpawnLocation", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(ZoneSystem.instance, new object[] { location, spawnSeed, pos, rot, ZoneSystem.SpawnMode.Full, spawnedGhostObjects });
-
-                //Set up for bed spawning
-                var bedPos = player.transform.position + player.transform.forward * bedDisplacement;
-                var bedRot = rot;
-
-                //Get piece table
-                var pieceTableName = "_HammerPieceTable";
-                var pieceTable = (from PieceTable table in Resources.FindObjectsOfTypeAll<PieceTable>() where table.gameObject.name == pieceTableName select table).FirstOrDefault();
-                if (pieceTable == null || pieceTable.m_pieces.Count <= 0)
-                    throw new NullReferenceException("Could not find hammer piece table");
-                pieceTable.UpdateAvailable(null, null, false, true); //noPlacementCost set to true - other fields don't matter
-
-                //Select piece
-                int category = -1;
-                Vector2Int pieceIndex = pieceTable.GetPieceIndexVec(bedPieceName, ref category);
-                pieceTable.SetCategory(category);
-                pieceTable.SetSelected(pieceIndex);
-
-                //Place piece
-                var piece = pieceTable.GetSelectedPiece();
-                piece.m_description = magicBedDesc;
                 TerrainModifier.SetTriggerOnPlaced(trigger: true);
-                GameObject gameObject = UnityEngine.Object.Instantiate(piece.gameObject, bedPos, bedRot);
-                TerrainModifier.SetTriggerOnPlaced(trigger: false);
-                WearNTear wear = gameObject.GetComponent<WearNTear>();
-                if ((bool)wear)
+                switch(_Quality)
                 {
-                    wear.OnPlaced();
+                    case RuneQuality.Common:
+                        CommonEffect(player);
+                        break;
+                    case RuneQuality.Ancient:
+                        AncientEffect(player);
+                        break;
+                    case RuneQuality.Dark:
+                        DarkEffect(player);
+                        break;
                 }
-                piece.m_description = "";
+                SnapToGround.SnappAll();
+                TerrainModifier.SetTriggerOnPlaced(trigger: false);
             }
             catch (Exception e)
             {
@@ -87,6 +63,95 @@ namespace Runestones.RuneEffects
                 typeof(Player).GetMethod("SetPlaceMode", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy).Invoke(player, new object[] { null });
                 typeof(Player).GetField("m_noPlacementCost", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(player, origPlaceCost);
             }
+        }
+
+        public void CommonEffect(Player player)
+        {
+            //Spawn location structure
+            var pos = player.transform.position;
+            var rot = player.GetLookYaw() * Quaternion.Euler(0, 90, 0);
+            var getLocationMethods = typeof(ZoneSystem).GetMethods(BindingFlags.NonPublic | BindingFlags.Instance);
+            var method = (from MethodInfo m in getLocationMethods where m.Name == "GetLocation" && m.GetParameters().Any(param => param.ParameterType == typeof(string)) select m).FirstOrDefault();
+            if (method == null)
+                throw new NullReferenceException("Could not find ZoneSystem.GetLocation method");
+            ZoneSystem.ZoneLocation location = (ZoneSystem.ZoneLocation)method.Invoke(ZoneSystem.instance, new object[] { houseLocationName });
+            //m_didZoneTest = true;
+            List<GameObject> spawnedGhostObjects = new List<GameObject>();
+            typeof(ZoneSystem).GetMethod("SpawnLocation", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(ZoneSystem.instance, new object[] { location, spawnSeed, pos, rot, ZoneSystem.SpawnMode.Full, spawnedGhostObjects });
+
+            //Set up for bed spawning
+            var bedPos = player.transform.position + player.transform.forward * bedDisplacement;
+            var bedRot = rot;
+
+            //Get piece table
+            var pieceTableName = "_HammerPieceTable";
+            var pieceTable = (from PieceTable table in Resources.FindObjectsOfTypeAll<PieceTable>() where table.gameObject.name == pieceTableName select table).FirstOrDefault();
+            if (pieceTable == null || pieceTable.m_pieces.Count <= 0)
+                throw new NullReferenceException("Could not find hammer piece table");
+            pieceTable.UpdateAvailable(null, null, false, true); //noPlacementCost set to true - other fields don't matter
+
+            //Select piece
+            int category = -1;
+            Vector2Int pieceIndex = pieceTable.GetPieceIndexVec(bedPieceName, ref category);
+            pieceTable.SetCategory(category);
+            pieceTable.SetSelected(pieceIndex);
+
+            //Place piece
+            var piece = pieceTable.GetSelectedPiece();
+            piece.m_description = magicBedDesc;
+            TerrainModifier.SetTriggerOnPlaced(trigger: true);
+            GameObject gameObject = UnityEngine.Object.Instantiate(piece.gameObject, bedPos, bedRot);
+            TerrainModifier.SetTriggerOnPlaced(trigger: false);
+            WearNTear wear = gameObject.GetComponent<WearNTear>();
+            if ((bool)wear)
+            {
+                wear.OnPlaced();
+            }
+            piece.m_description = "";
+        }
+
+        public void AncientEffect(Player player)
+        {
+            var houseLocPrefab = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == "WoodHouse11" select prefab).FirstOrDefault();
+            var housePrefab = houseLocPrefab.transform.Find("house").gameObject;
+            var flattenPrefab = houseLocPrefab.transform.Find("flatten").gameObject;
+            var bedPrefab = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == "bed" select prefab).FirstOrDefault();
+            var workbenchPrefab = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == "piece_workbench" select prefab).FirstOrDefault();
+            var torchPrefab = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == "piece_groundtorch_wood" select prefab).FirstOrDefault();
+            var bedPos = new Vector2(1, 1.75f);
+            var benchPos = new Vector2(1, -1.75f);
+            var torch1Pos = new Vector2(-4, 1.75f);
+            var torch2Pos = new Vector2(-4, -1.75f);
+            Debug.Log($"Prefab: {housePrefab}");
+            var housePos = player.transform.position + player.transform.forward * 7.5f;
+            var quat90 = Quaternion.Euler(0, -90, 0);
+            var quat180 = Quaternion.Euler(0, -180, 0);
+            GameObject.Instantiate(housePrefab, housePos, player.transform.rotation * quat180 * quat90);
+            GameObject.Instantiate(flattenPrefab, housePos, player.transform.rotation * quat180 * quat90);
+
+            GameObject.Instantiate(bedPrefab, housePos + player.transform.forward * bedPos.x + player.transform.right * bedPos.y, player.transform.rotation * quat180);
+            GameObject.Instantiate(workbenchPrefab, housePos + player.transform.forward * benchPos.x + player.transform.right * benchPos.y, player.transform.rotation * quat180 * quat90);
+            GameObject.Instantiate(torchPrefab, housePos + player.transform.forward * torch1Pos.x + player.transform.right * torch1Pos.y + player.transform.up, player.transform.rotation);
+            GameObject.Instantiate(torchPrefab, housePos + player.transform.forward * torch2Pos.x + player.transform.right * torch2Pos.y + player.transform.up, player.transform.rotation);
+        }
+
+        public void DarkEffect(Player player)
+        {
+            var cabinPrefab = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == "AbandonedLogCabin01" select prefab).FirstOrDefault();
+            var bedPrefab = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == "piece_bed02" select prefab).FirstOrDefault();
+            var workbenchPrefab = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == "piece_workbench" select prefab).FirstOrDefault();
+            var chestPrefab = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == "piece_chest_wood" select prefab).FirstOrDefault();
+            var bedPos = new Vector2(1, 4);
+            var benchPos = new Vector2(-3, -4);
+            var chestPos = new Vector2(1.9f, 1.75f);
+            Debug.Log($"Prefab: {cabinPrefab}");
+            var cabinPos = player.transform.position + player.transform.forward * 7.5f;
+            var quat90 = Quaternion.Euler(0, -90, 0);
+            var quat180 = Quaternion.Euler(0, -180, 0);
+            var cabinObj = GameObject.Instantiate(cabinPrefab, cabinPos, player.transform.rotation * quat90);
+            GameObject.Instantiate(bedPrefab, cabinPos + player.transform.forward * bedPos.x + player.transform.right * bedPos.y, player.transform.rotation * quat180);
+            GameObject.Instantiate(workbenchPrefab, cabinPos + player.transform.forward * benchPos.x + player.transform.right * benchPos.y, player.transform.rotation * quat180 * quat90);
+            GameObject.Instantiate(chestPrefab, cabinPos + player.transform.forward * chestPos.x + player.transform.right * chestPos.y, player.transform.rotation * quat180);
         }
 
         [HarmonyPatch(typeof(Bed), "CheckExposure")]

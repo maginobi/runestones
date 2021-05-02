@@ -19,8 +19,10 @@ namespace Runestones.RuneEffects
         {
             _FlavorText = "Revenge is a dish best served with raspberries";
             _EffectText = new List<string> { "Reduces enemy damage dealt", "1m radius" };
-            _RelativeStats = new Dictionary<string, Func<string>> { { "Damage", () => $"-{1-(baseDamageMod / _Effectiveness) :P1}"},
-                                                                    { "Duration", () => $"{baseDuration * _Effectiveness :F1} sec" } };
+            _QualityEffectText[RuneQuality.Ancient] = new List<string> { "+100% Duration" };
+            _QualityEffectText[RuneQuality.Dark] = new List<string> { "+100% More damage reduction" };
+            _RelativeStats = new Dictionary<string, Func<string>> { { "Damage", () => $"-{1-(baseDamageMod / _Effectiveness / (_Quality==RuneQuality.Dark ? 2 : 1)) :P1}"},
+                                                                    { "Duration", () => $"{baseDuration * _Effectiveness * (_Quality==RuneQuality.Ancient ? 2 : 1) :F1} sec" } };
         }
 
         public override void DoMagicAttack(Attack baseAttack)
@@ -29,7 +31,11 @@ namespace Runestones.RuneEffects
             var gameObject = GameObject.Instantiate(vfxPrefab);
             var aoe = gameObject.AddComponent<Aoe>();
 
-            aoe.m_statusEffect = "SE_Curse";
+            var curseEffect = ExtendedStatusEffect.Create<SE_Curse>();
+            curseEffect.m_ttl = baseDuration * _Effectiveness * (_Quality == RuneQuality.Ancient ? 2 : 1);
+            curseEffect.m_damageModifier = baseDamageMod / _Effectiveness / (_Quality == RuneQuality.Dark ? 2 : 1);
+
+            aoe.m_statusEffect = curseEffect.name;
             aoe.m_ttl = 1;
             aoe.m_radius = 1;
             typeof(Aoe).GetField("m_owner", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(aoe, baseAttack.GetCharacter());
@@ -45,7 +51,7 @@ namespace Runestones.RuneEffects
             project.Cast(baseAttack.GetAttackOrigin(), baseAttack.BetterAttackDir());
         }
 
-        public class SE_Curse : SE_Stats
+        public class SE_Curse : ExtendedStatusEffect
         {
             public SE_Curse() : base()
             {

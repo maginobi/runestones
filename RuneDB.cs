@@ -27,11 +27,29 @@ namespace Runestones
         {
             // Meadows runes
             new Rune { Name = "Force", EffectClass = typeof(ForceRuneEffect), DiscoveryToken = "$lore_meadows_random06", AssetIndex = 0, Reagents = new List<Dictionary<string, int>>{ new Dictionary<string, int> { { "TrophyBoar", 2 } } } },
-            new Rune { Name = "Hearth", EffectClass = typeof(HearthRuneEffect), DiscoveryToken = "$lore_meadows_random01", AssetIndex = 1, Reagents = new List<Dictionary<string, int>>{ new Dictionary<string, int>{ { "Stone", 20 }, { "Wood", 15 } } } },
-            new Rune { Name = "Curse", EffectClass = typeof(CurseRuneEffect), DiscoveryToken = "$lore_meadows_random02", AssetIndex = 2, Reagents = new List<Dictionary<string, int>>{ new Dictionary<string, int> { { "Raspberry", 5 } } } },
+            new Rune { Name = "Hearth", EffectClass = typeof(HearthRuneEffect), DiscoveryToken = "$lore_meadows_random01", AssetIndex = 1, Reagents =
+                    new List<Dictionary<string, int>>{
+                        new Dictionary<string, int>{ { "Stone", 20 }, { "Wood", 15 } },
+                        new Dictionary<string, int>{ { "ElderBark", 5 }, { "RoundLog", 10 }, { "FineWood", 10 }, { "SurtlingCore", 1 } },
+                        new Dictionary<string, int>{ { "Coal", 20 }, { "Obsidian", 5 } }
+                    }
+                },
+            new Rune { Name = "Curse", EffectClass = typeof(CurseRuneEffect), DiscoveryToken = "$lore_meadows_random02", AssetIndex = 2, Reagents =
+                    new List<Dictionary<string, int>>{
+                        new Dictionary<string, int> { { "Raspberry", 5 } },
+                        new Dictionary<string, int> { { "Raspberry", 10 }, { "GreydwarfEye", 3 } },
+                        new Dictionary<string, int> { { "Raspberry", 15 }, { "GreydwarfEye", 5 }, { "Ooze", 1 } }
+                    }
+                },
             new Rune { Name = "Index", EffectClass = typeof(IndexRuneEffect), DiscoveryToken = "$lore_meadows_random03", AssetIndex = 3, Reagents = new List < Dictionary < string, int > > { new Dictionary < string, int > { { "GreydwarfEye", 1 }, { "Feathers", 1 } } } }, //rearranges hotkeys for easier spellcasting, inventory effect
             new Rune { Name = "Light", EffectClass = typeof(LightRuneEffect), DiscoveryToken = "$lore_mountain_random04", AssetIndex = 4, Reagents = new List < Dictionary < string, int > > { new Dictionary < string, int > { { "Resin", 5 }, { "Dandelion", 3 } } } },
-            new Rune { Name = "Feather", EffectClass = typeof(FeatherRuneEffect), DiscoveryToken = "$lore_meadows_random05", AssetIndex = 5, Reagents = new List < Dictionary < string, int > > { new Dictionary < string, int > { { "Feathers", 10 } } } },
+            new Rune { Name = "Feather", EffectClass = typeof(FeatherRuneEffect), DiscoveryToken = "$lore_meadows_random05", AssetIndex = 5, Reagents =
+                    new List < Dictionary < string, int > > {
+                        new Dictionary < string, int > { { "Feathers", 10 } },
+                        new Dictionary < string, int > { { "Feathers", 20 }, { "FineWood", 5 } },
+                        new Dictionary < string, int > { { "Feathers", 30 }, { "Thistle", 5 }, { "TrophyHatchling", 1 } }
+                    }
+                },
             // Forest runes
             new Rune { Name = "Timber", EffectClass = typeof(TimberRuneEffect), DiscoveryToken = "$lore_blackforest_random01", AssetIndex = 7, Reagents = new List < Dictionary < string, int > > { new Dictionary < string, int > { { "BeechSeeds", 8 }, { "TrophyGreydwarf", 1 } } } },
             new Rune { Name = "Boat", EffectClass = typeof(BoatRuneEffect), DiscoveryToken = "$lore_blackforest_random02", AssetIndex = 8, Reagents =
@@ -72,18 +90,42 @@ namespace Runestones
             new Rune { Name = "FinalPlaceHolder3", EffectClass = typeof(LightRuneEffect), DiscoveryToken = "$lore_swamp_random04", AssetIndex = 17,  Reagents = new List < Dictionary < string, int > > { new Dictionary < string, int > { { "Raspberry", 5 }, { "GreydwarfEye", 5 } } } },
             new Rune { Name = "Revive", EffectClass = typeof(ReviveRuneEffect), DiscoveryToken = "$lore_swamp_random05", AssetIndex = 18, Reagents = new List < Dictionary < string, int > > { new Dictionary < string, int > { { "TrophyGreydwarfShaman", 1 } } } },
             new Rune { Name = "Pocket", EffectClass = typeof(PocketRuneEffect), DiscoveryToken = "$lore_swamp_random06", AssetIndex = 19, Reagents = new List < Dictionary < string, int > > { new Dictionary < string, int > { { "FineWood", 10 }, { "GreydwarfEye", 3 } } } }, //access small extradimensional chest, inventory effect
-            new Rune { Name = "Darkness", EffectClass = typeof(DarknessRuneEffect), DiscoveryToken = "$lore_swamp_random07", AssetIndex = 20, Reagents = new List < Dictionary < string, int > > { new Dictionary < string, int > { { "Coal", 10 }, { "Guck", 3 } } } }, //darkens an area, making stealth easier, requires area effect
+            new Rune { Name = "Darkness", EffectClass = typeof(DarknessRuneEffect), DiscoveryToken = "$lore_swamp_random07", AssetIndex = 20, Reagents =
+                    new List < Dictionary < string, int > > {
+                        new Dictionary < string, int > { { "Coal", 10 }, { "Guck", 3 } },
+                        new Dictionary < string, int > { { "Coal", 20 }, { "Guck", 3 }, { "TrollHide", 3 } },
+                        new Dictionary < string, int > { { "Obsidian", 6 }, { "Guck", 9 }, { "Feathers", 12 } }
+                    }
+                }, //darkens an area, making stealth easier, requires area effect
             // Mountain runes
             new Rune { Name = "Ice", EffectClass = typeof(IceRuneEffect), DiscoveryToken = "$lore_mountains_random01", AssetIndex = 21, Reagents = new List < Dictionary < string, int > > { new Dictionary < string, int > { { "FreezeGland", 10 }, { "GreydwarfEye", 3 } } } },
-            new Rune { Name = "Home", EffectClass = typeof(HouseRuneEffect), DiscoveryToken = "$lore_mountains_random02", AssetIndex = 22, Reagents = new List < Dictionary < string, int > > { new Dictionary < string, int > { { "Wood", 50 }, { "GreydwarfEye", 3 } } } },
+            new Rune { Name = "Home", EffectClass = typeof(HouseRuneEffect), DiscoveryToken = "$lore_mountains_random02", AssetIndex = 22, Reagents =
+                    new List < Dictionary < string, int > > {
+                        new Dictionary < string, int > { { "Wood", 50 }, { "GreydwarfEye", 3 } },
+                        new Dictionary < string, int > { { "Wood", 50 }, { "RoundLog", 10 }, { "GreydwarfEye", 10 } },
+                        new Dictionary < string, int > { { "FineWood", 50 }, { "RoundLog", 50 }, { "Iron", 3 } }
+                    }
+                },
             new Rune { Name = "Slow", EffectClass = typeof(SlowRuneEffect), DiscoveryToken = "$lore_mountains_random03", AssetIndex = 23, Reagents = new List < Dictionary < string, int > > { new Dictionary < string, int > { { "FreezeGland", 3 }, { "Silver", 1 } } } },
             new Rune { Name = "Transmute", _FixedEffect = new AlchemyRuneEffect(){ itemAName="$item_tin", itemAPrefabName="Tin", itemBName="$item_copper", itemBPrefabName="Copper", ratio=2, alertMessage="Transmuted Copper/Tin", reversible=true },
                 DiscoveryToken = "$lore_mountains_random04", AssetIndex = 24, Reagents = new List < Dictionary < string, int > > { new Dictionary < string, int > { { "Coal", 10 }, { "GreydwarfEye", 3 } } } },
-            new Rune { Name = "Heal", EffectClass = typeof(HealRuneEffect), DiscoveryToken = "$lore_mountains_random05", AssetIndex = 25, Reagents = new List < Dictionary < string, int > > { new Dictionary < string, int > { { "MeadHealthMinor", 3 }, { "Thistle", 3 } } } },
+            new Rune { Name = "Heal", EffectClass = typeof(HealRuneEffect), DiscoveryToken = "$lore_mountains_random05", AssetIndex = 25, Reagents =
+                    new List < Dictionary < string, int > > {
+                        new Dictionary < string, int > { { "MeadHealthMinor", 3 }, { "Thistle", 3 } },
+                        new Dictionary<string, int> { { "MeadHealthMinor", 3 }, { "Thistle", 6 }, { "TrophyGreydwarfShaman", 1 } },
+                        new Dictionary<string, int> { { "MeadHealthMinor", 3 }, { "Thistle", 9 }, { "TrophyLeech", 3 } }
+                    }
+                },
             new Rune { Name = "Weather", EffectClass = typeof(WeatherRuneEffect), DiscoveryToken = "$lore_mountains_random06", AssetIndex = 26, Reagents = new List < Dictionary < string, int > > { new Dictionary < string, int > { { "GreydwarfEye", 5 }, { "TrophyDeer", 2 } } } },
             new Rune { Name = "Quake", EffectClass = typeof(QuakeRuneEffect), DiscoveryToken = "$lore_mountains_random07", AssetIndex = 27, Reagents = new List < Dictionary < string, int > > { new Dictionary < string, int > { { "Crystal", 2 } } } }, //stagger at range, requires aoe
             // Plains runes
-            new Rune { Name = "Fire", EffectClass = typeof(FireRuneEffect), DiscoveryToken = "$lore_plains_random01", AssetIndex = 28, Reagents = new List < Dictionary < string, int > > { new Dictionary < string, int > { { "Coal", 10 }, { "AmberPearl", 2 }, { "SurtlingCore", 2 } } } },
+            new Rune { Name = "Fire", EffectClass = typeof(FireRuneEffect), DiscoveryToken = "$lore_plains_random01", AssetIndex = 28, Reagents =
+                    new List < Dictionary < string, int > > {
+                        new Dictionary < string, int > { { "Coal", 10 }, { "AmberPearl", 2 }, { "SurtlingCore", 2 } },
+                        new Dictionary < string, int > { { "Coal", 20 }, { "AmberPearl", 4 }, { "SurtlingCore", 4 } },
+                        new Dictionary < string, int > { { "Flametal", 3 }, { "Ruby", 1 }, { "TrophySurtling", 1 } }
+                    }
+                },
             new Rune { Name = "Wall", EffectClass = typeof(WallRuneEffect), DiscoveryToken = "$lore_plains_random02", AssetIndex = 29, Reagents = new List < Dictionary < string, int > > { new Dictionary < string, int > { { "Wood", 20 }, { "ShieldBanded", 1 } } } },
             new Rune { Name = "Charm", EffectClass = typeof(CharmRuneEffect), DiscoveryToken = "$lore_plains_random03", AssetIndex = 30, Reagents =
                     new List < Dictionary < string, int > > {

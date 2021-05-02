@@ -16,8 +16,10 @@ namespace Runestones.RuneEffects
         public CharmRuneEffect()
         {
             _FlavorText = "You can catch more flies with honey than with vinegar";
-            _EffectText = new List<string> { "Charms an enemy" };
-            _RelativeStats = new Dictionary<string, Func<string>> { { "Duration", () => $"{baseDuration * _Effectiveness:F1} sec" } };
+            _EffectText = new List<string> { "Charms an enemy with less health than you" };
+            _QualityEffectText[RuneQuality.Ancient] = new List<string> { "+100% Duration" };
+            _QualityEffectText[RuneQuality.Dark] = new List<string> { "+200% Duration" };
+            _RelativeStats = new Dictionary<string, Func<string>> { { "Duration", () => $"{baseDuration * _Effectiveness * ((int)_Quality+1) :F1} sec" } };
         }
 
         public override void DoMagicAttack(Attack baseAttack)
@@ -34,18 +36,21 @@ namespace Runestones.RuneEffects
             baseAttack.m_projectileVelMin = 50;
             baseAttack.m_attackHeight = 1.5f;
             baseAttack.m_attackRange = 1;
-            baseAttack.GetWeapon().m_shared.m_attackStatusEffect = ObjectDB.instance.GetStatusEffect("SE_Charm");
+            var duration = baseDuration * (1 + baseAttack.GetCharacter().GetSkillFactor(MagicSkill.MagicSkillDef.m_skill)) * (int)_Quality;
+            var charmEffect = ExtendedStatusEffect.Create<SE_Charm>();
+            charmEffect.m_ttl = duration;
+            baseAttack.GetWeapon().m_shared.m_attackStatusEffect = charmEffect;
             baseAttack.DoProjectileAttack();
             baseAttack.GetWeapon().m_shared.m_attackStatusEffect = null;
         }
 
-        public class SE_Charm : StatusEffect
+        public class SE_Charm : ExtendedStatusEffect
         {
             private Character.Faction originalFaction;
+            public RuneQuality runeQuality;
 
             public SE_Charm() : base()
             {
-                name = "SE_Charm";
                 m_name = "Charmed";
                 m_tooltip = "Charmed";
                 m_startMessage = "Charmed";
@@ -56,12 +61,6 @@ namespace Runestones.RuneEffects
                 var vfxPrefab = ZNetScene.instance.GetPrefab(charmStartVfxName);
                 m_startEffects.m_effectPrefabs = new EffectList.EffectData[] { new EffectList.EffectData { m_prefab = vfxPrefab, m_enabled = true, m_attach = true, m_scale = true } };
                 Debug.Log("Got charm vfx " + vfxPrefab.ToString());
-            }
-
-            public override void SetAttacker(Character attacker)
-            {
-                base.SetAttacker(attacker);
-                m_ttl = baseDuration * (1 + attacker.GetSkillFactor(MagicSkill.MagicSkillDef.m_skill));
             }
 
             public override void Setup(Character character)

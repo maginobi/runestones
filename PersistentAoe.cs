@@ -12,7 +12,7 @@ namespace Runestones
     {
         public abstract void OnHit(GameObject gameObject);
     }
-
+    
     [HarmonyPatch(typeof(Aoe), "OnHit", new Type[] { typeof(Collider), typeof(Vector3) })]
     public static class AoeOnHitMod
     {

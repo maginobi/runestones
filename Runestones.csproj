@@ -75,6 +75,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExtendedStatusEffect.cs" />
     <Compile Include="MagicSkill.cs" />
     <Compile Include="RuneDescriptions.cs" />
     <Compile Include="RuneEffects\DarknessRuneEffect.cs" />

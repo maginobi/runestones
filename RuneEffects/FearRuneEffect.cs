@@ -17,7 +17,7 @@ namespace Runestones.RuneEffects
         public FearRuneEffect()
         {
             _FlavorText = "This is a mandatory tactical retreat";
-            _EffectText = new List<string> { "Forces enemies to flee", "+30% move speed for fleeing enemies", "1m radius" };
+            _EffectText = new List<string> { "Forces enemies to flee", "+50% move speed for fleeing enemies", "1m radius" };
             _RelativeStats = new Dictionary<string, Func<string>> { { "Duration", () => $"{baseDuration * _Effectiveness:F1} sec" } };
         }
         public override void DoMagicAttack(Attack baseAttack)
@@ -73,7 +73,7 @@ namespace Runestones.RuneEffects
             {
                 name = "SE_Fear";
                 m_name = "Fear";
-                m_tooltip = "Fleeing at +30% move speed";
+                m_tooltip = "Fleeing at +50% move speed";
                 m_startMessage = "Fear overpowers you";
                 m_time = 0;
                 m_ttl = baseDuration;
@@ -90,7 +90,7 @@ namespace Runestones.RuneEffects
 
             override public void ModifySpeed(ref float speed)
             {
-                speed *= 1.3f;
+                speed *= 1.5f;
             }
         }
 

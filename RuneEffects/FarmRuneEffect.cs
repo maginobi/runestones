@@ -12,6 +12,7 @@ namespace Runestones.RuneEffects
     {
         const string aoeName = "shaman_heal_aoe";
         const float baseDuration = 300;
+        const float baseRadius = 4.3f;
         public FarmRuneEffect()
         {
             _FlavorText = "Agriculture is the foundation of civilization";
@@ -23,6 +24,7 @@ namespace Runestones.RuneEffects
         public override void DoMagicAttack(Attack baseAttack)
         {
             var aoePrefab = GameObject.Instantiate(ZNetScene.instance.GetPrefab(aoeName));
+            //vfx scaling not being applied properly
             if (_Quality == RuneQuality.Dark)
                 aoePrefab.transform.localScale = 2 * aoePrefab.transform.localScale;
             GameObject.Destroy(aoePrefab.GetComponent<Aoe>());
@@ -30,6 +32,7 @@ namespace Runestones.RuneEffects
             var aoe = aoePrefab.AddComponent<FarmAoe>();
             aoe.m_ttl = baseDuration * _Effectiveness * (_Quality == RuneQuality.Dark ? 2 : 1);
             aoe.m_accelerationFactor = _Quality == RuneQuality.Ancient ? 2 : 1;
+            aoe.m_radius = baseRadius * (_Quality == RuneQuality.Dark ? 2 : 1);
             var particles = aoePrefab.GetComponentInChildren<ParticleSystem>().main;
             particles.duration = 10/3f;
             particles.simulationSpeed = 1/3f;
