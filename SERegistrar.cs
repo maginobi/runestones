@@ -23,6 +23,13 @@ namespace Runestones
             ObjectDB.instance.m_StatusEffects.Add(ScriptableObject.CreateInstance<LightRuneEffect.SE_Light>());
             ObjectDB.instance.m_StatusEffects.Add(ScriptableObject.CreateInstance<DarknessRuneEffect.SE_DarknessStealth>());
             ObjectDB.instance.m_StatusEffects.Add(ScriptableObject.CreateInstance<DarknessRuneEffect.SE_DarknessStealthQuiet>());
+            ObjectDB.instance.m_StatusEffects.Add(ScriptableObject.CreateInstance<IndexRuneEffect.SE_Study>());
+            ObjectDB.instance.m_StatusEffects.Add(ScriptableObject.CreateInstance<IndexRuneEffect.SE_Scholar>());
+            Debug.Log("Status effects registered, listing all status effects:");
+            foreach(var statusEffect in ObjectDB.instance.m_StatusEffects)
+            {
+                Debug.Log(statusEffect.name);
+            }
         }
     }
 }

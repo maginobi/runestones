@@ -22,8 +22,8 @@ namespace Runestones.RuneEffects
         {
             _FlavorText = "Home is where ya put yer feet up";
             _EffectText = new List<string> { "Conjures a small lean-to" };
-            _QualityEffectText[RuneQuality.Ancient] = new List<string> { "Conjures a larger house" };
-            _QualityEffectText[RuneQuality.Dark] = new List<string> { "Conjures a furnished log cabin" };
+            _QualityEffectText[RuneQuality.Ancient] = new List<string> { "Conjures a larger house instead" };
+            _QualityEffectText[RuneQuality.Dark] = new List<string> { "Conjures a furnished log cabin instead" };
         }
 
         public override void DoMagicAttack(Attack baseAttack)

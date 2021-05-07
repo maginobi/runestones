@@ -17,7 +17,15 @@ namespace Runestones
             if (item.m_shared.m_itemType == ItemData.ItemType.Ammo && item.m_shared.m_ammoType == "rune")
             {
                 var runeEffect = RuneDB.Instance.GetRune(item.m_shared.m_name).Effect;
-                runeEffect._Effectiveness = 1 + Player.m_localPlayer.GetSkillFactor(MagicSkill.MagicSkillDef.m_skill);
+                float magicSkillFactor = Player.m_localPlayer.GetSkillFactor(MagicSkill.MagicSkillDef.m_skill);
+                foreach (var statusEffect in Player.m_localPlayer.GetSEMan().GetStatusEffects())
+                {
+                    if (statusEffect is RuneEffects.IndexRuneEffect.ISE_MagicBuff magicBuff)
+                    {
+                        magicBuff.ModifyMagic(ref magicSkillFactor);
+                    }
+                }
+                runeEffect._Effectiveness = 1 + magicSkillFactor;
                 StringBuilder builder = new StringBuilder(runeEffect.GetDescription());
                 builder.Append("\n");
                 if (item.m_crafterID != 0L)

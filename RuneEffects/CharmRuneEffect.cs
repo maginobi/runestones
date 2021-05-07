@@ -36,7 +36,7 @@ namespace Runestones.RuneEffects
             baseAttack.m_projectileVelMin = 50;
             baseAttack.m_attackHeight = 1.5f;
             baseAttack.m_attackRange = 1;
-            var duration = baseDuration * (1 + baseAttack.GetCharacter().GetSkillFactor(MagicSkill.MagicSkillDef.m_skill)) * (int)_Quality;
+            var duration = baseDuration * _Effectiveness * ((int)_Quality+1);
             var charmEffect = ExtendedStatusEffect.Create<SE_Charm>();
             charmEffect.m_ttl = duration;
             baseAttack.GetWeapon().m_shared.m_attackStatusEffect = charmEffect;

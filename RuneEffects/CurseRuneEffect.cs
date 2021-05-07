@@ -70,13 +70,6 @@ namespace Runestones.RuneEffects
                 var vfxPrefab = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == curseVfxName select prefab).FirstOrDefault();
                 m_startEffects.m_effectPrefabs = new EffectList.EffectData[] { new EffectList.EffectData { m_prefab = vfxPrefab, m_enabled = true, m_attach = true, m_scale = true } };
             }
-            public override void SetAttacker(Character attacker)
-            {
-                base.SetAttacker(attacker);
-                float effectiveness = (1 + attacker.GetSkillFactor(MagicSkill.MagicSkillDef.m_skill));
-                m_ttl = baseDuration * effectiveness;
-                m_damageModifier = baseDamageMod / effectiveness;
-            }
         }
     }
 }
