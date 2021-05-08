@@ -13,12 +13,15 @@ namespace Runestones.RuneEffects
         private const string vfxName = "vfx_blob_hit";
         public const float baseSpeedMod = 0.5f;
         public const float baseDuration = 30;
+        public const float darkSpeedMod = 0.1f;
         public SlowRuneEffect()
         {
             _FlavorText = "Stop and smell the roses";
             _EffectText = new List<string> { "Slows enemies", "1m radius" };
-            _RelativeStats = new Dictionary<string, Func<string>> { { "Slow", () => $"{1 - baseSpeedMod / _Effectiveness :P1}"},
-                                                                    { "Duration", () => $"{baseDuration * _Effectiveness :F1} sec" }};
+            _QualityEffectText[RuneQuality.Ancient] = new List<string> { "+200% Duration" };
+            _QualityEffectText[RuneQuality.Dark] = new List<string> { "+40% Slow (before spell effectiveness)" };
+            _RelativeStats = new Dictionary<string, Func<string>> { { "Slow", () => $"{1 - (_Quality==RuneQuality.Dark ? darkSpeedMod : baseSpeedMod) / _Effectiveness :P1}"},
+                                                                    { "Duration", () => $"{baseDuration * _Effectiveness * (_Quality==RuneQuality.Ancient ? 3 : 1) :F1} sec" }};
         }
         public override void DoMagicAttack(Attack baseAttack)
         {
@@ -26,18 +29,14 @@ namespace Runestones.RuneEffects
             Debug.Log($"fetched prefab {vfxPrefab.name}");
             var gameObject = GameObject.Instantiate(vfxPrefab);
             Debug.Log("vfx instantiated");
+
+            var statusEffect = ExtendedStatusEffect.Create<SE_Slow>();
+            statusEffect.m_ttl = baseDuration * _Effectiveness * (_Quality == RuneQuality.Ancient ? 3 : 1);
+            statusEffect.speedMod = (_Quality == RuneQuality.Dark ? darkSpeedMod : baseSpeedMod) / _Effectiveness;
+
             var aoe = gameObject.AddComponent<SlowAoe>();
-            typeof(Aoe).GetField("m_owner", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(aoe, baseAttack.GetCharacter());
-            Debug.Log($"Added aoe component {gameObject.GetComponent<SlowAoe>()}");
-            var propertyInfo = typeof(Aoe).GetField("m_owner", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-            if (propertyInfo != null)
-            {
-                propertyInfo.SetValue(gameObject.GetComponent<SlowAoe>(), baseAttack.GetCharacter());
-                Debug.Log($"Found field, new value: {propertyInfo.GetValue(gameObject.GetComponent<SlowAoe>())}");
-                Debug.Log($"Flags: {gameObject.GetComponent<SlowAoe>().m_hitOwner}, {gameObject.GetComponent<SlowAoe>().m_hitSame}, {gameObject.GetComponent<SlowAoe>().m_hitFriendly}");
-            }
-            else
-                Debug.Log("did not find owner property");
+            aoe.m_statusEffect = statusEffect.name;
+            
             var project = new MagicProjectile
             {
                 m_spawnOnHit = gameObject,
@@ -69,19 +68,27 @@ namespace Runestones.RuneEffects
             }
         };
 
-        public class SE_Slow : StatusEffect
+        public class SE_Slow : ExtendedStatusEffect
         {
-            float speedMod = baseSpeedMod;
+            public float speedMod = baseSpeedMod;
             public SE_Slow() : base()
             {
-                name = "SE_Slow";
                 m_name = "Slow";
-                m_tooltip = "-90% Speed";
                 m_startMessage = "Slowed";
                 m_time = 0;
                 m_ttl = baseDuration;
                 m_icon = (from Sprite s in Resources.FindObjectsOfTypeAll<Sprite>() where s.name == "CorpseRun" select s).FirstOrDefault();
+
+                var vfxPrefab = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == CurseRuneEffect.curseVfxName select prefab).FirstOrDefault();
+                m_startEffects.m_effectPrefabs = new EffectList.EffectData[] { new EffectList.EffectData { m_prefab = vfxPrefab, m_enabled = true, m_attach = true, m_scale = true } };
             }
+
+            public override string GetTooltipString()
+            {
+                return $"-{1-speedMod :P0} Speed";
+            }
+
+            /*
             public override void SetAttacker(Character attacker)
             {
                 base.SetAttacker(attacker);
@@ -89,6 +96,7 @@ namespace Runestones.RuneEffects
                 m_ttl = baseDuration * effectiveness;
                 speedMod = baseSpeedMod / effectiveness;
             }
+            */
 
             override public void ModifySpeed(ref float speed)
             {

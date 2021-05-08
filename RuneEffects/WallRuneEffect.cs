@@ -11,10 +11,13 @@ namespace Runestones.RuneEffects
     class WallRuneEffect : RuneEffect
     {
         private const string wallPieceName = "$piece_stakewall";
+        private List<string> pieceList = new List<string> { "$piece_woodwallhalf", "$piece_stakewall", "$piece_stonewall4x2" };
         public WallRuneEffect()
         {
             _FlavorText = "Keeps out your enemies";
-            _EffectText = new List<string> { "Conjures a stakewall" };
+            _EffectText = new List<string> { "Conjures a wall" };
+            _QualityEffectText[RuneQuality.Ancient] = new List<string> { "Conjures a stakewall instead" };
+            _QualityEffectText[RuneQuality.Dark] = new List<string> { "Conjures a stone wall instead" };
         }
 
         public override void DoMagicAttack(Attack baseAttack)
@@ -37,12 +40,12 @@ namespace Runestones.RuneEffects
 
                 //Select piece
                 int category = -1;
-                Vector2Int pieceIndex = pieceTable.GetPieceIndexVec(wallPieceName, ref category);
+                Vector2Int pieceIndex = pieceTable.GetPieceIndexVec(pieceList[(int)_Quality], ref category);
                 pieceTable.SetCategory(category);
                 pieceTable.SetSelected(pieceIndex);
 
                 //Set rotation
-                int rotation = (int)Math.Floor(player.GetLookYaw().eulerAngles.y/22.5);
+                int rotation = (int)Math.Floor(player.GetLookYaw().eulerAngles.y / 22.5);
                 typeof(Player).GetField("m_placeRotation", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(player, rotation);
 
                 //Place piece

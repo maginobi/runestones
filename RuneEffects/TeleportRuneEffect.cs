@@ -19,7 +19,9 @@ namespace Runestones.RuneEffects
         {
             _FlavorText = "Heimdallr guards the Bifrost, but you may pass";
             _EffectText = new List<string> { "Short-range teleport" };
-            _RelativeStats = new Dictionary<string, Func<string>> { { "Range", () => $"{baseRange * _Effectiveness:F1}m" } };
+            _QualityEffectText[RuneQuality.Ancient] = new List<string> { "+100% Range" };
+            _QualityEffectText[RuneQuality.Dark] = new List<string> { "+300% Range" };
+            _RelativeStats = new Dictionary<string, Func<string>> { { "Range", () => $"{baseRange * _Effectiveness * Math.Pow(2, (int)_Quality):F1}m" } };
         }
 
         public override void DoMagicAttack(Attack baseAttack)
@@ -31,10 +33,10 @@ namespace Runestones.RuneEffects
             {
                 m_spawnOnHit = vfxPrefab,
                 m_actionOnHit = this.TeleportTo,
-                m_range = baseRange * _Effectiveness,
+                m_range = baseRange * _Effectiveness * (float)Math.Pow(2, (int)_Quality),
                 m_launchAngle = 0,
-                m_attackSpread = 10,
-                m_hitType = Attack.HitPointType.Average
+                m_attackSpread = 0,
+                m_hitType = Attack.HitPointType.Closest
             };
             project.Cast(baseAttack.GetAttackOrigin(), baseAttack.BetterAttackDir());
         }

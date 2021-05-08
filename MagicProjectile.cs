@@ -12,6 +12,7 @@ namespace Runestones
     {
         public GameObject m_spawnOnHit = null;
         public Action<Vector3> m_actionOnHit = null;
+        public Action<Collider> m_actionOnHitCollider = null;
         public float m_range = 2;
         public float m_launchAngle = 0;
         public float m_attackSpread = 90; //spread angle in degrees; equivalent to Attack.m_attackAngle for horizontal attacks
@@ -65,6 +66,13 @@ namespace Runestones
             if (m_actionOnHit != null)
             {
                 m_actionOnHit(spawnLoc);
+            }
+            if (m_actionOnHitCollider != null)
+            {
+                foreach(var hitInfo in hits)
+                {
+                    m_actionOnHitCollider(hitInfo.collider);
+                }
             }
         }
 

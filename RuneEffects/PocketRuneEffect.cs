@@ -12,6 +12,8 @@ namespace Runestones.RuneEffects
         {
             _FlavorText = "The magician's coat is filled with hidden pockets";
             _EffectText = new List<string> { "Access extradimensional storage" };
+            _QualityEffectText[RuneQuality.Ancient] = new List<string> { "+100% Capacity" };
+            _QualityEffectText[RuneQuality.Dark] = new List<string> { "+200% Capacity" };
             _RelativeStats = new Dictionary<string, Func<string>> { { "Slots", () => $"{Math.Floor(baseWidth * _Effectiveness * ((int)_Quality+1))}" } };
         }
         public override void DoMagicAttack(Attack baseAttack)

@@ -18,14 +18,18 @@ namespace Runestones.RuneEffects
         {
             _FlavorText = "The earth shook whenever the venom fell on Loki's face";
             _EffectText = new List<string> { "Stagger enemies at range", "10m range", "5m radius", "Duration: 10 sec" };
-            _RelativeStats = new Dictionary<string, Func<string>> { { "Stagger Power", () => $"{baseStaggerDamage * _Effectiveness}" } };
+            _QualityEffectText[RuneQuality.Ancient] = new List<string> { "+300% Stagger Power" };
+            _QualityEffectText[RuneQuality.Dark] = new List<string> { "5 Bludgeoning damage per second" };
+            _RelativeStats = new Dictionary<string, Func<string>> { { "Stagger Power", () => $"{baseStaggerDamage * _Effectiveness * (_Quality==RuneQuality.Ancient ? 4 : 1) :F0}" } };
         }
         public override void DoMagicAttack(Attack baseAttack)
         {
             var vfxPrefab = ZNetScene.instance.GetPrefab(vfxName);
             var gameObject = GameObject.Instantiate(vfxPrefab);
             var aoe = (QuakeAoe)gameObject.AddComponent<QuakeAoe>();
-            aoe.staggerDamage = baseStaggerDamage * _Effectiveness;
+            aoe.staggerDamage = baseStaggerDamage * _Effectiveness * (_Quality == RuneQuality.Ancient ? 4 : 1);
+            if (_Quality == RuneQuality.Dark)
+                aoe.m_damage.m_blunt = 5 * aoe.m_hitInterval;
             gameObject.GetComponent<TimedDestruction>().m_timeout = 10;
             var particles = gameObject.GetComponent<ParticleSystem>().main;
             particles.loop = true;
