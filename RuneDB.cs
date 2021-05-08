@@ -84,8 +84,20 @@ namespace Runestones
                         new Dictionary < string, int > { { "Silver", 1 }, { "SurtlingCore", 1 }, { "FreezeGland", 1 }, { "Ooze", 1 } }
                     }
                 },
-            new Rune { Name = "Harden", _FixedEffect = new AlchemyRuneEffect(){ itemAName="$item_resin", itemAPrefabName="Resin", itemBName="$item_amber", itemBPrefabName="Amber", ratio=25, alertMessage="Hardened Resin=>Amber", reversible=false },
-                DiscoveryToken = "$lore_forest_random04", AssetIndex = 10, Reagents = new List < Dictionary < string, int > > { new Dictionary < string, int > { { "Stone", 20 }, { "GreydwarfEye", 3 } } } },
+            new Rune { Name = "Pyrolyze", _FixedEffect = new AlchemyRuneEffect(){
+                _EffectText = new List<string>{ "Makes items more flamable" },
+                conversionList = new List<AlchemyRuneEffect.Conversion> {
+                    new AlchemyRuneEffect.Conversion { itemAName="$item_wood", itemAPrefabName="Wood", itemBName="$item_resin", itemBPrefabName="Resin", ratio=1, reversible=false },
+                    new AlchemyRuneEffect.Conversion { itemAName="$item_wood", itemAPrefabName="Wood", itemBName="$item_coal", itemBPrefabName="Coal", ratio=3, reversible=false },
+                    new AlchemyRuneEffect.Conversion { itemAName="$item_iron", itemAPrefabName="Iron", itemBName="$item_flametal", itemBPrefabName="Flametal", ratio=3, reversible=false }
+                } },
+                DiscoveryToken = "$lore_forest_random04", AssetIndex = 10, Reagents =
+                    new List < Dictionary < string, int > > {
+                        new Dictionary < string, int > { { "SurtlingCore", 1 }, { "GreydwarfEye", 3 } },
+                        new Dictionary < string, int > { { "SurtlingCore", 1 }, { "GreydwarfEye", 6 } },
+                        new Dictionary < string, int > { { "SurtlingCore", 3 }, { "GreydwarfEye", 9 } }
+                    }
+                },
             new Rune { Name = "Cultivate", EffectClass = typeof(FarmRuneEffect), DiscoveryToken = "$lore_blackforest_random05", AssetIndex = 11, Reagents =
                     new List < Dictionary < string, int > > {
                         new Dictionary < string, int > { { "AncientSeed", 1 }, { "BeechSeeds", 10 } },
@@ -149,8 +161,20 @@ namespace Runestones
                         new Dictionary < string, int > { { "FreezeGland", 9 }, { "Needle", 3 } }
                     }
                 },
-            new Rune { Name = "Transmute", _FixedEffect = new AlchemyRuneEffect(){ itemAName="$item_tin", itemAPrefabName="Tin", itemBName="$item_copper", itemBPrefabName="Copper", ratio=2, alertMessage="Transmuted Copper/Tin", reversible=true },
-                DiscoveryToken = "$lore_mountains_random04", AssetIndex = 24, Reagents = new List < Dictionary < string, int > > { new Dictionary < string, int > { { "Coal", 10 }, { "GreydwarfEye", 3 } } } },
+            new Rune { Name = "Transmute", _FixedEffect = new AlchemyRuneEffect(){
+                _EffectText = new List<string>{ "Transmutes metals" },
+                conversionList = new List<AlchemyRuneEffect.Conversion> {
+                    new AlchemyRuneEffect.Conversion { itemAName="$item_tin", itemAPrefabName="Tin", itemBName="$item_copper", itemBPrefabName="Copper", ratio=2, reversible=true },
+                    new AlchemyRuneEffect.Conversion { itemAName="$item_gold", itemAPrefabName="Gold", itemBName="$item_silver", itemBPrefabName="Silver", ratio=100, reversible=true },
+                    new AlchemyRuneEffect.Conversion { itemAName="$item_flametal", itemAPrefabName="Flametal", itemBName="$item_blackmetal", itemBPrefabName="BlackMetal", ratio=3, reversible=true }
+                } },
+                DiscoveryToken = "$lore_mountains_random04", AssetIndex = 24, Reagents =
+                    new List < Dictionary < string, int > > {
+                        new Dictionary < string, int > { { "Coal", 10 }, { "FineWood", 5 } },
+                        new Dictionary < string, int > { { "Chitin", 5 }, { "Entrails", 3 } },
+                        new Dictionary < string, int > { { "DragonTear", 1 }, { "Crystal", 1 } }
+                    }
+                },
             new Rune { Name = "Heal", EffectClass = typeof(HealRuneEffect), DiscoveryToken = "$lore_mountains_random05", AssetIndex = 25, Reagents =
                     new List < Dictionary < string, int > > {
                         new Dictionary < string, int > { { "MeadHealthMinor", 3 }, { "Thistle", 3 } },
@@ -194,8 +218,20 @@ namespace Runestones
                         new Dictionary < string, int > { { "Honey", 10 }, { "SurtlingCore", 3 }, { "Bloodbag", 3 } }
                     }
                 },
-            new Rune { Name = "Pyrolyze", _FixedEffect = new AlchemyRuneEffect(){ itemAName="$item_wood", itemAPrefabName="Wood", itemBName="$item_coal", itemBPrefabName="Coal", ratio=4, alertMessage="Pyrolyzed Wood=>Coal", reversible=false },
-                DiscoveryToken = "$lore_plains_random04", AssetIndex = 31, Reagents = new List < Dictionary < string, int > > { new Dictionary < string, int > { { "SurtlingCore", 1 }, { "GreydwarfEye", 3 } } } },
+            new Rune { Name = "Harden", _FixedEffect = new AlchemyRuneEffect(){
+                _EffectText = new List<string>{ "Hardens items" },
+                conversionList = new List<AlchemyRuneEffect.Conversion> {
+                    new AlchemyRuneEffect.Conversion { itemAName="$item_resin", itemAPrefabName="Resin", itemBName="$item_amber", itemBPrefabName="Amber", ratio=25, reversible=false },
+                    new AlchemyRuneEffect.Conversion { itemAName="$item_copper", itemAPrefabName="Copper", itemBName="$item_bronze", itemBPrefabName="Bronze", ratio=4, reversible=false },
+                    new AlchemyRuneEffect.Conversion { itemAName="$item_silver", itemAPrefabName="Silver", itemBName="$item_iron", itemBPrefabName="Iron", ratio=2, reversible=false }
+                } },
+                DiscoveryToken = "$lore_plains_random04", AssetIndex = 31, Reagents =
+                    new List < Dictionary < string, int > > {
+                        new Dictionary < string, int > { { "Stone", 20 }, { "Thistle", 3 } },
+                        new Dictionary < string, int > { { "Flint", 15 }, { "Thistle", 3 } },
+                        new Dictionary < string, int > { { "Obsidian", 10 }, { "Thistle", 3 } }
+                    }
+                },
             new Rune { Name = "Ward", EffectClass = typeof(WardRuneEffect), DiscoveryToken = "$lore_plains_random05", AssetIndex = 32, Reagents =
                     new List < Dictionary < string, int > > {
                         new Dictionary < string, int > { { "FineWood", 10 }, { "GoblinTotem", 1 } },

@@ -5,14 +5,17 @@ namespace Runestones.RuneEffects
 {
     class AlchemyRuneEffect : RuneEffect
     {
-        public string itemAName = null;
-        public string itemBName = null;
-        public string itemAPrefabName = null;
-        public string itemBPrefabName = null;
+        public struct Conversion
+        {
+            public string itemAName;
+            public string itemBName;
+            public string itemAPrefabName;
+            public string itemBPrefabName;
+            public int ratio;
+            public bool reversible;
+        };
 
-        public string alertMessage = null;
-        public int ratio = 2;
-        public bool reversible = false;
+        public List<Conversion> conversionList;
 
         public AlchemyRuneEffect()
         {
@@ -21,28 +24,30 @@ namespace Runestones.RuneEffects
 
         public override string GetDescription()
         {
-            _EffectText = new List<string> { $"Converts {itemAPrefabName} {(reversible ? "<" : "" + "")}=> {itemBPrefabName} (ratio {ratio}:1)" };
+            var conv = conversionList[(int)_Quality];
+            _QualityEffectText[_Quality] = new List<string> { $"Converts {conv.itemAPrefabName} {(conv.reversible ? "<" : "" + "")}=> {conv.itemBPrefabName} (ratio {conv.ratio}:1)" };
             return base.GetDescription();
         }
 
         public override void DoMagicAttack(Attack baseAttack)
         {
+            var conv = conversionList[(int)_Quality];
             var inventory = baseAttack.GetCharacter().GetInventory();
             var itemACount = 0;
             var itemBCount = 0;
             foreach (var item in inventory.GetAllItems())
             {
-                if (item.m_shared.m_name == itemAName)
+                if (item.m_shared.m_name == conv.itemAName)
                     itemACount += item.m_stack;
-                else if (item.m_shared.m_name == itemBName && reversible)
+                else if (item.m_shared.m_name == conv.itemBName && conv.reversible)
                     itemBCount += item.m_stack;
             }
-            itemACount -= itemACount % ratio;
-            inventory.RemoveItems(itemAName, itemACount);
-            inventory.RemoveItems(itemBName, itemBCount);
-            inventory.AddItems(itemBName, itemBPrefabName, itemACount / ratio);
-            inventory.AddItems(itemAName, itemAPrefabName, itemBCount * ratio);
-            baseAttack.GetCharacter().Message(MessageHud.MessageType.Center, alertMessage);
+            itemACount -= itemACount % conv.ratio;
+            inventory.RemoveItems(conv.itemAName, itemACount);
+            inventory.RemoveItems(conv.itemBName, itemBCount);
+            inventory.AddItems(conv.itemBName, conv.itemBPrefabName, itemACount / conv.ratio);
+            inventory.AddItems(conv.itemAName, conv.itemAPrefabName, itemBCount * conv.ratio);
+            baseAttack.GetCharacter().Message(MessageHud.MessageType.Center, $"Converted {conv.itemAPrefabName} {(conv.reversible ? "<" : "" + "")}=> {conv.itemBPrefabName} (ratio {conv.ratio}:1)");
         }
 
     }
