@@ -10,7 +10,7 @@ namespace Runestones
     public class ExtendedStatusEffect : SE_Stats
     {
         private Guid Id;
-        private static Dictionary< Guid, HashSet<ExtendedStatusEffect> > instances;
+        private static Dictionary< Guid, HashSet<ExtendedStatusEffect> > instances = new Dictionary<Guid, HashSet<ExtendedStatusEffect>>();
         private static void Register(ExtendedStatusEffect statusEffect)
         {
             ObjectDB.instance.m_StatusEffects.Add(statusEffect);
@@ -19,6 +19,8 @@ namespace Runestones
         public static T Create<T>() where T : ExtendedStatusEffect, new()
         {
             var newId = Guid.NewGuid();
+            if(instances == null)
+                instances = new Dictionary<Guid, HashSet<ExtendedStatusEffect>>();
             instances[newId] = new HashSet<ExtendedStatusEffect>();
             var newSE = ScriptableObject.CreateInstance<T>();
             newSE.Id = newId;

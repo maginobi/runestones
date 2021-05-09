@@ -158,7 +158,7 @@ namespace Runestones
                                         
                     ObjectDB.instance.m_recipes.Add(rune.Recipe);
 
-                    Debug.Log($"Created Recipe for Rune {rune.GetToken()}");
+                    //Debug.Log($"Created Recipe for Rune {rune.GetToken()}");
                 }
                 catch (Exception e)
                 {
@@ -166,7 +166,7 @@ namespace Runestones
                     Debug.LogException(e);
                 }
             }
-            Debug.Log($"Loaded recipes for {RuneDB.Instance.AllRunes.FindAll(r => r.Recipe != null && r.Recipe.m_item != null).Count} / {RuneDB.Instance.AllRunes.Count} runes");
+            Debug.Log($"Loaded recipes for {RuneDB.Instance.AllRunes.FindAll(r => r.Recipe != null && r.Recipe.m_item != null && r.Recipe.m_enabled == true).Count} / {RuneDB.Instance.AllRunes.Count} runes");
         }
 
     }

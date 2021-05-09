@@ -12,24 +12,23 @@ namespace Runestones
     {
         public static void RegisterStatusEffects()
         {
-            ObjectDB.instance.m_StatusEffects.Add(ScriptableObject.CreateInstance<CurseRuneEffect.SE_Curse>());
             ObjectDB.instance.m_StatusEffects.Add(ScriptableObject.CreateInstance<FeatherRuneEffect.SE_Feather>());
             ObjectDB.instance.m_StatusEffects.Add(ScriptableObject.CreateInstance<FeatherRuneEffect.SE_Flight>());
             ObjectDB.instance.m_StatusEffects.Add(ScriptableObject.CreateInstance<AnimateRuneEffect.SE_Necromancer>());
             ObjectDB.instance.m_StatusEffects.Add(ScriptableObject.CreateInstance<ReviveRuneEffect.SE_Revivify>());
-            ObjectDB.instance.m_StatusEffects.Add(ScriptableObject.CreateInstance<SlowRuneEffect.SE_Slow>());
-            ObjectDB.instance.m_StatusEffects.Add(ScriptableObject.CreateInstance<SunderRuneEffect.SE_Sunder>());
             ObjectDB.instance.m_StatusEffects.Add(ScriptableObject.CreateInstance<FearRuneEffect.SE_Fear>());
             ObjectDB.instance.m_StatusEffects.Add(ScriptableObject.CreateInstance<LightRuneEffect.SE_Light>());
             ObjectDB.instance.m_StatusEffects.Add(ScriptableObject.CreateInstance<DarknessRuneEffect.SE_DarknessStealth>());
             ObjectDB.instance.m_StatusEffects.Add(ScriptableObject.CreateInstance<DarknessRuneEffect.SE_DarknessStealthQuiet>());
             ObjectDB.instance.m_StatusEffects.Add(ScriptableObject.CreateInstance<IndexRuneEffect.SE_Study>());
             ObjectDB.instance.m_StatusEffects.Add(ScriptableObject.CreateInstance<IndexRuneEffect.SE_Scholar>());
+            /*
             Debug.Log("Status effects registered, listing all status effects:");
             foreach(var statusEffect in ObjectDB.instance.m_StatusEffects)
             {
                 Debug.Log(statusEffect.name);
             }
+            */
         }
     }
 }

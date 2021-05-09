@@ -30,7 +30,7 @@ namespace Runestones
                     new List<Dictionary<string, int>>{
                         new Dictionary<string, int> { { "TrophyBoar", 2 } },
                         new Dictionary<string, int> { { "TrophyBoar", 5 }, { "Flint", 5 } },
-                        new Dictionary<string, int> { { "TrophyTroll", 1 }, { "Obsidian", 5 } }
+                        new Dictionary<string, int> { { "TrophyForestTroll", 1 }, { "Obsidian", 5 } }
                     }
                 },
             new Rune { Name = "Hearth", EffectClass = typeof(HearthRuneEffect), DiscoveryToken = "$lore_meadows_random01", AssetIndex = 1, Reagents =
@@ -225,7 +225,7 @@ namespace Runestones
             new Rune { Name = "Wall", EffectClass = typeof(WallRuneEffect), DiscoveryToken = "$lore_plains_random02", AssetIndex = 29, Reagents =
                     new List < Dictionary < string, int > > {
                         new Dictionary < string, int > { { "ShieldWood", 1 } },
-                        new Dictionary < string, int > { { "CoreWood", 5 }, { "ShieldBanded", 1 } },
+                        new Dictionary < string, int > { { "RoundLog", 5 }, { "ShieldBanded", 1 } },
                         new Dictionary < string, int > { { "Obsidian", 10 }, { "ShieldSilver", 1 } }
                     }
                 },
