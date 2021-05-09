@@ -131,7 +131,7 @@ namespace Runestones
             new Rune { Name = "Fear", EffectClass = typeof(FearRuneEffect), DiscoveryToken = "$lore_swamp_random03", AssetIndex = 16, Reagents =
                     new List < Dictionary < string, int > > {
                         new Dictionary < string, int > { { "TrophyBlob", 1 }, { "GreydwarfEye", 3 } },
-                        new Dictionary < string, int > { { "TrophyBlob", 1 }, { "TrophyDraugr", 1 } { "GreydwarfEye", 6 } },
+                        new Dictionary < string, int > { { "TrophyBlob", 1 }, { "TrophyDraugr", 1 }, { "GreydwarfEye", 6 } },
                         new Dictionary < string, int > { { "TrophyBonemass", 1 }, { "GreydwarfEye", 9 } }
                     }
                 }, //requires aoe
