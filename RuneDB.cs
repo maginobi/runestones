@@ -26,7 +26,13 @@ namespace Runestones
         public List<Rune> AllRunes = new List<Rune>
         {
             // Meadows runes
-            new Rune { Name = "Force", EffectClass = typeof(ForceRuneEffect), DiscoveryToken = "$lore_meadows_random06", AssetIndex = 0, Reagents = new List<Dictionary<string, int>>{ new Dictionary<string, int> { { "TrophyBoar", 2 } } } },
+            new Rune { Name = "Force", EffectClass = typeof(ForceRuneEffect), DiscoveryToken = "$lore_meadows_random06", AssetIndex = 0, Reagents =
+                    new List<Dictionary<string, int>>{
+                        new Dictionary<string, int> { { "TrophyBoar", 2 } },
+                        new Dictionary<string, int> { { "TrophyBoar", 5 }, { "Flint", 5 } },
+                        new Dictionary<string, int> { { "TrophyTroll", 1 }, { "Obsidian", 5 } }
+                    }
+                },
             new Rune { Name = "Hearth", EffectClass = typeof(HearthRuneEffect), DiscoveryToken = "$lore_meadows_random01", AssetIndex = 1, Reagents =
                     new List<Dictionary<string, int>>{
                         new Dictionary<string, int>{ { "Stone", 20 }, { "Wood", 15 } },
@@ -122,9 +128,21 @@ namespace Runestones
                     }
                 },
             new Rune { Name = "FinalPlaceHolder2", EffectClass = typeof(LightRuneEffect), DiscoveryToken = "$lore_swamp_random02", AssetIndex = 15,  Reagents = new List < Dictionary < string, int > > { new Dictionary < string, int > { { "Raspberry", 5 }, { "GreydwarfEye", 5 } } } },
-            new Rune { Name = "Fear", EffectClass = typeof(FearRuneEffect), DiscoveryToken = "$lore_swamp_random03", AssetIndex = 16, Reagents = new List < Dictionary < string, int > > { new Dictionary < string, int > { { "TrophyBlob", 1 }, { "GreydwarfEye", 3 } } } }, //requires aoe
+            new Rune { Name = "Fear", EffectClass = typeof(FearRuneEffect), DiscoveryToken = "$lore_swamp_random03", AssetIndex = 16, Reagents =
+                    new List < Dictionary < string, int > > {
+                        new Dictionary < string, int > { { "TrophyBlob", 1 }, { "GreydwarfEye", 3 } },
+                        new Dictionary < string, int > { { "TrophyBlob", 1 }, { "TrophyDraugr", 1 } { "GreydwarfEye", 6 } },
+                        new Dictionary < string, int > { { "TrophyBonemass", 1 }, { "GreydwarfEye", 9 } }
+                    }
+                }, //requires aoe
             new Rune { Name = "FinalPlaceHolder3", EffectClass = typeof(LightRuneEffect), DiscoveryToken = "$lore_swamp_random04", AssetIndex = 17,  Reagents = new List < Dictionary < string, int > > { new Dictionary < string, int > { { "Raspberry", 5 }, { "GreydwarfEye", 5 } } } },
-            new Rune { Name = "Revive", EffectClass = typeof(ReviveRuneEffect), DiscoveryToken = "$lore_swamp_random05", AssetIndex = 18, Reagents = new List < Dictionary < string, int > > { new Dictionary < string, int > { { "TrophyGreydwarfShaman", 1 } } } },
+            new Rune { Name = "Revive", EffectClass = typeof(ReviveRuneEffect), DiscoveryToken = "$lore_swamp_random05", AssetIndex = 18, Reagents =
+                    new List < Dictionary < string, int > > {
+                        new Dictionary < string, int > { { "TrophyGreydwarfShaman", 1 } },
+                        new Dictionary < string, int > { { "TrophyGreydwarfShaman", 1 }, { "AncientSeed", 3 } },
+                        new Dictionary < string, int > { { "TrophyTheElder", 1 }, { "AncientSeed", 6 } }
+                    }
+                },
             new Rune { Name = "Pocket", EffectClass = typeof(PocketRuneEffect), DiscoveryToken = "$lore_swamp_random06", AssetIndex = 19, Reagents =
                     new List < Dictionary < string, int > > {
                         new Dictionary < string, int > { { "FineWood", 10 }, { "GreydwarfEye", 3 } },

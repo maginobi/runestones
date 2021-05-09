@@ -3,77 +3,66 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using static HitData;
 
 namespace Runestones.RuneEffects
 {
     public class FearRuneEffect : RuneEffect
     {
-        private const string vfxName = "vfx_blob_hit";
+        public const string vfxName = "vfx_bow_fire";
+        public const float baseRange = 5;
+        public const float baseAngle = 25;
         public const float baseDuration = 30;
+        public const float baseSpeedMod = 1.5f;
+        public const float darkSpeedMod = 0.75f;
+        private float duration = baseDuration;
+        private float speedModifier = baseSpeedMod;
         public FearRuneEffect()
         {
             _FlavorText = "This is a mandatory tactical retreat";
-            _EffectText = new List<string> { "Forces enemies to flee", "+50% move speed for fleeing enemies", "1m radius" };
-            _RelativeStats = new Dictionary<string, Func<string>> { { "Duration", () => $"{baseDuration * _Effectiveness:F1} sec" } };
+            _EffectText = new List<string> { "Forces enemies to flee", "+50% move speed for fleeing enemies", "Cone: 5m, 25 degrees" };
+            _QualityEffectText[RuneQuality.Ancient] = new List<string> { "+100% Duration", "+100% Spread angle" };
+            _QualityEffectText[RuneQuality.Dark] = new List<string> { "Fleeing enemies get -25% move speed instead of +50%" };
+            _RelativeStats = new Dictionary<string, Func<string>> { { "Duration", () => $"{baseDuration * _Effectiveness * (_Quality==RuneQuality.Ancient ? 2 : 1):F1} sec" } };
         }
         public override void DoMagicAttack(Attack baseAttack)
         {
-            var vfxPrefab = ZNetScene.instance.GetPrefab(vfxName);
-            var gameObject = GameObject.Instantiate(vfxPrefab);
-            var aoe = gameObject.AddComponent<FearAoe>();
+            var castDir = baseAttack.BetterAttackDir();
+            duration = baseDuration * _Effectiveness * (_Quality == RuneQuality.Ancient ? 2 : 1);
+            speedModifier = _Quality == RuneQuality.Dark ? darkSpeedMod : baseSpeedMod;
 
-            var propertyInfo = typeof(Aoe).GetField("m_owner", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-            if (propertyInfo != null)
-            {
-                propertyInfo.SetValue(aoe, baseAttack.GetCharacter());
-                Debug.Log($"Found field, new value: {propertyInfo.GetValue(aoe)}");
-                Debug.Log($"Flags: {aoe.m_hitOwner}, {aoe.m_hitSame}, {aoe.m_hitFriendly}");
-            }
-            else
-                Debug.Log("did not find owner property");
+            var vfx = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == vfxName select prefab).FirstOrDefault();
+            GameObject.Instantiate(vfx, baseAttack.GetAttackOrigin().position, Quaternion.LookRotation(castDir));
 
             var project = new MagicProjectile
             {
-                m_spawnOnHit = gameObject,
-                m_range = 10,
-                m_launchAngle = 0,
-                m_attackSpread = 10,
-                m_hitType = Attack.HitPointType.Average
+                m_range = baseRange,
+                m_actionOnHitCollider = ApplyFear,
+                m_attackSpread = baseAngle * (_Quality == RuneQuality.Ancient ? 2 : 1)
             };
-            project.Cast(baseAttack.GetAttackOrigin(), baseAttack.BetterAttackDir());
+            project.Cast(baseAttack.GetAttackOrigin(), castDir);
         }
 
-
-        public class FearAoe : Aoe
+        public void ApplyFear(Collider collider)
         {
-            public FearAoe() : base()
+            var destructible = collider.gameObject.GetComponent<IDestructible>();
+            if (destructible is Character character)
             {
-                m_useAttackSettings = false;
-                m_dodgeable = true;
-                m_blockable = false;
-                m_statusEffect = "SE_Fear";
-                m_hitOwner = false;
-                m_hitSame = false;
-                m_hitFriendly = false;
-                m_hitEnemy = true;
-                m_skill = Skills.SkillType.None;
-                m_hitInterval = -1;
-                m_ttl = 1;
-                m_radius = 1;
+                var statusEffect = (SE_Fear)character.GetSEMan().AddStatusEffect("SE_Fear", true);
+                statusEffect.m_ttl = duration;
+                statusEffect.speedModifier = speedModifier;
             }
-        };
+        }
 
         public class SE_Fear : StatusEffect
         {
+            public float speedModifier = 1.5f;
+
             public SE_Fear() : base()
             {
                 name = "SE_Fear";
                 m_name = "Fear";
-                m_tooltip = "Fleeing at +50% move speed";
+                m_tooltip = "Fleeing";
                 m_startMessage = "Fear overpowers you";
                 m_time = 0;
                 m_ttl = baseDuration;
@@ -82,15 +71,10 @@ namespace Runestones.RuneEffects
                 var vfxPrefab = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == CurseRuneEffect.curseVfxName select prefab).FirstOrDefault();
                 m_startEffects.m_effectPrefabs = new EffectList.EffectData[] { new EffectList.EffectData { m_prefab = vfxPrefab, m_enabled = true, m_attach = true, m_scale = true } };
             }
-            public override void SetAttacker(Character attacker)
-            {
-                base.SetAttacker(attacker);
-                m_ttl = baseDuration * (1 + attacker.GetSkillFactor(MagicSkill.MagicSkillDef.m_skill));
-            }
 
             override public void ModifySpeed(ref float speed)
             {
-                speed *= 1.5f;
+                speed *= speedModifier;
             }
         }
 

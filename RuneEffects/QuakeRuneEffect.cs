@@ -13,7 +13,7 @@ namespace Runestones.RuneEffects
     public class QuakeRuneEffect : RuneEffect
     {
         private const string vfxName = "vfx_lox_groundslam";
-        private const float baseStaggerDamage = 50;
+        private const float baseStaggerDamage = 100;
         public QuakeRuneEffect()
         {
             _FlavorText = "The earth shook whenever the venom fell on Loki's face";

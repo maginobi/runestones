@@ -12,21 +12,28 @@ namespace Runestones.RuneEffects
     public class ReviveRuneEffect : RuneEffect
     {
         static Dictionary<Skills.SkillType, float> localLastDeathSkills = new Dictionary<Skills.SkillType, float>();
+        public const float baseDuration = 90;
         public ReviveRuneEffect()
         {
             _FlavorText = "He had such a knowledge of the Dark Side, he could even keep the ones he cared about from dying";
-            _EffectText = new List<string> { "After a recent death, restores 50% of skill knowledge lost and grants +75% movement speed" };
+            _EffectText = new List<string> { "After a recent death, restores 50% of skill levels lost and grants +75% movement speed" };
+            _QualityEffectText[RuneQuality.Ancient] = new List<string> { "Restores 100% of skill levels lost (progress to next skill level still resets)", "+100% Revivify duration" };
+            _QualityEffectText[RuneQuality.Dark] = new List<string> { "Restores 100% of skill levels lost (progress to next skill level still resets)", "Teleports you to your gravestone", "No Revivify buff" };
+            _RelativeStats = new Dictionary<string, Func<string>> { { "Revivify speed buff duration", () => _Quality==RuneQuality.Dark ? "N/A" : $"{baseDuration * _Effectiveness * (_Quality == RuneQuality.Ancient ? 2 : 1)}" } };
         }
         public override void DoMagicAttack(Attack baseAttack)
         {
             var player = (Player)baseAttack.GetCharacter();
+
+            //debug logging
+            Debug.Log("Revive rune triggered");
             if (player == Player.m_localPlayer)
                 Debug.Log("Caster is local player");
             else
                 Debug.Log("Caster not local player");
-            Debug.Log("Revive rune triggered");
             Debug.Log($"HardDeath: {typeof(Player).GetMethod("HardDeath", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(player, null)}");
             Debug.Log($"lastDeathDict: {localLastDeathSkills}");
+            
             if (!(bool)typeof(Player).GetMethod("HardDeath", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(player, null) && player == Player.m_localPlayer)
             {
                 var playerSkills = (Dictionary<Skills.SkillType, Skills.Skill>)typeof(Skills).GetField("m_skillData", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(player.GetSkills());
@@ -34,18 +41,28 @@ namespace Runestones.RuneEffects
                 {
                     Debug.Log($"difference between {keyValue.Value} and {playerSkills[keyValue.Key].m_level}");
                     float difference = keyValue.Value - playerSkills[keyValue.Key].m_level;
-                    playerSkills[keyValue.Key].m_level += difference / 2;
+                    playerSkills[keyValue.Key].m_level += difference * (_Quality==RuneQuality.Common ? 0.5f : 1);
+                    /*
                     if (((int)difference) % 2 != 0)
                         playerSkills[keyValue.Key].m_accumulator = (float)typeof(Skills).GetMethod("GetNextLevelRequirement", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(player.GetSkills(), null) / 2;
+                    */
                 }
                 typeof(Player).GetField("m_timeSinceDeath", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(player, 999999f);
                 Debug.Log($"time since death: {typeof(Player).GetField("m_timeSinceDeath", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(player)}");
-                player.GetSEMan().AddStatusEffect("SE_Revivify");
+                if (_Quality == RuneQuality.Dark)
+                {
+                    var deathPoint = Game.instance.GetPlayerProfile().GetDeathPoint();
+                    player.TeleportTo(deathPoint + Vector3.up, player.transform.rotation, true);
+                }
+                else
+                {
+                    var statusEffect = player.GetSEMan().AddStatusEffect("SE_Revivify");
+                    statusEffect.m_ttl = baseDuration * _Effectiveness * (_Quality == RuneQuality.Ancient ? 2 : 1);
+                }
             }
             else
             {
-                baseAttack.GetCharacter().Message(MessageHud.MessageType.Center, "Revive failed");
-                player.PickupPrefab(RuneDB.Instance.GetRune("$ReviveRune").prefab);
+                throw new Exception("Last death too long ago to revive from");
             }
         }
 
@@ -72,7 +89,7 @@ namespace Runestones.RuneEffects
                 m_tooltip = "+75% Speed";
                 m_startMessage = "Revivified";
                 m_time = 0;
-                m_ttl = 120;
+                m_ttl = baseDuration;
                 m_icon = (from Sprite s in Resources.FindObjectsOfTypeAll<Sprite>() where s.name == "CorpseRun" select s).FirstOrDefault();
             }
 
