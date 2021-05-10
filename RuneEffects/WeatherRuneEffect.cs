@@ -39,13 +39,17 @@ namespace Runestones.RuneEffects
         {
             var player = baseAttack.GetCharacter();
             var lookDir = (Quaternion)typeof(Character).GetField("m_lookYaw", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(player);
+            Debug.Log("Weather rune");
             Debug.Log($"Player facing: {lookDir.eulerAngles}");
+            Debug.Log($"Current environment: {EnvMan.instance.GetCurrentEnvironment().m_name}");
+            Debug.Log("All environments:");
+            Debug.Log($"{(from EnvSetup env in EnvMan.instance.m_environments select env.m_name).ToList()}");
             CancellationTokenSource.Cancel();
             EnvMan.instance.ResetDebugWind();
             EnvMan.instance.SetDebugWind(lookDir.eulerAngles.y, baseWindStrength * ((int)_Quality+1));
             if (_Quality == RuneQuality.Ancient)
             {
-                EnvMan.instance.SetForceEnvironment("");
+                EnvMan.instance.SetForceEnvironment("Clear");
             }
             if (_Quality == RuneQuality.Dark)
             {

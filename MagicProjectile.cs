@@ -18,7 +18,7 @@ namespace Runestones
         public float m_attackSpread = 90; //spread angle in degrees; equivalent to Attack.m_attackAngle for horizontal attacks
         public Vector3 m_attackOffset = Vector3.up * 1.5f; //1.5m approx human height
         public Attack.HitPointType m_hitType = Attack.HitPointType.Average;
-        const float degInterval = 4;
+        public float degInterval = 4;
 
         public GameObject InstantiatedObject;
 
@@ -33,10 +33,9 @@ namespace Runestones
             for (float angle = startAngle; angle <= startAngle + m_attackSpread; angle += degInterval)
             {
                 Vector3 currentDir = origin.TransformDirection(Quaternion.Euler(m_launchAngle, angle, 0) * localSpaceDir);
-                RaycastHit hitInfo;
-                Physics.Raycast(attackOrigin, currentDir, out hitInfo, m_range, mask, QueryTriggerInteraction.Ignore);
-                Debug.Log($"cast from {attackOrigin} in direction {currentDir}");
-                hits.Add(hitInfo);
+                Physics.Raycast(attackOrigin, currentDir, out RaycastHit hitInfo, m_range, mask, QueryTriggerInteraction.Ignore);
+                if(hitInfo.collider)
+                    hits.Add(hitInfo);
             }
 
             Vector3 spawnLoc = origin.position;
@@ -71,7 +70,8 @@ namespace Runestones
             {
                 foreach(var hitInfo in hits)
                 {
-                    m_actionOnHitCollider(hitInfo.collider);
+                    if (hitInfo.collider)
+                        m_actionOnHitCollider(hitInfo.collider);
                 }
             }
         }

@@ -21,7 +21,7 @@ namespace Runestones.RuneEffects
             _EffectText = new List<string> { "Knocks back enemies", "Cone: 5m, 25 degrees" };
             _QualityEffectText[RuneQuality.Ancient] = new List<string> { "+100% Range", "+100% Spread angle" };
             _QualityEffectText[RuneQuality.Dark] = new List<string> { "+200% Force" };
-            _RelativeStats = new Dictionary<string, Func<string>> { { "Force", () => $"{baseForce * _Effectiveness * (_Quality==RuneQuality.Dark ? 3 : 1)}" } };
+            _RelativeStats = new Dictionary<string, Func<string>> { { "Force", () => $"{baseForce * _Effectiveness * (_Quality==RuneQuality.Dark ? 3 : 1) :F0}" } };
         }
         public override void DoMagicAttack(Attack baseAttack)
         {
@@ -35,7 +35,8 @@ namespace Runestones.RuneEffects
             {
                 m_range = baseRange * (_Quality==RuneQuality.Ancient ? 2 : 1),
                 m_actionOnHitCollider = DoPushback,
-                m_attackSpread = baseAngle * (_Quality == RuneQuality.Ancient ? 2 : 1)
+                m_attackSpread = baseAngle * (_Quality == RuneQuality.Ancient ? 2 : 1),
+                degInterval = 2
             };
             project.Cast(baseAttack.GetAttackOrigin(), castDir);
         }

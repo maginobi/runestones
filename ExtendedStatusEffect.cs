@@ -25,13 +25,15 @@ namespace Runestones
             var newSE = ScriptableObject.CreateInstance<T>();
             newSE.Id = newId;
             newSE.name = "SEext_"+ newId.ToString();
+            instances[newId].Add(newSE);
             Register(newSE);
             return newSE;
         }
 
         public void Awake()
         {
-            instances[Id].Add(this);
+            if(Id != null)
+                instances[Id].Add(this);
         }
 
         public override void OnDestroy()
