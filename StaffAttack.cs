@@ -100,9 +100,9 @@ namespace Runestones
         [HarmonyPatch(typeof(Attack), "Start")]
         public static class AttackOverride
         {
-            public static void Postfix(Attack __instance)
+            public static void Postfix(Attack __instance, bool __result)
             {
-                if (__instance.GetWeapon().m_shared.m_ammoType == "rune")
+                if (__result && __instance.GetWeapon().m_shared.m_ammoType == "rune")
                 {
                     DoMagicAttack(__instance);
                 }
