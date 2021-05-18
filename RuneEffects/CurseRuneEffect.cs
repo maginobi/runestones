@@ -31,11 +31,11 @@ namespace Runestones.RuneEffects
             var gameObject = GameObject.Instantiate(vfxPrefab);
             var aoe = gameObject.AddComponent<Aoe>();
 
-            var curseEffect = ExtendedStatusEffect.Create<SE_Curse>();
+            var curseEffect = ScriptableObject.CreateInstance<SE_Curse>();
             curseEffect.m_ttl = baseDuration * _Effectiveness * (_Quality == RuneQuality.Ancient ? 2 : 1);
             curseEffect.m_damageModifier = baseDamageMod / _Effectiveness / (_Quality == RuneQuality.Dark ? 2 : 1);
 
-            aoe.m_statusEffect = curseEffect.name;
+            aoe.m_statusEffect = curseEffect.Serialize();
             aoe.m_ttl = 1;
             aoe.m_radius = 1;
             typeof(Aoe).GetField("m_owner", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(aoe, baseAttack.GetCharacter());
@@ -51,7 +51,7 @@ namespace Runestones.RuneEffects
             project.Cast(baseAttack.GetAttackOrigin(), baseAttack.BetterAttackDir());
         }
 
-        public class SE_Curse : ExtendedStatusEffect
+        public class SE_Curse : RuneStatusEffect
         {
             public SE_Curse() : base()
             {

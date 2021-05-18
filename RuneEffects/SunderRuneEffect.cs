@@ -27,7 +27,7 @@ namespace Runestones.RuneEffects
             var gameObject = GameObject.Instantiate(vfxPrefab);
             var aoe = gameObject.AddComponent<SunderAoe>();
 
-            var statusEffect = ExtendedStatusEffect.Create<SE_Sunder>();
+            var statusEffect = ScriptableObject.CreateInstance<SE_Sunder>();
             statusEffect.m_ttl = baseDuration * _Effectiveness;
             switch(_Quality)
             {
@@ -42,7 +42,7 @@ namespace Runestones.RuneEffects
                     statusEffect.modifyElemental = true;
                     break;
             }
-            aoe.m_statusEffect = statusEffect.name;
+            aoe.m_statusEffect = statusEffect.Serialize();
 
             var propertyInfo = typeof(Aoe).GetField("m_owner", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
             if (propertyInfo != null)
@@ -84,7 +84,7 @@ namespace Runestones.RuneEffects
             }
         };
 
-        public class SE_Sunder : ExtendedStatusEffect
+        public class SE_Sunder : RuneStatusEffect
         {
             public bool modifyElemental = false;
             public DamageModifier targetDamageModifier = DamageModifier.Normal;

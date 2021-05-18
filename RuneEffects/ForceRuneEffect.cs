@@ -31,12 +31,11 @@ namespace Runestones.RuneEffects
             var vfx = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == vfxName select prefab).FirstOrDefault();
             GameObject.Instantiate(vfx, baseAttack.GetAttackOrigin().position, Quaternion.LookRotation(castDir));
             
-            var project = new MagicProjectile
+            var project = new ConeVolumeProjectile
             {
                 m_range = baseRange * (_Quality==RuneQuality.Ancient ? 2 : 1),
                 m_actionOnHitCollider = DoPushback,
-                m_attackSpread = baseAngle * (_Quality == RuneQuality.Ancient ? 2 : 1),
-                degInterval = 2
+                m_attackSpread = baseAngle * (_Quality == RuneQuality.Ancient ? 2 : 1)
             };
             project.Cast(baseAttack.GetAttackOrigin(), castDir);
         }

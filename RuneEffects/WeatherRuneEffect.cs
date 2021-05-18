@@ -54,7 +54,7 @@ namespace Runestones.RuneEffects
             if (_Quality == RuneQuality.Dark)
             {
                 EnvMan.instance.SetForceEnvironment("ThunderStorm");
-                var project = new MagicProjectile
+                var project = new ConeVolumeProjectile
                 {
                     m_actionOnHitCollider = DoLightningDamage,
                     m_attackSpread = 25,

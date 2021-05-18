@@ -22,7 +22,7 @@ namespace Runestones.RuneEffects
             _EffectText = new List<string> { "Creates a powerful ward", "Bars all monsters from entering", "2.5m radius" };
             _QualityEffectText[RuneQuality.Ancient] = new List<string> { "+300% Duration" };
             _QualityEffectText[RuneQuality.Dark] = new List<string> { "15m radius" };
-            _RelativeStats = new Dictionary<string, Func<string>> { { "Duration", () => $"{baseDuration * _Effectiveness * (_Quality==RuneQuality.Ancient ? 4 : 1)} sec" } };
+            _RelativeStats = new Dictionary<string, Func<string>> { { "Duration", () => $"{baseDuration * _Effectiveness * (_Quality==RuneQuality.Ancient ? 4 : 1) :F1} sec" } };
         }
 
         public override void DoMagicAttack(Attack baseAttack)

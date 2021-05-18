@@ -30,12 +30,12 @@ namespace Runestones.RuneEffects
             var gameObject = GameObject.Instantiate(vfxPrefab);
             Debug.Log("vfx instantiated");
 
-            var statusEffect = ExtendedStatusEffect.Create<SE_Slow>();
+            var statusEffect = ScriptableObject.CreateInstance<SE_Slow>();
             statusEffect.m_ttl = baseDuration * _Effectiveness * (_Quality == RuneQuality.Ancient ? 3 : 1);
             statusEffect.speedMod = (_Quality == RuneQuality.Dark ? darkSpeedMod : baseSpeedMod) / _Effectiveness;
 
             var aoe = gameObject.AddComponent<SlowAoe>();
-            aoe.m_statusEffect = statusEffect.name;
+            aoe.m_statusEffect = statusEffect.Serialize();
             
             var project = new MagicProjectile
             {
@@ -68,11 +68,12 @@ namespace Runestones.RuneEffects
             }
         };
 
-        public class SE_Slow : ExtendedStatusEffect
+        public class SE_Slow : RuneStatusEffect
         {
             public float speedMod = baseSpeedMod;
             public SE_Slow() : base()
             {
+                name = "SE_Slow";
                 m_name = "Slow";
                 m_startMessage = "Slowed";
                 m_time = 0;

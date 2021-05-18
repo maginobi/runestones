@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Runestones.RuneEffects
 {
-    class CharmRuneEffect : RuneEffect
+    public class CharmRuneEffect : RuneEffect
     {
         const string projectileName = "projectile_beam";
         const string charmStartVfxName = "vfx_boar_love";
@@ -37,17 +37,17 @@ namespace Runestones.RuneEffects
             baseAttack.m_attackHeight = 1.5f;
             baseAttack.m_attackRange = 1;
             var duration = baseDuration * _Effectiveness * ((int)_Quality+1);
-            var charmEffect = ExtendedStatusEffect.Create<SE_Charm>();
+            var charmEffect = ScriptableObject.CreateInstance<SE_Charm>();
             charmEffect.m_ttl = duration;
+            charmEffect.name = charmEffect.Serialize();
             baseAttack.GetWeapon().m_shared.m_attackStatusEffect = charmEffect;
             baseAttack.DoProjectileAttack();
             baseAttack.GetWeapon().m_shared.m_attackStatusEffect = null;
         }
 
-        public class SE_Charm : ExtendedStatusEffect
+        public class SE_Charm : RuneStatusEffect
         {
             private Character.Faction originalFaction;
-            public RuneQuality runeQuality;
 
             public SE_Charm() : base()
             {
