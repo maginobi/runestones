@@ -47,30 +47,36 @@ namespace Runestones.RuneEffects
         [HarmonyPatch(typeof(Projectile), "Setup")]
         public static class TimberProjectileSetupPatch
         {
-            public static void Postfix(Projectile __instance, ref HitData hitData)
+            public static void Prefix(Projectile __instance, ref HitData hitData)
             {
                 // Do not modify the timber projectile hit data based on weapon data
-                if (__instance.name == customProjectileName)
+                if (__instance.name.Contains(customProjectileName))
+                {
                     hitData = null;
+                }
             }
         }
 
         [HarmonyPatch(typeof(Projectile), "OnHit")]
         public static class TimberProjectileHitPatch
         {
-            public static void Prefix(Projectile __instance, ref Collider collider, Vector3 hitPoint)
+            public static bool Prefix(Projectile __instance, ref Collider collider, Vector3 hitPoint)
             {
-                if (__instance.name == customProjectileName)
+                if (__instance.name.Contains(customProjectileName))
                 {
                     GameObject gameObject = (collider ? Projectile.FindHitObject(collider) : null);
                     IDestructible destructible = (gameObject ? gameObject.GetComponent<IDestructible>() : null);
                     if (destructible != null)
                     {
+                        bool hitCharacter = false;
+                        bool hitValid = (bool)typeof(Projectile).GetMethod("IsValidTarget", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(__instance, new object[] { destructible, hitCharacter });
+                        if (!hitValid)
+                            return true;
                         HitData hitData = new HitData();
                         hitData.m_hitCollider = collider;
-                        hitData.m_damage = __instance.m_damage;
+                        hitData.m_damage = __instance.m_damage.Clone();
                         hitData.m_toolTier = __instance.m_damage.m_chop == darkChopDamage ? 2 : 0;
-                        if (!(destructible is Character character && treelikeCreatures.Contains(character.m_name)))
+                        if ((destructible is Character character) && !treelikeCreatures.Contains(character.m_name))
                         {
                             hitData.m_damage.m_pierce = 0;
                         }
@@ -81,12 +87,21 @@ namespace Runestones.RuneEffects
                         hitData.m_dodgeable = true;
                         hitData.m_blockable = true;
                         hitData.m_skill = MagicSkill.MagicSkillDef.m_skill;
-                        hitData.SetAttacker((Character)typeof(Projectile).GetField("m_owner", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy).GetValue(__instance));
+                        var owner = (Character)typeof(Projectile).GetField("m_owner", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy).GetValue(__instance);
+                        hitData.SetAttacker(owner);
                         destructible.Damage(hitData);
-                        __instance.m_damage.m_chop = 0;
-                        __instance.m_damage.m_pierce = 0;
+
+                        __instance.m_hitEffects.Create(hitPoint, Quaternion.identity);
+                        if (__instance.m_hitNoise > 0f)
+                        {
+                            BaseAI.DoProjectileHitNoise(__instance.transform.position, __instance.m_hitNoise, owner);
+                        }
+                        ((ZNetView)typeof(Projectile).GetField("m_nview", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy).GetValue(__instance)).InvokeRPC("OnHit");
+                        ZNetScene.instance.Destroy(__instance.gameObject);
+                        return false;
                     }
                 }
+                return true;
             }
         }
     }
