@@ -20,7 +20,9 @@ namespace Runestones.RuneEffects
         
         public override void DoMagicAttack(Attack baseAttack)
         {
-            var effect = baseAttack.GetCharacter().GetSEMan().AddStatusEffect("SE_Runestones_Light");
+            var effect = baseAttack.GetCharacter().GetSEMan().AddStatusEffect("SE_Runestones_Light", true);
+            if (effect == null)
+                effect = baseAttack.GetCharacter().GetSEMan().GetStatusEffect("SE_Runestones_Light");
             effect.m_ttl = baseDuration * _Effectiveness;
             effect.SetAttacker(baseAttack.GetCharacter());
             ((SE_Light)effect).SetQuality(_Quality);
@@ -94,8 +96,6 @@ namespace Runestones.RuneEffects
                 m_icon = Sprite.Create((from Texture2D s in Resources.FindObjectsOfTypeAll<Texture2D>() where s.name == "bam2" select s).FirstOrDefault(), new Rect(0,0,256,256), new Vector2());
                 Debug.Log($"light status effect icon: {m_icon}");
                 m_startEffects = new EffectList();
-
-                m_startEffects.m_effectPrefabs = new EffectList.EffectData[] { new EffectList.EffectData { m_prefab = ConstructGameObject(), m_enabled = true, m_attach = true } };
 
                 m_stealthModifier = 1f;
             }

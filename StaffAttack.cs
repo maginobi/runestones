@@ -91,6 +91,7 @@ namespace Runestones
                         {
                             baseAttack.GetCharacter().PickupPrefab(RuneDB.Instance.GetRune(runeName).prefab);
                             baseAttack.GetCharacter().Message(MessageHud.MessageType.TopLeft, ex.Message);
+                            Debug.LogWarning(ex);
                         }
                     }
                 }

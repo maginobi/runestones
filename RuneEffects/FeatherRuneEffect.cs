@@ -30,22 +30,23 @@ namespace Runestones.RuneEffects
 
         public override void DoMagicAttack(Attack baseAttack)
         {
+            StatusEffect effect;
+            string effectName;
             if (_Quality == RuneQuality.Dark)
-            {
-                var effect = baseAttack.GetCharacter().GetSEMan().AddStatusEffect("SE_Flight");
-                effect.m_ttl = baseDuration * _Effectiveness * (1 + (int)_Quality);
-            }
+                effectName = "SE_Flight";
             else
-            {
-                var effect = (SE_Feather)baseAttack.GetCharacter().GetSEMan().AddStatusEffect("SE_Feather"); //Use code like this to add status effects to the player
-                effect.m_ttl = baseDuration * _Effectiveness * (1 + (int)_Quality);
-                effect._Quality = _Quality;
-            }
+                effectName = "SE_Feather";
+            effect = baseAttack.GetCharacter().GetSEMan().AddStatusEffect(effectName, true);
+            if (effect == null)
+                effect = baseAttack.GetCharacter().GetSEMan().GetStatusEffect(effectName);
+            effect.m_ttl = baseDuration * _Effectiveness * (1 + (int)_Quality);
+            if (_Quality == RuneQuality.Ancient)
+                ((SE_Feather)effect).glide = true;
         }
 
         public class SE_Feather : StatusEffect
         {
-            public RuneQuality _Quality = RuneQuality.Common;
+            public bool glide = false;
             public SE_Feather() : base()
             {
                 name = "SE_Feather";
@@ -63,11 +64,11 @@ namespace Runestones.RuneEffects
 
             public void ModifyFall(ref Vector3 velocity, float dt)
             {
-                if (_Quality == RuneQuality.Common && velocity.y < maxFallSpeed)
+                if (!glide && velocity.y < maxFallSpeed)
                 {
                     velocity.y = maxFallSpeed;
                 }
-                else if (_Quality == RuneQuality.Ancient && velocity.y < glideMaxFallSpeed)
+                else if (glide && velocity.y < glideMaxFallSpeed)
                 {
                     velocity.y = glideMaxFallSpeed;
                     var moveDir = new Vector3(velocity.x, 0, velocity.z);
