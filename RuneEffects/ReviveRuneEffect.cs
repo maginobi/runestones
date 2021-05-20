@@ -57,7 +57,8 @@ namespace Runestones.RuneEffects
                 else
                 {
                     var statusEffect = player.GetSEMan().AddStatusEffect("SE_Revivify");
-                    statusEffect.m_ttl = baseDuration * _Effectiveness * (_Quality == RuneQuality.Ancient ? 2 : 1);
+                    if (statusEffect != null)
+                        statusEffect.m_ttl = baseDuration * _Effectiveness * (_Quality == RuneQuality.Ancient ? 2 : 1);
                 }
             }
             else
