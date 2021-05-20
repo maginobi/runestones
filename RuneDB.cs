@@ -92,6 +92,7 @@ namespace Runestones
                 },
             new Rune { Name = "Pyrolyze", _FixedEffect = new AlchemyRuneEffect(){
                 _EffectText = new List<string>{ "Makes items more flamable" },
+                _FlavorText = "The alchemic prime of sulphur governs combustion and the fire of the soul",
                 conversionList = new List<AlchemyRuneEffect.Conversion> {
                     new AlchemyRuneEffect.Conversion { itemAName="$item_wood", itemAPrefabName="Wood", itemBName="$item_resin", itemBPrefabName="Resin", ratio=1, reversible=false },
                     new AlchemyRuneEffect.Conversion { itemAName="$item_wood", itemAPrefabName="Wood", itemBName="$item_coal", itemBPrefabName="Coal", ratio=3, reversible=false },
@@ -181,9 +182,10 @@ namespace Runestones
                 },
             new Rune { Name = "Transmute", _FixedEffect = new AlchemyRuneEffect(){
                 _EffectText = new List<string>{ "Transmutes metals" },
+                _FlavorText = "The alchemic prime of mercury governs transformation and the fluidity of the mind",
                 conversionList = new List<AlchemyRuneEffect.Conversion> {
                     new AlchemyRuneEffect.Conversion { itemAName="$item_tin", itemAPrefabName="Tin", itemBName="$item_copper", itemBPrefabName="Copper", ratio=2, reversible=true },
-                    new AlchemyRuneEffect.Conversion { itemAName="$item_gold", itemAPrefabName="Gold", itemBName="$item_silver", itemBPrefabName="Silver", ratio=100, reversible=true },
+                    new AlchemyRuneEffect.Conversion { itemAName="$item_coins", itemAPrefabName="Coins", itemBName="$item_silver", itemBPrefabName="Silver", ratio=100, reversible=true },
                     new AlchemyRuneEffect.Conversion { itemAName="$item_flametal", itemAPrefabName="Flametal", itemBName="$item_blackmetal", itemBPrefabName="BlackMetal", ratio=3, reversible=true }
                 } },
                 DiscoveryToken = "$lore_mountains_random04", AssetIndex = 24, Reagents =
@@ -238,6 +240,7 @@ namespace Runestones
                 },
             new Rune { Name = "Harden", _FixedEffect = new AlchemyRuneEffect(){
                 _EffectText = new List<string>{ "Hardens items" },
+                _FlavorText = "The alchemic prime of salt governs fixation and the strength of the body",
                 conversionList = new List<AlchemyRuneEffect.Conversion> {
                     new AlchemyRuneEffect.Conversion { itemAName="$item_resin", itemAPrefabName="Resin", itemBName="$item_amber", itemBPrefabName="Amber", ratio=25, reversible=false },
                     new AlchemyRuneEffect.Conversion { itemAName="$item_copper", itemAPrefabName="Copper", itemBName="$item_bronze", itemBPrefabName="Bronze", ratio=4, reversible=false },

@@ -43,8 +43,8 @@ namespace Runestones.RuneEffects
                     itemBCount += item.m_stack;
             }
             itemACount -= itemACount % conv.ratio;
-            inventory.RemoveItems(conv.itemAName, itemACount);
-            inventory.RemoveItems(conv.itemBName, itemBCount);
+            inventory.RemoveItem(conv.itemAName, itemACount);
+            inventory.RemoveItem(conv.itemBName, itemBCount);
             inventory.AddItems(conv.itemBName, conv.itemBPrefabName, itemACount / conv.ratio);
             inventory.AddItems(conv.itemAName, conv.itemAPrefabName, itemBCount * conv.ratio);
             baseAttack.GetCharacter().Message(MessageHud.MessageType.Center, $"Converted {conv.itemAPrefabName} {(conv.reversible ? "<" : "" + "")}=> {conv.itemBPrefabName} (ratio {conv.ratio}:1)");

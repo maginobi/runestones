@@ -23,14 +23,13 @@ namespace Runestones
         {
             get
             {
+                RuneEffect result;
                 if (_FixedEffect != null)
-                    return _FixedEffect;
+                    result = _FixedEffect;
                 else
-                {
-                    RuneEffect result = (RuneEffect)EffectClass.GetConstructor(Type.EmptyTypes).Invoke(Type.EmptyTypes);
-                    result._Quality = Quality;
-                    return result;
-                }
+                    result = (RuneEffect)EffectClass.GetConstructor(Type.EmptyTypes).Invoke(Type.EmptyTypes);
+                result._Quality = Quality;
+                return result;
             }
         }
         public List<Dictionary<string, int>> Reagents;

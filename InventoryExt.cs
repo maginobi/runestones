@@ -6,32 +6,6 @@ namespace Runestones
 {
     public static class InventoryExt
     {
-        public static void RemoveItems(this Inventory inventory, string itemName, int amount)
-        {
-            for (int i = 0; i < inventory.GetAllItems().Count; i++)
-            {
-                if (inventory.GetItem(i).m_shared.m_name == itemName && amount > 0)
-                {
-                    var stackSize = inventory.GetItem(i).m_stack;
-                    if (amount - stackSize >= 0)
-                    {
-                        amount -= stackSize;
-                        inventory.RemoveItem(i);
-                        i--;
-                    }
-                    else
-                    {
-                        inventory.GetItem(i).m_stack -= amount;
-                        amount = 0;
-                    }
-                }
-                else
-                {
-                    return;
-                }
-            }
-        }
-
         public static void AddItems(this Inventory inventory, string itemName, string prefabName, int amount)
         {
             while (amount > 0)
