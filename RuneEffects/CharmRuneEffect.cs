@@ -12,6 +12,7 @@ namespace Runestones.RuneEffects
     {
         const string projectileName = "projectile_beam";
         const string charmStartVfxName = "vfx_boar_love";
+        const string charmContinueVfxName = "vfx_creature_soothed";
         const float baseDuration = 30;
         public CharmRuneEffect()
         {
@@ -59,9 +60,14 @@ namespace Runestones.RuneEffects
                 m_ttl = baseDuration;
                 m_icon = (from Sprite s in Resources.FindObjectsOfTypeAll<Sprite>() where s.name == "CorpseRun" select s).FirstOrDefault();
 
-                var vfxPrefab = ZNetScene.instance.GetPrefab(charmStartVfxName);
-                m_startEffects.m_effectPrefabs = new EffectList.EffectData[] { new EffectList.EffectData { m_prefab = vfxPrefab, m_enabled = true, m_attach = true, m_scale = true } };
-                Debug.Log("Got charm vfx " + vfxPrefab.ToString());
+                var StartVfxPrefab = ZNetScene.instance.GetPrefab(charmStartVfxName);
+                var ContinueVfxPrefab = GameObject.Instantiate(ZNetScene.instance.GetPrefab(charmContinueVfxName));
+                DestroyImmediate(ContinueVfxPrefab.GetComponentInChildren<TimedDestruction>());
+                var particles = ContinueVfxPrefab.GetComponentInChildren<ParticleSystem>().main;
+                particles.loop = true;
+                particles.duration = 1;
+                m_startEffects.m_effectPrefabs = new EffectList.EffectData[] { new EffectList.EffectData { m_prefab = StartVfxPrefab, m_enabled = true, m_attach = true, m_scale = true },
+                                                                                new EffectList.EffectData { m_prefab = ContinueVfxPrefab, m_enabled = true, m_attach = true, m_scale = true } };
             }
 
             public override void Setup(Character character)

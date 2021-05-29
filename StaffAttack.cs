@@ -64,9 +64,9 @@ namespace Runestones
         public static void DoMagicAttack(Attack baseAttack)
         {
             Debug.Log("Staff attack triggered");
-            if (baseAttack.UseAmmo())
+            var anim = baseAttack.GetCharacter().gameObject.GetComponent<CastingAnimations>();
+            if (!anim.IsLocked && baseAttack.UseAmmo())
             {
-                Debug.Log("Reflected UseAmmo method returned true");
                 var runeName = baseAttack.GetAmmoItem()?.m_shared?.m_name;
                 Rune rune = RuneDB.Instance.GetRune(runeName);
                 if (rune != null)
@@ -84,7 +84,6 @@ namespace Runestones
                     
                     runeAttack.Precast(baseAttack);
 
-                    var anim = baseAttack.GetCharacter().gameObject.GetComponent<CastingAnimations>();
                     anim.OnComplete = () => CompleteMagicAttack(baseAttack, runeAttack, runeName);
                     anim.Play(runeAttack.speed);
                 }

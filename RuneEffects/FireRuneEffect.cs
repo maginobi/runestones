@@ -15,7 +15,7 @@ namespace Runestones.RuneEffects
         const float baseRadius = 1;
         public override CastingAnimations.CastSpeed speed { get {
                 if (_Quality == RuneQuality.Dark)
-                    return CastingAnimations.CastSpeed.Slow;
+                    return CastingAnimations.CastSpeed.Super;
                 else
                     return CastingAnimations.CastSpeed.Fast;
             } set => base.speed = value; }

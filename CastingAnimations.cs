@@ -12,33 +12,44 @@ namespace Runestones
             Instant,
             Fast,
             Medium,
-            Slow
+            Slow,
+            Super
         }
 
         public static Dictionary<CastSpeed, string> SpeedAnimations = new Dictionary<CastSpeed, string>
         {
-            { CastSpeed.Instant, "bow_fire" },
+            { CastSpeed.Instant, "knife_slash0" },
             { CastSpeed.Fast, "Standing 1H Magic Attack 01" }, //1H, directional; also note CastFireball for longer 1H directional
             { CastSpeed.Medium, "Standing 1H Magic Attack 03" }, //1H, vertical; also note Standing 1H Cast Spell 01 for less dramatic 1H vertical
-            { CastSpeed.Slow, "Standing 2H Magic Attack 04" } //2H, directional, long; CastFireball similar length
+            { CastSpeed.Slow, "ProtectiveSpell" }, //2H, long; 'CastFireball' similar length. //Check out 'Standing 2H Magic Attack 04' for this as well
+            { CastSpeed.Super, "CastFireball" }
         };
-
+        /*
         public static Dictionary<CastSpeed, float> FrameRateAdjustments = new Dictionary<CastSpeed, float>
         {
             { CastSpeed.Instant, 1 },
             { CastSpeed.Fast, 1 },
-            { CastSpeed.Medium, 4 },
-            { CastSpeed.Slow, 1 }
+            { CastSpeed.Medium, 1 },
+            { CastSpeed.Slow, 1 },
+            { CastSpeed.Super, 1 }
         };
+        */
 
         public const string overrideAnimName = "Cheer";
         public const string overrideAnimTrigger = "emote_cheer";
         public const string overrideAnimTriggerStop = "emote_stop";
 
+        public const float instantSpellDelay = 0.05f;
+        public float lastCastTime = -1;
+
         public System.Action OnComplete { get; set; }
+        public bool IsLocked { get => Time.time - lastCastTime <= instantSpellDelay; }
 
         public void Play(CastSpeed speed)
         {
+            // Lock this component on a delay
+            lastCastTime = Time.time;
+
             // Get animator reference
             var animator = gameObject.GetComponentInChildren<Animator>();
 
@@ -63,12 +74,8 @@ namespace Runestones
             overrideController[overrideAnimName] = animation;
             animator.runtimeAnimatorController = overrideController;
             animator.SetTrigger(overrideAnimTrigger);
-            Invoke("FinishAnim", animation.length);
-            
-            // Reset the animator to original settings (perhaps after a delay)
-            //animator.runtimeAnimatorController = originalController;
-            //overrideController[overrideAnimName] = originalAnimation;
-            //GameObject.Destroy(overrideController);
+            Debug.Log("animation trigger set, playing animation");
+            Invoke("FinishAnim", Mathf.Max(animation?.length ?? 0, instantSpellDelay));
         }
 
         public void FinishAnim()

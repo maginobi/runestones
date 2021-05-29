@@ -55,6 +55,7 @@ namespace Runestones.RuneEffects
             {
                 Debug.Log("Unable to find light component");
             }
+            GameObject.DestroyImmediate(modifiedEffectPrefab.transform.Find("flame/smoke (1)").gameObject);
 
             var numLights = 3f;
             var radius = (quality == RuneQuality.Ancient ? 3f : 1.5f);
@@ -63,7 +64,7 @@ namespace Runestones.RuneEffects
                 var angle = (i / numLights) * 2*Math.PI;
                 var go = GameObject.Instantiate(modifiedEffectPrefab);
                 // Must destroy smoke here; doesn't successfully destroy if destroyed on modifiedEffectPrefab
-                GameObject.Destroy(go.transform.Find("flame/smoke (1)").gameObject);
+                //GameObject.Destroy(go.transform.Find("flame/smoke (1)").gameObject);
                 go.transform.SetParent(result.transform);
                 go.transform.localPosition = new Vector3((float)(radius * Math.Cos(angle)), 0, (float)(radius * Math.Sin(angle)));
             }

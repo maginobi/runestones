@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using UnityEngine;
 
 namespace Runestones.RuneEffects
 {
     class AlchemyRuneEffect : RuneEffect
     {
+        public const string vfxPrefabName = "vfx_bonfire_AddFuel";
+
         public struct Conversion
         {
             public string itemAName;
@@ -48,6 +51,8 @@ namespace Runestones.RuneEffects
             inventory.RemoveItem(conv.itemBName, itemBCount);
             inventory.AddItems(conv.itemBName, conv.itemBPrefabName, itemACount / conv.ratio);
             inventory.AddItems(conv.itemAName, conv.itemAPrefabName, itemBCount * conv.ratio);
+            var vfxPrefab = ZNetScene.instance.GetPrefab(vfxPrefabName);
+            GameObject.Instantiate(vfxPrefab, baseAttack.GetCharacter().transform.position, Quaternion.identity);
             baseAttack.GetCharacter().Message(MessageHud.MessageType.Center, $"Converted {conv.itemAPrefabName} {(conv.reversible ? "<" : "" + "")}=> {conv.itemBPrefabName} (ratio {conv.ratio}:1)");
         }
 
