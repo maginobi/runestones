@@ -22,6 +22,7 @@ namespace Runestones.RuneEffects
             _QualityEffectText[RuneQuality.Dark] = new List<string> { "+40% Slow (before spell effectiveness)" };
             _RelativeStats = new Dictionary<string, Func<string>> { { "Slow", () => $"{1 - (_Quality==RuneQuality.Dark ? darkSpeedMod : baseSpeedMod) / _Effectiveness :P1}"},
                                                                     { "Duration", () => $"{baseDuration * _Effectiveness * (_Quality==RuneQuality.Ancient ? 3 : 1) :F1} sec" }};
+            targetLock = true;
         }
         public override void DoMagicAttack(Attack baseAttack)
         {
@@ -36,17 +37,8 @@ namespace Runestones.RuneEffects
 
             var aoe = gameObject.AddComponent<SlowAoe>();
             aoe.m_statusEffect = statusEffect.Serialize();
-            
-            var project = new MagicProjectile
-            {
-                m_spawnOnHit = gameObject,
-                m_range = 10,
-                m_launchAngle = 0,
-                m_attackSpread = 10,
-                m_hitType = Attack.HitPointType.Average
-            };
 
-            project.Cast(baseAttack.GetAttackOrigin(), baseAttack.BetterAttackDir());
+            GameObject.Instantiate(gameObject, targetLocation, Quaternion.identity);
         }
 
 

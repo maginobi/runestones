@@ -20,6 +20,7 @@ namespace Runestones.RuneEffects
             _QualityEffectText[RuneQuality.Ancient] = new List<string> { "+200% Duration" };
             _QualityEffectText[RuneQuality.Dark] = new List<string> { "Summons a Draugr instead" };
             _RelativeStats = new Dictionary<string, Func<string>> { { "Duration", ()=>$"{baseBaseDuration*_Effectiveness * (_Quality==RuneQuality.Ancient ? 3 : 1) :F1} sec" } };
+            speed = CastingAnimations.CastSpeed.Medium;
         }
 
         public override void DoMagicAttack(Attack baseAttack)

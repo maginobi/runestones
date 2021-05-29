@@ -20,6 +20,7 @@ namespace Runestones.RuneEffects
             _QualityEffectText[RuneQuality.Ancient] = new List<string> { "Makes enemies weak to physical damage instead" };
             _QualityEffectText[RuneQuality.Dark] = new List<string> { "Makes enemies very weak to elemental damage instead" };
             _RelativeStats = new Dictionary<string, Func<string>> { { "Duration", () => $"{baseDuration * _Effectiveness :F1} sec" } };
+            targetLock = true;
         }
         public override void DoMagicAttack(Attack baseAttack)
         {
@@ -54,15 +55,7 @@ namespace Runestones.RuneEffects
             else
                 Debug.Log("did not find owner property");
 
-            var project = new MagicProjectile
-            {
-                m_spawnOnHit = gameObject,
-                m_range = 10,
-                m_launchAngle = 0,
-                m_attackSpread = 10,
-                m_hitType = Attack.HitPointType.Average
-            };
-            project.Cast(baseAttack.GetAttackOrigin(), baseAttack.BetterAttackDir());
+            GameObject.Instantiate(gameObject, targetLocation, Quaternion.identity);
         }
 
 

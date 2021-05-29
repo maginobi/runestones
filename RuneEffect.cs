@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using UnityEngine;
 
 namespace Runestones
 {
@@ -12,6 +13,9 @@ namespace Runestones
         public List<string> _EffectText = new List<string>();
         public Dictionary<RuneQuality, List<string>> _QualityEffectText = new Dictionary<RuneQuality, List<string>>();
         public Dictionary<string, Func<string>> _RelativeStats;
+        public bool targetLock = false;
+        public Vector3 targetLocation;
+        public virtual CastingAnimations.CastSpeed speed { get; set; } = CastingAnimations.CastSpeed.Fast;
         public virtual string GetDescription()
         {
             StringBuilder builder = new StringBuilder();
@@ -58,5 +62,20 @@ namespace Runestones
             return builder.ToString();
         }
         public abstract void DoMagicAttack(Attack baseAttack);
+
+        public virtual void Precast(Attack baseAttack)
+        {
+            if (targetLock)
+            {
+                var project = new MagicProjectile
+                {
+                    m_actionOnHit = hitLoc => targetLocation = hitLoc,
+                    m_range = 10,
+                    m_launchAngle = 0,
+                    m_attackSpread = 0
+                };
+                project.Cast(baseAttack.GetAttackOrigin(), baseAttack.BetterAttackDir());
+            }
+        }
     }
 }

@@ -20,6 +20,7 @@ namespace Runestones.RuneEffects
         public AlchemyRuneEffect()
         {
             _FlavorText = "Is this really an equivalent exchange?";
+            speed = CastingAnimations.CastSpeed.Slow;
         }
 
         public override string GetDescription()

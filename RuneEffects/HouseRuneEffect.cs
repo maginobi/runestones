@@ -18,12 +18,22 @@ namespace Runestones.RuneEffects
         private const float bedDisplacement = 4;
         private const string magicBedDesc = "magic_bed";
         private const float magicBedExposureAllowed = 0.65f;
+        private Vector3 originLocation;
+        private Vector3 originForward;
         public HouseRuneEffect()
         {
             _FlavorText = "Home is where ya put yer feet up";
             _EffectText = new List<string> { "Conjures a small lean-to" };
             _QualityEffectText[RuneQuality.Ancient] = new List<string> { "Conjures a larger house instead" };
             _QualityEffectText[RuneQuality.Dark] = new List<string> { "Conjures a furnished log cabin instead" };
+            targetLock = true;
+            speed = CastingAnimations.CastSpeed.Slow;
+        }
+
+        public override void Precast(Attack baseAttack)
+        {
+            originLocation = baseAttack.GetCharacter().transform.position;
+            originForward = baseAttack.GetCharacter().transform.forward;
         }
 
         public override void DoMagicAttack(Attack baseAttack)
@@ -68,8 +78,8 @@ namespace Runestones.RuneEffects
         public void CommonEffect(Player player)
         {
             //Spawn location structure
-            var pos = player.transform.position;
-            var rot = player.GetLookYaw() * Quaternion.Euler(0, 90, 0);
+            var pos = originLocation;
+            var rot = Quaternion.LookRotation(originForward) * Quaternion.Euler(0, 90, 0);
             var getLocationMethods = typeof(ZoneSystem).GetMethods(BindingFlags.NonPublic | BindingFlags.Instance);
             var method = (from MethodInfo m in getLocationMethods where m.Name == "GetLocation" && m.GetParameters().Any(param => param.ParameterType == typeof(string)) select m).FirstOrDefault();
             if (method == null)
@@ -123,16 +133,19 @@ namespace Runestones.RuneEffects
             var torch1Pos = new Vector2(-4, 1.75f);
             var torch2Pos = new Vector2(-4, -1.75f);
             Debug.Log($"Prefab: {housePrefab}");
-            var housePos = player.transform.position + player.transform.forward * 7.5f;
+            var housePos = originLocation + originForward * 7.5f;
+            var rotation = Quaternion.LookRotation(originForward);
+            var forwardDir = originForward;
+            var rightDir = originForward; //rotate 90 deg
             var quat90 = Quaternion.Euler(0, -90, 0);
             var quat180 = Quaternion.Euler(0, -180, 0);
-            GameObject.Instantiate(housePrefab, housePos, player.transform.rotation * quat180 * quat90);
-            GameObject.Instantiate(flattenPrefab, housePos, player.transform.rotation * quat180 * quat90);
+            GameObject.Instantiate(housePrefab, housePos, rotation * quat180 * quat90);
+            GameObject.Instantiate(flattenPrefab, housePos, rotation * quat180 * quat90);
 
-            GameObject.Instantiate(bedPrefab, housePos + player.transform.forward * bedPos.x + player.transform.right * bedPos.y, player.transform.rotation * quat180);
-            GameObject.Instantiate(workbenchPrefab, housePos + player.transform.forward * benchPos.x + player.transform.right * benchPos.y, player.transform.rotation * quat180 * quat90);
-            GameObject.Instantiate(torchPrefab, housePos + player.transform.forward * torch1Pos.x + player.transform.right * torch1Pos.y + player.transform.up, player.transform.rotation);
-            GameObject.Instantiate(torchPrefab, housePos + player.transform.forward * torch2Pos.x + player.transform.right * torch2Pos.y + player.transform.up, player.transform.rotation);
+            GameObject.Instantiate(bedPrefab, housePos + forwardDir * bedPos.x + rightDir * bedPos.y, rotation * quat180);
+            GameObject.Instantiate(workbenchPrefab, housePos + forwardDir * benchPos.x + rightDir * benchPos.y, rotation * quat180 * quat90);
+            GameObject.Instantiate(torchPrefab, housePos + forwardDir * torch1Pos.x + rightDir * torch1Pos.y + player.transform.up, rotation);
+            GameObject.Instantiate(torchPrefab, housePos + forwardDir * torch2Pos.x + rightDir * torch2Pos.y + player.transform.up, rotation);
         }
 
         public void DarkEffect(Player player)
@@ -145,13 +158,16 @@ namespace Runestones.RuneEffects
             var benchPos = new Vector2(-3, -4);
             var chestPos = new Vector2(1.9f, 1.75f);
             Debug.Log($"Prefab: {cabinPrefab}");
-            var cabinPos = player.transform.position + player.transform.forward * 7.5f;
+            var cabinPos = originLocation + originForward * 7.5f;
+            var rotation = Quaternion.LookRotation(originForward);
+            var forwardDir = originForward;
+            var rightDir = originForward; //rotate 90 deg
             var quat90 = Quaternion.Euler(0, -90, 0);
             var quat180 = Quaternion.Euler(0, -180, 0);
-            var cabinObj = GameObject.Instantiate(cabinPrefab, cabinPos, player.transform.rotation * quat90);
-            GameObject.Instantiate(bedPrefab, cabinPos + player.transform.forward * bedPos.x + player.transform.right * bedPos.y, player.transform.rotation * quat180);
-            GameObject.Instantiate(workbenchPrefab, cabinPos + player.transform.forward * benchPos.x + player.transform.right * benchPos.y, player.transform.rotation * quat180 * quat90);
-            GameObject.Instantiate(chestPrefab, cabinPos + player.transform.forward * chestPos.x + player.transform.right * chestPos.y, player.transform.rotation * quat180);
+            var cabinObj = GameObject.Instantiate(cabinPrefab, cabinPos, rotation * quat90);
+            GameObject.Instantiate(bedPrefab, cabinPos + forwardDir * bedPos.x + rightDir * bedPos.y, rotation * quat180);
+            GameObject.Instantiate(workbenchPrefab, cabinPos + forwardDir * benchPos.x + rightDir * benchPos.y, rotation * quat180 * quat90);
+            GameObject.Instantiate(chestPrefab, cabinPos + forwardDir * chestPos.x + rightDir * chestPos.y, rotation * quat180);
         }
 
         [HarmonyPatch(typeof(Bed), "CheckExposure")]

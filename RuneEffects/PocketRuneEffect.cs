@@ -15,6 +15,7 @@ namespace Runestones.RuneEffects
             _QualityEffectText[RuneQuality.Ancient] = new List<string> { "+100% Capacity" };
             _QualityEffectText[RuneQuality.Dark] = new List<string> { "+200% Capacity" };
             _RelativeStats = new Dictionary<string, Func<string>> { { "Slots", () => $"{Math.Floor(baseWidth * _Effectiveness) * ((int)_Quality+1)}" } };
+            speed = CastingAnimations.CastSpeed.Instant;
         }
         public override void DoMagicAttack(Attack baseAttack)
         {

@@ -20,6 +20,8 @@ namespace Runestones.RuneEffects
             _QualityEffectText[RuneQuality.Ancient] = new List<string> { "+100% more growth speed (stacks additively)" };
             _QualityEffectText[RuneQuality.Dark] = new List<string> { "+100% radius", "+100% Duration" };
             _RelativeStats = new Dictionary<string, Func<string>> { { "Duration", () => $"{baseDuration * _Effectiveness * (_Quality == RuneQuality.Dark ? 2 : 1) :F0} sec" } };
+            targetLock = true;
+            speed = CastingAnimations.CastSpeed.Slow;
         }
         public override void DoMagicAttack(Attack baseAttack)
         {
@@ -40,17 +42,8 @@ namespace Runestones.RuneEffects
 
             aoePrefab.GetComponent<ZNetView>().SetPersistent(true);
 
-            var project = new MagicProjectile
-            {
-                m_spawnOnHit = aoePrefab,
-                m_range = 10,
-                m_launchAngle = 0,
-                m_attackSpread = 10,
-                m_hitType = Attack.HitPointType.Closest
-            };
-            var origin = baseAttack.GetAttackOrigin();
-            Debug.Log($"origin direction: {origin.forward} attack direction: {baseAttack.GetCharacter().GetAimDir(origin.position)} better attack dir: {baseAttack.BetterAttackDir()}");
-            project.Cast(origin, baseAttack.BetterAttackDir());
+            GameObject.Instantiate(aoePrefab, targetLocation, Quaternion.identity);
+            
         }
         public class FarmAoe : PersistentAoe
         {

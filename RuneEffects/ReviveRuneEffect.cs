@@ -20,6 +20,7 @@ namespace Runestones.RuneEffects
             _QualityEffectText[RuneQuality.Ancient] = new List<string> { "Restores 100% of skill levels lost (progress to next skill level still resets)", "+100% Revivify duration" };
             _QualityEffectText[RuneQuality.Dark] = new List<string> { "Restores 100% of skill levels lost (progress to next skill level still resets)", "Teleports you to your gravestone", "No Revivify buff" };
             _RelativeStats = new Dictionary<string, Func<string>> { { "Revivify speed buff duration", () => _Quality==RuneQuality.Dark ? "N/A" : $"{baseDuration * _Effectiveness * (_Quality == RuneQuality.Ancient ? 2 : 1)}" } };
+            speed = CastingAnimations.CastSpeed.Medium;
         }
         public override void DoMagicAttack(Attack baseAttack)
         {

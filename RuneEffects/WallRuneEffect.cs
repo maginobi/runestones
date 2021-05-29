@@ -18,6 +18,7 @@ namespace Runestones.RuneEffects
             _EffectText = new List<string> { "Conjures a wall" };
             _QualityEffectText[RuneQuality.Ancient] = new List<string> { "Conjures a stakewall instead" };
             _QualityEffectText[RuneQuality.Dark] = new List<string> { "Conjures a stone wall instead" };
+            speed = CastingAnimations.CastSpeed.Medium;
         }
 
         public override void DoMagicAttack(Attack baseAttack)

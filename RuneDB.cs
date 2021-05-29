@@ -289,6 +289,8 @@ namespace Runestones
 
         public Rune GetRune(string runeName)
         {
+            if (runeName == null)
+                return null;
             RunesByName.TryGetValue(runeName, out Rune r);
             return r;
         }

@@ -23,6 +23,7 @@ namespace Runestones.RuneEffects
             _QualityEffectText[RuneQuality.Ancient] = new List<string> { "+300% Duration" };
             _QualityEffectText[RuneQuality.Dark] = new List<string> { "15m radius" };
             _RelativeStats = new Dictionary<string, Func<string>> { { "Duration", () => $"{baseDuration * _Effectiveness * (_Quality==RuneQuality.Ancient ? 4 : 1) :F1} sec" } };
+            speed = CastingAnimations.CastSpeed.Medium;
         }
 
         public override void DoMagicAttack(Attack baseAttack)

@@ -21,6 +21,8 @@ namespace Runestones.RuneEffects
             _QualityEffectText[RuneQuality.Ancient] = new List<string> { "+300% Stagger Power" };
             _QualityEffectText[RuneQuality.Dark] = new List<string> { "5 Bludgeoning damage per second" };
             _RelativeStats = new Dictionary<string, Func<string>> { { "Stagger Power", () => $"{baseStaggerDamage * _Effectiveness * (_Quality==RuneQuality.Ancient ? 4 : 1) :F0}" } };
+            targetLock = true;
+            speed = CastingAnimations.CastSpeed.Medium;
         }
         public override void DoMagicAttack(Attack baseAttack)
         {
@@ -45,15 +47,7 @@ namespace Runestones.RuneEffects
             else
                 Debug.Log("did not find owner property");
 
-            var project = new MagicProjectile
-            {
-                m_spawnOnHit = gameObject,
-                m_range = 10,
-                m_launchAngle = 0,
-                m_attackSpread = 10,
-                m_hitType = Attack.HitPointType.Average
-            };
-            project.Cast(baseAttack.GetAttackOrigin(), baseAttack.BetterAttackDir());
+            GameObject.Instantiate(gameObject, targetLocation, Quaternion.identity);
         }
 
         public class QuakeAoe : PersistentAoe

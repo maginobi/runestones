@@ -26,6 +26,7 @@ namespace Runestones.RuneEffects
             _QualityEffectText[RuneQuality.Ancient] = new List<string> { "Gliding", "+100% Duration" };
             _QualityEffectText[RuneQuality.Dark] = new List<string> { "True flight", "+200% Duration" };
             _RelativeStats = new Dictionary<string, Func<string>> { { "Duration", () => $"{baseDuration * _Effectiveness * (1 + (int)_Quality):F1} sec" } };
+            speed = CastingAnimations.CastSpeed.Instant;
         }
 
         public override void DoMagicAttack(Attack baseAttack)

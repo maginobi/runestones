@@ -76,6 +76,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CastingAnimations.cs" />
     <Compile Include="RuneStatusEffect.cs" />
     <Compile Include="ExtendedStatusEffect.cs" />
     <Compile Include="ConeVolumeProjectile.cs" />

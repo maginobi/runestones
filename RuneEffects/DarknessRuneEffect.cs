@@ -24,6 +24,7 @@ namespace Runestones.RuneEffects
             _QualityEffectText[RuneQuality.Dark] = new List<string> { "Your footsteps now make the sound of silence" };
             _RelativeStats = new Dictionary<string, Func<string>> { { "Stealth Buff", () => $"+{-(baseStealth * _Effectiveness) :P1}"},
                                                                     { "Duration", () => $"{baseDuration * _Effectiveness * (_Quality==RuneQuality.Ancient ? 2 : 1) :F1} sec" } };
+            speed = CastingAnimations.CastSpeed.Medium;
         }
 
         public override void DoMagicAttack(Attack baseAttack)

@@ -18,6 +18,7 @@ namespace Runestones.RuneEffects
             _EffectText = new List<string> { "Summons a swarm of angry bees, bee careful", "Generates a Queen Bee item"};
             _QualityEffectText[RuneQuality.Ancient] = new List<string> { "-50% Damage" };
             _QualityEffectText[RuneQuality.Dark] = new List<string> { "Summon bees at targeted location instead of on self", "10m range" };
+            targetLock = true;
         }
         public override void DoMagicAttack(Attack baseAttack)
         {
@@ -26,16 +27,7 @@ namespace Runestones.RuneEffects
             GameObject aoe;
             if (_Quality == RuneQuality.Dark)
             {
-                var project = new MagicProjectile
-                {
-                    m_spawnOnHit = aoePrefab,
-                    m_range = 10,
-                    m_launchAngle = 0,
-                    m_attackSpread = 0,
-                    m_hitType = Attack.HitPointType.Average
-                };
-                project.Cast(baseAttack.GetAttackOrigin(), baseAttack.BetterAttackDir());
-                aoe = project.InstantiatedObject;
+                aoe = GameObject.Instantiate(aoePrefab, targetLocation, character.transform.rotation);
             }
             else
             {

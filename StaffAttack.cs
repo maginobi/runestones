@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using System;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
@@ -67,9 +68,10 @@ namespace Runestones
             {
                 Debug.Log("Reflected UseAmmo method returned true");
                 var runeName = baseAttack.GetAmmoItem()?.m_shared?.m_name;
-                if (runeName != null)
+                Rune rune = RuneDB.Instance.GetRune(runeName);
+                if (rune != null)
                 {
-                    RuneEffect runeAttack = RuneDB.Instance.GetRune(runeName)?.Effect;
+                    RuneEffect runeAttack = rune.Effect;
                     float magicSkillFactor = baseAttack.GetCharacter().GetSkillFactor(MagicSkill.MagicSkillDef.m_skill);
                     foreach(var statusEffect in baseAttack.GetCharacter().GetSEMan().GetStatusEffects())
                     {
@@ -79,22 +81,28 @@ namespace Runestones
                         }
                     }
                     runeAttack._Effectiveness = 1 + magicSkillFactor;
-                    if (runeAttack != null)
-                    {
-                        Debug.Log("Found rune match");
-                        try
-                        {
-                            runeAttack.DoMagicAttack(baseAttack);
-                            ((Player)baseAttack.GetCharacter()).RaiseSkill(MagicSkill.MagicSkillDef.m_skill, 1);
-                        }
-                        catch (Exception ex)
-                        {
-                            baseAttack.GetCharacter().PickupPrefab(RuneDB.Instance.GetRune(runeName).prefab);
-                            baseAttack.GetCharacter().Message(MessageHud.MessageType.TopLeft, ex.Message);
-                            Debug.LogWarning(ex);
-                        }
-                    }
+                    
+                    runeAttack.Precast(baseAttack);
+
+                    var anim = baseAttack.GetCharacter().gameObject.GetComponent<CastingAnimations>();
+                    anim.OnComplete = () => CompleteMagicAttack(baseAttack, runeAttack, runeName);
+                    anim.Play(runeAttack.speed);
                 }
+            }
+        }
+
+        public static void CompleteMagicAttack(Attack baseAttack, RuneEffect runeAttack, string runeName)
+        {
+            try
+            {
+                runeAttack.DoMagicAttack(baseAttack);
+                ((Player)baseAttack.GetCharacter()).RaiseSkill(MagicSkill.MagicSkillDef.m_skill, 1);
+            }
+            catch (Exception ex)
+            {
+                baseAttack.GetCharacter().PickupPrefab(RuneDB.Instance.GetRune(runeName).prefab);
+                baseAttack.GetCharacter().Message(MessageHud.MessageType.TopLeft, ex.Message);
+                Debug.LogWarning(ex);
             }
         }
 

@@ -23,6 +23,7 @@ namespace Runestones.RuneEffects
             _QualityEffectText[RuneQuality.Dark] = new List<string> { "+100% More damage reduction" };
             _RelativeStats = new Dictionary<string, Func<string>> { { "Damage", () => $"-{1-(baseDamageMod / _Effectiveness / (_Quality==RuneQuality.Dark ? 2 : 1)) :P1}"},
                                                                     { "Duration", () => $"{baseDuration * _Effectiveness * (_Quality==RuneQuality.Ancient ? 2 : 1) :F1} sec" } };
+            targetLock = true;
         }
 
         public override void DoMagicAttack(Attack baseAttack)
@@ -40,15 +41,7 @@ namespace Runestones.RuneEffects
             aoe.m_radius = 1;
             typeof(Aoe).GetField("m_owner", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(aoe, baseAttack.GetCharacter());
 
-            var project = new MagicProjectile
-            {
-                m_spawnOnHit = gameObject,
-                m_range = 10,
-                m_launchAngle = 0,
-                m_attackSpread = 10,
-                m_hitType = Attack.HitPointType.Average
-            };
-            project.Cast(baseAttack.GetAttackOrigin(), baseAttack.BetterAttackDir());
+            GameObject.Instantiate(gameObject, targetLocation, Quaternion.identity);
         }
 
         public class SE_Curse : RuneStatusEffect
