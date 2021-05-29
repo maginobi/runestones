@@ -135,7 +135,7 @@ namespace Runestones
                     rune.Recipe = ScriptableObject.CreateInstance<Recipe>();
                     rune.Recipe.name = rune.GetToken();
                     rune.Recipe.m_item = rune.prefab.GetComponent<ItemDrop>();
-                    rune.Recipe.m_amount = 5;
+                    rune.Recipe.m_amount = 3;
 
                     var resources = new List<Piece.Requirement>();
                     foreach (KeyValuePair<string, int> requirement in rune.SimpleRecipe)
