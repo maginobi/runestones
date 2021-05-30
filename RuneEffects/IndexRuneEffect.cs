@@ -8,6 +8,7 @@ namespace Runestones.RuneEffects
     class IndexRuneEffect : RuneEffect
     {
         public const float baseDuration = 120;
+        public const string preVfxPrefabName = "vfx_prespawn";
         public IndexRuneEffect()
         {
             _FlavorText = "Knowledge is power";
@@ -15,6 +16,20 @@ namespace Runestones.RuneEffects
             _QualityEffectText[RuneQuality.Ancient] = new List<string> { "+25% Magic xp gain" };
             _QualityEffectText[RuneQuality.Dark] = new List<string> { "+25 Spell Effectiveness" };
             _RelativeStats = new Dictionary<string, Func<string>> { { "Duration", () => $"{baseDuration * _Effectiveness:F1} sec" } };
+            speed = CastingAnimations.CastSpeed.Medium;
+        }
+
+        public override void Precast(Attack baseAttack)
+        {
+            base.Precast(baseAttack);
+            var vfxPrefab = ZNetScene.instance.GetPrefab(preVfxPrefabName);
+            var go = GameObject.Instantiate(vfxPrefab, baseAttack.GetCharacter().GetCenterPoint(), Quaternion.identity, baseAttack.GetCharacter().transform);
+            var particles = go.GetComponentInChildren<ParticleSystem>();
+            var mainSettings = particles.main;
+            var shapeSettings = particles.shape;
+            mainSettings.duration = 2;
+            mainSettings.startLifetime = 2;
+            shapeSettings.radius = 10;
         }
 
         public override void DoMagicAttack(Attack baseAttack)

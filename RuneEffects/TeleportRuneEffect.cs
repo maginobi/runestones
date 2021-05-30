@@ -12,7 +12,7 @@ namespace Runestones.RuneEffects
 {
     public class TeleportRuneEffect : RuneEffect
     {
-        private const string vfxName = "vfx_blob_hit";
+        private const string vfxName = "vfx_odin_despawn";
         private Player caster;
         public const float baseRange = 15;
         public override CastingAnimations.CastSpeed speed { get {
@@ -48,8 +48,8 @@ namespace Runestones.RuneEffects
             var vfxPrefab = ZNetScene.instance.GetPrefab(vfxName);
             caster = baseAttack.GetCharacter() as Player;
 
-            GameObject.Instantiate(vfxPrefab, caster.transform.position, Quaternion.identity);
-            GameObject.Instantiate(vfxPrefab, targetLocation, Quaternion.identity);
+            GameObject.Instantiate(vfxPrefab, caster.transform.position + Vector3.up, Quaternion.identity);
+            GameObject.Instantiate(vfxPrefab, targetLocation + Vector3.up, Quaternion.identity);
             TeleportTo(targetLocation);
         }
 

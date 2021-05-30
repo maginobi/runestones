@@ -13,6 +13,7 @@ namespace Runestones.RuneEffects
     {
         static Dictionary<Skills.SkillType, float> localLastDeathSkills = new Dictionary<Skills.SkillType, float>();
         public const float baseDuration = 90;
+        public const string vfxName = "vfx_Potion_stamina_medium";
         public ReviveRuneEffect()
         {
             _FlavorText = "He had such a knowledge of the Dark Side, he could even keep the ones he cared about from dying";
@@ -93,6 +94,10 @@ namespace Runestones.RuneEffects
                 m_time = 0;
                 m_ttl = baseDuration;
                 m_icon = (from Sprite s in Resources.FindObjectsOfTypeAll<Sprite>() where s.name == "CorpseRun" select s).FirstOrDefault();
+
+                m_startEffects = new EffectList();
+                var vfxPrefab = ZNetScene.instance.GetPrefab(vfxName);
+                m_startEffects.m_effectPrefabs = new EffectList.EffectData[] { new EffectList.EffectData { m_prefab = vfxPrefab, m_enabled = true, m_attach = true, m_scale = true } };
             }
 
             override public void ModifySpeed(ref float speed)

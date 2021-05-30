@@ -35,8 +35,9 @@ namespace Runestones.RuneEffects
             _RelativeStats = new Dictionary<string, Func<string>> { { "Duration", () => $"{baseDuration * _Effectiveness :F0} sec" } };
         }
 
-        public override void DoMagicAttack(Attack baseAttack)
+        public override void Precast(Attack baseAttack)
         {
+            base.Precast(baseAttack);
             var player = baseAttack.GetCharacter();
             var lookDir = (Quaternion)typeof(Character).GetField("m_lookYaw", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(player);
             Debug.Log("Weather rune");
@@ -46,7 +47,7 @@ namespace Runestones.RuneEffects
             Debug.Log($"{(from EnvSetup env in EnvMan.instance.m_environments select env.m_name).ToList()}");
             CancellationTokenSource.Cancel();
             EnvMan.instance.ResetDebugWind();
-            EnvMan.instance.SetDebugWind(lookDir.eulerAngles.y, baseWindStrength * ((int)_Quality+1));
+            EnvMan.instance.SetDebugWind(lookDir.eulerAngles.y, baseWindStrength * ((int)_Quality + 1));
             if (_Quality == RuneQuality.Ancient)
             {
                 EnvMan.instance.SetForceEnvironment("Clear");
@@ -54,6 +55,14 @@ namespace Runestones.RuneEffects
             if (_Quality == RuneQuality.Dark)
             {
                 EnvMan.instance.SetForceEnvironment("ThunderStorm");
+            }
+            Task.Run(() => ResetWind(CancellationTokenSource.Token, (int)(baseDuration * _Effectiveness * 1000)), CancellationTokenSource.Token);
+        }
+
+        public override void DoMagicAttack(Attack baseAttack)
+        {
+            if (_Quality == RuneQuality.Dark)
+            {
                 var project = new ConeVolumeProjectile
                 {
                     m_actionOnHitCollider = DoLightningDamage,
@@ -65,7 +74,6 @@ namespace Runestones.RuneEffects
                 GameObject.Instantiate(vfx, baseAttack.GetAttackOrigin().position, Quaternion.LookRotation(baseAttack.BetterAttackDir()));
                 project.Cast(baseAttack.GetAttackOrigin(), baseAttack.BetterAttackDir());
             }
-            Task.Run(() => ResetWind(CancellationTokenSource.Token, (int)(baseDuration * _Effectiveness * 1000)), CancellationTokenSource.Token);
         }
 
         public static void DoLightningDamage(Collider collider)

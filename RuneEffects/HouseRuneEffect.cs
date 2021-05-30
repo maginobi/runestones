@@ -15,9 +15,10 @@ namespace Runestones.RuneEffects
         private const string bedPieceName = "$piece_bed";
         private const string houseLocationName = "WoodHouse3";
         private const int spawnSeed = 32979;
-        private const float bedDisplacement = 4;
+        private const float commonBedDisplacement = 4;
         private const string magicBedDesc = "magic_bed";
         private const float magicBedExposureAllowed = 0.65f;
+        private const string baseVfxPrefabName = "vfx_Place_wood_floor";
         private Vector3 originLocation;
         private Vector3 originForward;
         public HouseRuneEffect()
@@ -34,6 +35,31 @@ namespace Runestones.RuneEffects
         {
             originLocation = baseAttack.GetCharacter().transform.position;
             originForward = baseAttack.GetCharacter().transform.forward;
+            Vector3 targetLocation = new Vector3();
+            var preVfx = GameObject.Instantiate(ZNetScene.instance.GetPrefab(baseVfxPrefabName));
+            var particles = preVfx.GetComponentInChildren<ParticleSystem>();
+            var emission = particles.emission;
+            var shape = particles.shape;
+            emission.SetBursts(new ParticleSystem.Burst[0]);
+            emission.rateOverTime = 100;
+            shape.sphericalDirectionAmount = 0;
+            shape.randomDirectionAmount = 1;
+            switch (_Quality)
+            {
+                case RuneQuality.Common:
+                    targetLocation = originLocation + originForward * 5;
+                    shape.scale = new Vector3(4, 0.2f, 4);
+                    break;
+                case RuneQuality.Ancient:
+                    targetLocation = originLocation + originForward * 7.5f;
+                    shape.scale = new Vector3(4, 0.2f, 10);
+                    break;
+                case RuneQuality.Dark:
+                    targetLocation = originLocation + originForward * 5;
+                    shape.scale = new Vector3(10, 0.2f, 8);
+                    break;
+            }
+            GameObject.Instantiate(preVfx, targetLocation, baseAttack.GetCharacter().transform.rotation);
         }
 
         public override void DoMagicAttack(Attack baseAttack)
@@ -90,7 +116,7 @@ namespace Runestones.RuneEffects
             typeof(ZoneSystem).GetMethod("SpawnLocation", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(ZoneSystem.instance, new object[] { location, spawnSeed, pos, rot, ZoneSystem.SpawnMode.Full, spawnedGhostObjects });
 
             //Set up for bed spawning
-            var bedPos = player.transform.position + player.transform.forward * bedDisplacement;
+            var bedPos = originLocation + originForward * commonBedDisplacement;
             var bedRot = rot;
 
             //Get piece table
@@ -134,11 +160,11 @@ namespace Runestones.RuneEffects
             var torch2Pos = new Vector2(-4, -1.75f);
             Debug.Log($"Prefab: {housePrefab}");
             var housePos = originLocation + originForward * 7.5f;
-            var rotation = Quaternion.LookRotation(originForward);
             var forwardDir = originForward;
-            var rightDir = originForward; //rotate 90 deg
+            var rightDir = Quaternion.Euler(0, 90, 0) * originForward;
             var quat90 = Quaternion.Euler(0, -90, 0);
             var quat180 = Quaternion.Euler(0, -180, 0);
+            var rotation = Quaternion.LookRotation(originForward);
             GameObject.Instantiate(housePrefab, housePos, rotation * quat180 * quat90);
             GameObject.Instantiate(flattenPrefab, housePos, rotation * quat180 * quat90);
 
@@ -154,16 +180,16 @@ namespace Runestones.RuneEffects
             var bedPrefab = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == "piece_bed02" select prefab).FirstOrDefault();
             var workbenchPrefab = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == "piece_workbench" select prefab).FirstOrDefault();
             var chestPrefab = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == "piece_chest_wood" select prefab).FirstOrDefault();
-            var bedPos = new Vector2(1, 4);
+            var bedPos = new Vector2(0.75f, 3.75f);
             var benchPos = new Vector2(-3, -4);
-            var chestPos = new Vector2(1.9f, 1.75f);
+            var chestPos = new Vector2(1.9f, 1.5f);
             Debug.Log($"Prefab: {cabinPrefab}");
             var cabinPos = originLocation + originForward * 7.5f;
-            var rotation = Quaternion.LookRotation(originForward);
             var forwardDir = originForward;
-            var rightDir = originForward; //rotate 90 deg
+            var rightDir = Quaternion.Euler(0, 90, 0) * originForward;
             var quat90 = Quaternion.Euler(0, -90, 0);
             var quat180 = Quaternion.Euler(0, -180, 0);
+            var rotation = Quaternion.LookRotation(originForward);
             var cabinObj = GameObject.Instantiate(cabinPrefab, cabinPos, rotation * quat90);
             GameObject.Instantiate(bedPrefab, cabinPos + forwardDir * bedPos.x + rightDir * bedPos.y, rotation * quat180);
             GameObject.Instantiate(workbenchPrefab, cabinPos + forwardDir * benchPos.x + rightDir * benchPos.y, rotation * quat180 * quat90);
