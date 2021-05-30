@@ -15,8 +15,16 @@ namespace Runestones.RuneEffects
             _EffectText = new List<string> { "Rearranges your hotkeys for quick and easy spellcasting" };
             _QualityEffectText[RuneQuality.Ancient] = new List<string> { "+25% Magic xp gain" };
             _QualityEffectText[RuneQuality.Dark] = new List<string> { "+25 Spell Effectiveness" };
-            _RelativeStats = new Dictionary<string, Func<string>> { { "Duration", () => $"{baseDuration * _Effectiveness:F1} sec" } };
             speed = CastingAnimations.CastSpeed.Medium;
+        }
+
+        public override string GetDescription()
+        {
+            if (_Quality == RuneQuality.Common)
+                _RelativeStats = new Dictionary<string, Func<string>>();
+            else
+                _RelativeStats = new Dictionary<string, Func<string>> { { "Duration", () => $"{baseDuration * _Effectiveness:F1} sec" } };
+            return base.GetDescription();
         }
 
         public override void Precast(Attack baseAttack)

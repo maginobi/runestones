@@ -77,6 +77,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CastingAnimations.cs" />
+    <Compile Include="RuneEffects\DispelRuneEffect.cs" />
+    <Compile Include="RuneEffects\MeteorRuneEffect.cs" />
+    <Compile Include="RuneEffects\WraithRuneEffect.cs" />
+    <Compile Include="RuneEffects\VineRuneEffect.cs" />
     <Compile Include="RuneStatusEffect.cs" />
     <Compile Include="ExtendedStatusEffect.cs" />
     <Compile Include="ConeVolumeProjectile.cs" />

@@ -108,9 +108,12 @@ namespace Runestones.RuneEffects
                 base.Setup(character);
                 if(character is Player player)
                 {
+                    /*
                     origFlySetting = player.IsDebugFlying();
                     typeof(Player).GetField("m_debugFly", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(player, true);
                     ((ZNetView)typeof(Player).GetField("m_nview", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(player)).GetZDO().Set("DebugFly", true);
+                    */
+                    player.m_flying = true;
                 }
             }
 
@@ -119,9 +122,12 @@ namespace Runestones.RuneEffects
                 base.Stop();
                 if (m_character is Player player)
                 {
+                    /*
                     typeof(Player).GetField("m_debugFly", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(player, origFlySetting);
                     ((ZNetView)typeof(Player).GetField("m_nview", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(player)).GetZDO().Set("DebugFly", origFlySetting);
                     typeof(Character).GetField("m_maxAirAltitude", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(m_character, m_character.transform.position.y);
+                    */
+                    player.m_flying = false;
                 }
             }
         }
@@ -152,13 +158,22 @@ namespace Runestones.RuneEffects
             }
         }
 
-        [HarmonyPatch(typeof(Character), "UpdateDebugFly")]
+        [HarmonyPatch(typeof(Character), "UpdateFlying")]
         public static class FlySpeedMod
         {
-            public static void Prefix(ref Vector3 ___m_moveDir, SEMan ___m_seman)
+            public static void Prefix(Character __instance, ref Vector3 ___m_moveDir)
             {
-                if (___m_seman.HaveStatusEffect("SE_Flight"))
-                    ___m_moveDir = ___m_moveDir * flySpeedFactor;
+                if (__instance is Player player && (bool)typeof(Player).GetMethod("TakeInput", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(player, null))
+                {
+                    if (ZInput.GetButton("Jump"))
+                    {
+                        ___m_moveDir += Vector3.up;
+                    }
+                    else if (ZInput.GetButton("Crouch") || ZInput.GetButton("JoyCrouch"))
+                    {
+                        ___m_moveDir -= Vector3.up;
+                    }
+                }
             }
         }
     }
