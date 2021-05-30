@@ -17,13 +17,12 @@ namespace Runestones.RuneEffects
         const float glideMaxForwardSpeed = 20;
         const float glideAcceleration = 1;
         const float baseDuration = 30;
-        const float flySpeedFactor = 0.2f;
 
         public FeatherRuneEffect()
         {
             _FlavorText = "I'm sure Hugin can lend you some";
             _EffectText = new List<string> { "Prevents fall damage", "Limits fall speed" };
-            _QualityEffectText[RuneQuality.Ancient] = new List<string> { "Gliding", "+100% Duration" };
+            _QualityEffectText[RuneQuality.Ancient] = new List<string> { "Glide when not pressing movement keys", "+100% Duration" };
             _QualityEffectText[RuneQuality.Dark] = new List<string> { "True flight", "+200% Duration" };
             _RelativeStats = new Dictionary<string, Func<string>> { { "Duration", () => $"{baseDuration * _Effectiveness * (1 + (int)_Quality):F1} sec" } };
             speed = CastingAnimations.CastSpeed.Instant;
@@ -87,7 +86,6 @@ namespace Runestones.RuneEffects
 
         public class SE_Flight : StatusEffect
         {
-            private bool origFlySetting = false;
             public SE_Flight() : base()
             {
                 name = "SE_Flight";
@@ -108,11 +106,6 @@ namespace Runestones.RuneEffects
                 base.Setup(character);
                 if(character is Player player)
                 {
-                    /*
-                    origFlySetting = player.IsDebugFlying();
-                    typeof(Player).GetField("m_debugFly", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(player, true);
-                    ((ZNetView)typeof(Player).GetField("m_nview", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(player)).GetZDO().Set("DebugFly", true);
-                    */
                     player.m_flying = true;
                 }
             }
@@ -122,11 +115,6 @@ namespace Runestones.RuneEffects
                 base.Stop();
                 if (m_character is Player player)
                 {
-                    /*
-                    typeof(Player).GetField("m_debugFly", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(player, origFlySetting);
-                    ((ZNetView)typeof(Player).GetField("m_nview", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(player)).GetZDO().Set("DebugFly", origFlySetting);
-                    typeof(Character).GetField("m_maxAirAltitude", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(m_character, m_character.transform.position.y);
-                    */
                     player.m_flying = false;
                 }
             }
