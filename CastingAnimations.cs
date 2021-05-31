@@ -42,6 +42,8 @@ namespace Runestones
         public const float instantSpellDelay = 0.05f;
         public float lastCastTime = -1;
 
+        public bool isCasting = false;
+
         public System.Action OnComplete { get; set; }
         public bool IsLocked { get => Time.time - lastCastTime <= instantSpellDelay; }
 
@@ -75,12 +77,30 @@ namespace Runestones
             animator.runtimeAnimatorController = overrideController;
             animator.SetTrigger(overrideAnimTrigger);
             Debug.Log("animation trigger set, playing animation");
+            isCasting = true;
             Invoke("FinishAnim", Mathf.Max(animation?.length ?? 0, instantSpellDelay));
         }
 
         public void FinishAnim()
         {
+            isCasting = false;
             OnComplete.Invoke();
+        }
+    }
+
+    [HarmonyPatch(typeof(Player), "InAttack")]
+    public class PlayerInAttackPatch
+    {
+        public static void Postfix(Player __instance, ref bool __result)
+        {
+            if (!__result)
+            {
+                var castingAnim = __instance.gameObject.GetComponent<CastingAnimations>();
+                if (castingAnim != null)
+                {
+                    __result = castingAnim.isCasting;
+                }
+            }
         }
     }
 

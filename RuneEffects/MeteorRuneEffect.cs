@@ -39,7 +39,7 @@ namespace Runestones.RuneEffects
                 spawnEffect.m_minToSpawn = 20;
                 spawnEffect.m_maxToSpawn = 40;
                 spawnEffect.m_spawnAtTarget = false;
-                spawnEffect.m_spawnRadius = 100;
+                spawnEffect.m_spawnRadius = 150;
             }
             else
             {
