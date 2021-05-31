@@ -50,6 +50,7 @@ namespace Runestones
                     {
                         var materialItem = ObjectDB.instance.GetItemPrefab(materialName).GetComponent<ItemDrop>();
                         __result = __result && ___m_knownMaterial.Contains(materialItem.m_itemData.m_shared.m_name);
+                        //if (itemName == materialItem.m_itemData.m_shared.m_name) return true;
                     }
 
                     return false;
