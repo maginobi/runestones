@@ -27,17 +27,10 @@ namespace Runestones
             GameObject forcefieldPrefab = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == "ForceField" select prefab).FirstOrDefault();
             if (forcefieldPrefab != null)
             {
-                Debug.Log("ForceField loaded");
                 forcefieldPrefab.AddComponent<ZNetView>();
                 Prefabs.Add(forcefieldPrefab);
             }
-            else
-            {
-                Debug.Log("Failed to find ForceField prefab");
-            }
         }
-
-        //[HarmonyPatch(typeof())]
 
         [HarmonyPatch(typeof(ZNet), "LoadWorld")]
         public static class ZNet_LoadWorld_Patch

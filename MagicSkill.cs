@@ -37,6 +37,28 @@ namespace Runestones
         }
     }
 
+    [HarmonyPatch(typeof(Skills), "GetRandomSkillFactor")]
+    public static class RandomSkillFactorPatch
+    {
+        public static void Postfix(Skills.SkillType skillType, ref float __result)
+        {
+            if (skillType == MagicSkill.MagicSkillDef.m_skill)
+                __result = 1;
+        }
+    }
+
+    [HarmonyPatch(typeof(Skills), "GetSkillFactor")]
+    public static class NormalSkillFactorPatch
+    {
+        public static void Postfix(Skills.SkillType skillType, ref float __result, Player ___m_player)
+        {
+            if (skillType == MagicSkill.MagicSkillDef.m_skill && ___m_player != null)
+            {
+                __result += ___m_player.GetEquipmentMovementModifier();
+            }
+        }
+    }
+
     [HarmonyPatch(typeof(Skills), "IsSkillValid")]
     public static class MagicSkillValidityPatch
     {

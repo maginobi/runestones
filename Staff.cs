@@ -21,6 +21,7 @@ namespace Runestones
             staffPrefab.GetComponent<ItemDrop>().m_itemData.m_shared.m_attack = new Attack();
             staffPrefab.GetComponent<ItemDrop>().m_itemData.m_shared.m_attack.m_attackType = Attack.AttackType.Horizontal;
             staffPrefab.GetComponent<ItemDrop>().m_itemData.m_shared.m_attack.m_attackAnimation = "bow_fire";
+            staffPrefab.GetComponent<ItemDrop>().m_itemData.m_shared.m_skillType = MagicSkill.MagicSkillDef.m_skill;
             var staffObj = new Staff() { StaffPrefab = staffPrefab };
 
             ItemHelper.Instance.AddItem(staffPrefab);
