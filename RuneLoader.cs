@@ -85,6 +85,7 @@ namespace Runestones
             }
             BaseRunePrefab.GetComponent<ItemDrop>().m_itemData.m_shared.m_icons = newIcons;
         }
+        public void Load() { }
 
         public static void AfterLoad()
         {

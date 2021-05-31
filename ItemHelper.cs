@@ -74,6 +74,13 @@ namespace Runestones
 
         public static void AddItemToZNetScene(GameObject prefab)
         {
+            var itemDrop = prefab.GetComponent<ItemDrop>();
+            if (itemDrop != null)
+                AddPrefabToZNetScene(prefab);
+        }
+
+        public static void AddPrefabToZNetScene(GameObject prefab)
+        {
             if (prefab == null)
                 throw new NullReferenceException("prefab is null");
             if (ZNetScene.instance == null)
@@ -82,8 +89,7 @@ namespace Runestones
             Dictionary<int, GameObject> namedPrefabs = (Dictionary<int, GameObject>)namedPrefabsInfo.GetValue(ZNetScene.instance);
             if (namedPrefabs == null)
                 throw new NullReferenceException("ZNetScene named prefab dictionary is null");
-            var itemDrop = prefab.GetComponent<ItemDrop>();
-            if (itemDrop != null && !namedPrefabs.ContainsKey(prefab.name.GetStableHashCode()))
+            if (!namedPrefabs.ContainsKey(prefab.name.GetStableHashCode()))
             {
                 ZNetScene.instance.m_prefabs.Add(prefab);
                 namedPrefabs.Add(prefab.name.GetStableHashCode(), prefab);

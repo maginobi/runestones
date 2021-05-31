@@ -48,15 +48,15 @@ namespace Runestones.RuneEffects
                 spawnEffect.m_spawnAtTarget = true;
             }
             spawnEffect.m_targetType = SpawnAbility.TargetType.Position;
-            if (_Quality == RuneQuality.Ancient)
-            {
-                spawnEffect.Setup(null, Vector3.zero, 0, null, null);
-            }
-            else
+            if (_Quality == RuneQuality.Common)
             {
                 var delayer = spawner.AddComponent<ExtraDelay>();
                 delayer.actionToDelay = () => spawnEffect.Setup(null, Vector3.zero, 0, null, null);
                 delayer.Invoke("DelayedAction", baseDelay);
+            }
+            else
+            {
+                spawnEffect.Setup(null, Vector3.zero, 0, null, null);
             }
         }
     }

@@ -17,10 +17,11 @@ namespace Runestones.RuneEffects
         public const float darkSpeedMod = 0.75f;
         private float duration = baseDuration;
         private float speedModifier = baseSpeedMod;
+        private float maxHealth = 25;
         public FearRuneEffect()
         {
             _FlavorText = "This is a mandatory tactical retreat";
-            _EffectText = new List<string> { "Forces enemies to flee", "+50% move speed for fleeing enemies", "Cone: 5m, 25 degrees" };
+            _EffectText = new List<string> { "Forces enemies with less health than you to flee", "+50% move speed for fleeing enemies", "Cone: 5m, 25 degrees" };
             _QualityEffectText[RuneQuality.Ancient] = new List<string> { "+100% Duration", "+100% Spread angle" };
             _QualityEffectText[RuneQuality.Dark] = new List<string> { "Fleeing enemies get -25% move speed instead of +50%" };
             _RelativeStats = new Dictionary<string, Func<string>> { { "Duration", () => $"{baseDuration * _Effectiveness * (_Quality==RuneQuality.Ancient ? 2 : 1):F1} sec" } };
@@ -30,6 +31,7 @@ namespace Runestones.RuneEffects
             var castDir = baseAttack.BetterAttackDir();
             duration = baseDuration * _Effectiveness * (_Quality == RuneQuality.Ancient ? 2 : 1);
             speedModifier = _Quality == RuneQuality.Dark ? darkSpeedMod : baseSpeedMod;
+            maxHealth = baseAttack.GetCharacter().GetHealth();
 
             var vfx = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == vfxName select prefab).FirstOrDefault();
             GameObject.Instantiate(vfx, baseAttack.GetAttackOrigin().position, Quaternion.LookRotation(castDir));
@@ -48,15 +50,20 @@ namespace Runestones.RuneEffects
             var destructible = collider.gameObject.GetComponent<IDestructible>();
             if (destructible is Character character)
             {
-                var statusEffect = (SE_Fear)character.GetSEMan().AddStatusEffect("SE_Fear", true);
-                statusEffect.m_ttl = duration;
-                statusEffect.speedModifier = speedModifier;
+                if (character.GetHealth() < maxHealth && !character.IsBoss())
+                {
+                    var statusEffect = (SE_Fear)character.GetSEMan().AddStatusEffect("SE_Fear", true);
+                    statusEffect.m_ttl = duration;
+                    statusEffect.speedModifier = speedModifier;
+                    statusEffect.maxHealth = maxHealth;
+                }
             }
         }
 
         public class SE_Fear : StatusEffect
         {
             public float speedModifier = 1.5f;
+            public float maxHealth = 25;
 
             public SE_Fear() : base()
             {
@@ -70,6 +77,13 @@ namespace Runestones.RuneEffects
                 
                 var vfxPrefab = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == CurseRuneEffect.curseVfxName select prefab).FirstOrDefault();
                 m_startEffects.m_effectPrefabs = new EffectList.EffectData[] { new EffectList.EffectData { m_prefab = vfxPrefab, m_enabled = true, m_attach = true, m_scale = true } };
+            }
+
+            public override void UpdateStatusEffect(float dt)
+            {
+                base.UpdateStatusEffect(dt);
+                if (m_character.GetHealth() >= maxHealth || m_character.IsBoss())
+                    m_character.GetSEMan().RemoveStatusEffect(this);
             }
 
             override public void ModifySpeed(ref float speed)

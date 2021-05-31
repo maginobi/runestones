@@ -53,6 +53,8 @@ namespace Runestones.RuneEffects
                 origPlaceCost = (bool)typeof(Player).GetField("m_noPlacementCost", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(player);
                 typeof(Player).GetField("m_noPlacementCost", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(player, true);
                 typeof(Player).GetMethod("SetPlaceMode", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy).Invoke(player, new object[] { pieceTable });
+                var piece = pieceTable.GetSelectedPiece();
+                piece.gameObject.GetComponent<Fireplace>().m_startFuel = 1;
                 bool success = (bool)typeof(Player).GetMethod("PlacePiece", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(player, new object[] { pieceTable.GetSelectedPiece() });
                 if (!success)
                     throw new Exception("campfire placement failed");

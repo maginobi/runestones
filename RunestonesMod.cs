@@ -27,7 +27,7 @@ namespace Runestones
             ModAssetBundle = GetAssetBundleFromResources(AssetBundleName);
 
             Staff.Load(ModAssetBundle);
-            _ = RuneLoader.Instance;
+            RuneLoader.Instance.Load();
             ItemHelper.Instance.OnAllItemsLoaded(SERegistrar.RegisterStatusEffects);
         }
 
