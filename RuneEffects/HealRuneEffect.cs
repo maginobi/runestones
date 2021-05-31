@@ -25,9 +25,11 @@ namespace Runestones.RuneEffects
         {
             var aoePrefab = GameObject.Instantiate((from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == projectileName select prefab).FirstOrDefault());
             var aoe = aoePrefab.GetComponent<Aoe>();
-            aoe.m_hitOwner = false;
+            aoe.m_hitEnemy = false;
             aoe.m_damage.m_damage = -baseHeal*_Effectiveness*(int)_Quality;
-            GameObject.Instantiate(aoePrefab, targetLocation, Quaternion.identity);
+
+            var go = GameObject.Instantiate(aoePrefab, targetLocation, Quaternion.identity);
+            go.GetComponent<Aoe>().Setup(baseAttack.GetCharacter(), Vector3.zero, 0, null, null);
         }
     }
 }

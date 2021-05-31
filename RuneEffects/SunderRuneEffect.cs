@@ -44,18 +44,10 @@ namespace Runestones.RuneEffects
                     break;
             }
             aoe.m_statusEffect = statusEffect.Serialize();
+            aoe.m_hitOwner = false;
 
-            var propertyInfo = typeof(Aoe).GetField("m_owner", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-            if (propertyInfo != null)
-            {
-                propertyInfo.SetValue(aoe, baseAttack.GetCharacter());
-                Debug.Log($"Found field, new value: {propertyInfo.GetValue(aoe)}");
-                Debug.Log($"Flags: {aoe.m_hitOwner}, {aoe.m_hitSame}, {aoe.m_hitFriendly}");
-            }
-            else
-                Debug.Log("did not find owner property");
-
-            GameObject.Instantiate(gameObject, targetLocation, Quaternion.identity);
+            var go = GameObject.Instantiate(gameObject, targetLocation, Quaternion.identity);
+            go.GetComponent<Aoe>().Setup(baseAttack.GetCharacter(), Vector3.zero, 0, null, null);
         }
 
 

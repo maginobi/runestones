@@ -38,7 +38,8 @@ namespace Runestones.RuneEffects
             var aoe = gameObject.AddComponent<SlowAoe>();
             aoe.m_statusEffect = statusEffect.Serialize();
 
-            GameObject.Instantiate(gameObject, targetLocation, Quaternion.identity);
+            var go = GameObject.Instantiate(gameObject, targetLocation, Quaternion.identity);
+            go.GetComponent<Aoe>().Setup(baseAttack.GetCharacter(), Vector3.zero, 0, null, null);
         }
 
 

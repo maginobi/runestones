@@ -39,9 +39,10 @@ namespace Runestones.RuneEffects
             aoe.m_statusEffect = curseEffect.Serialize();
             aoe.m_ttl = 1;
             aoe.m_radius = 1;
-            typeof(Aoe).GetField("m_owner", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(aoe, baseAttack.GetCharacter());
+            aoe.m_hitOwner = false;
 
-            GameObject.Instantiate(gameObject, targetLocation, Quaternion.identity);
+            var go = GameObject.Instantiate(gameObject, targetLocation, Quaternion.identity);
+            go.GetComponent<Aoe>().Setup(baseAttack.GetCharacter(), Vector3.zero, 0, null, null);
         }
 
         public class SE_Curse : RuneStatusEffect

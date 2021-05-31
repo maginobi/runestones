@@ -31,7 +31,7 @@ namespace Runestones.RuneEffects
         public static GameObject ConstructGameObject(RuneQuality quality = RuneQuality.Common)
         {
             GameObject torchPrefab = ZNetScene.instance.GetPrefab("Torch");
-            GameObject effectPrefab = torchPrefab.transform.Find("attach/equiped")?.gameObject;
+            GameObject effectPrefab = torchPrefab.transform.Find("attach/equiped/flame")?.gameObject;
             GameObject modifiedEffectPrefab = GameObject.Instantiate(effectPrefab);
             GameObject result = new GameObject();
 
@@ -44,18 +44,12 @@ namespace Runestones.RuneEffects
             }
 
             modifiedEffectPrefab.SetActive(true);
-            var light = modifiedEffectPrefab.GetComponentInChildren<Light>();
-            if (light != null)
-            {
-                Debug.Log("Found light component");
-                light.range = (quality == RuneQuality.Ancient ? 20 : 10);
-                light.intensity = (quality == RuneQuality.Common ? 1.5f : 2);
-            }
-            else
-            {
-                Debug.Log("Unable to find light component");
-            }
-            GameObject.DestroyImmediate(modifiedEffectPrefab.transform.Find("flame/smoke (1)").gameObject);
+            var light = modifiedEffectPrefab.AddComponent<Light>();
+            light.enabled = true;
+            light.color = new Color(1, 0.6f, 0.5f);
+            light.range = (quality == RuneQuality.Ancient ? 20 : 10);
+            light.intensity = (quality == RuneQuality.Common ? 1.5f : 2);
+            GameObject.DestroyImmediate(modifiedEffectPrefab.transform.Find("smoke (1)").gameObject);
 
             var numLights = 3f;
             var radius = (quality == RuneQuality.Ancient ? 3f : 1.5f);
@@ -63,29 +57,17 @@ namespace Runestones.RuneEffects
             {
                 var angle = (i / numLights) * 2*Math.PI;
                 var go = GameObject.Instantiate(modifiedEffectPrefab);
-                // Must destroy smoke here; doesn't successfully destroy if destroyed on modifiedEffectPrefab
-                //GameObject.Destroy(go.transform.Find("flame/smoke (1)").gameObject);
                 go.transform.SetParent(result.transform);
                 go.transform.localPosition = new Vector3((float)(radius * Math.Cos(angle)), 0, (float)(radius * Math.Sin(angle)));
             }
             GameObject.Destroy(modifiedEffectPrefab);
-
-
-            if (quality == RuneQuality.Dark)
-            {
-                result.AddComponent<FireAura>();
-                /*
-                fireAura.Setup(baseAttack.GetCharacter(), Vector3.zero, 0, null, null);
-                fireAura.m_ttl = effect.m_ttl;
-                ((SE_Light)effect).fireAura = fireAura;
-                */
-            }
 
             return result;
         }
 
         public class SE_Light : SE_Stats
         {
+            FireAura fireAura;
             public SE_Light() : base()
             {
                 name = "SE_Runestones_Light";
@@ -101,18 +83,27 @@ namespace Runestones.RuneEffects
                 m_stealthModifier = 1f;
             }
 
+            public override void SetAttacker(Character attacker)
+            {
+                base.SetAttacker(attacker);
+                m_character = attacker;
+            }
+
             public void SetQuality(RuneQuality quality)
             {
                 var lightEffect = ConstructGameObject(quality);
-                if(quality == RuneQuality.Dark)
-                {
-                    lightEffect.GetComponent<FireAura>().m_ttl = m_ttl - m_time;
-                    typeof(Aoe).GetField("m_owner", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(lightEffect.GetComponent<FireAura>(), m_character);
-                    Debug.Log(typeof(Aoe).GetField("m_owner", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(lightEffect.GetComponent<FireAura>()));
-                }
                 m_startEffects.m_effectPrefabs = new EffectList.EffectData[] { new EffectList.EffectData { m_prefab = lightEffect, m_enabled = true, m_attach = true } };
                 TriggerStartEffects();
+                if (quality == RuneQuality.Dark)
+                {
+                    var startInstance = m_startEffectInstances[0];
+                    fireAura = startInstance.AddComponent<FireAura>();
+                    fireAura.m_ttl = m_ttl - m_time;
+                    fireAura.m_hitOwner = false;
+                    fireAura.Setup(m_character, Vector3.zero, 0, null, null);
+                }
             }
+
         }
 
         public class LightHover : MonoBehaviour
@@ -141,10 +132,10 @@ namespace Runestones.RuneEffects
                 m_hitSame = false;
                 m_hitFriendly = false;
                 m_hitProps = false;
-                m_hitEnemy = false;
-                m_hitCharacters = false;
+                m_hitEnemy = true;
+                m_hitCharacters = true;
                 m_radius = 1.5f;
-                m_damage.m_fire = 5f;
+                m_damage.m_fire = 25f;
                 m_ttl = baseDuration;
                 m_hitInterval = 1f;
                 m_useTriggers = false;
