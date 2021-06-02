@@ -48,15 +48,15 @@ namespace Runestones.RuneEffects
             {
                 case RuneQuality.Common:
                     targetLocation = originLocation + originForward * 5;
-                    shape.scale = new Vector3(4, 0.2f, 4);
+                    shape.scale = new Vector3(4, 0.4f, 4);
                     break;
                 case RuneQuality.Ancient:
                     targetLocation = originLocation + originForward * 7.5f;
-                    shape.scale = new Vector3(4, 0.2f, 10);
+                    shape.scale = new Vector3(4, 0.4f, 10);
                     break;
                 case RuneQuality.Dark:
                     targetLocation = originLocation + originForward * 5;
-                    shape.scale = new Vector3(10, 0.2f, 8);
+                    shape.scale = new Vector3(10, 0.4f, 8);
                     break;
             }
             GameObject.Instantiate(preVfx, targetLocation, baseAttack.GetCharacter().transform.rotation);

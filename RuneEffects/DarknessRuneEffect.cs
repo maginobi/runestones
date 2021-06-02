@@ -13,9 +13,11 @@ namespace Runestones.RuneEffects
 {
     public class DarknessRuneEffect : RuneEffect
     {
-        public const float radius = 5;
+        public const float radius = 7.5f;
         public const float baseDuration = 30;
         public const float baseStealth = -0.25f;
+        private const string baseVfxPrefabName = "vfx_darkland_groundfog";
+        private GameObject gameObject;
         public DarknessRuneEffect()
         {
             _FlavorText = "\u266AHello darkness my old friend\u266A";
@@ -27,30 +29,49 @@ namespace Runestones.RuneEffects
             speed = CastingAnimations.CastSpeed.Medium;
         }
 
+        public override void Precast(Attack baseAttack)
+        {
+            base.Precast(baseAttack);
+            var player = baseAttack.GetCharacter();
+            var adjRad = radius * (_Quality == RuneQuality.Ancient ? 2 : 1);
+
+            var preVfx = GameObject.Instantiate(ZNetScene.instance.GetPrefab(baseVfxPrefabName));
+            var particles = preVfx.GetComponentInChildren<ParticleSystem>();
+            var mainSettings = particles.main;
+            mainSettings.maxParticles = 15;
+            var shapeSettings = particles.shape;
+            shapeSettings.shapeType = ParticleSystemShapeType.Circle;
+            shapeSettings.scale = new Vector3(adjRad / 2, adjRad / 2, 0.5f);
+            var velocitySettings = particles.velocityOverLifetime;
+            velocitySettings.z = 0;
+            velocitySettings.radial = 1;
+            var material = preVfx.GetComponentInChildren<Renderer>().material;
+            material.color = Color.black;
+            gameObject = GameObject.Instantiate(preVfx, player.transform.position, Quaternion.identity);
+
+            var collider = gameObject.AddComponent<SphereCollider>();
+            collider.radius = adjRad;
+            collider.isTrigger = true;
+        }
+
         public override void DoMagicAttack(Attack baseAttack)
         {
             var ttl = baseDuration * _Effectiveness * (_Quality == RuneQuality.Ancient ? 2 : 1);
-            var size = radius * 2 * (_Quality == RuneQuality.Ancient ? 2 : 1);
-            var statusEffect = (_Quality == RuneQuality.Dark ? "SE_DarknessStealthQuiet" : "SE_DarknessStealth");
-            Debug.Log($"darkness status effect: {statusEffect}");
-            var player = baseAttack.GetCharacter();
 
-            GameObject gameObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            gameObject.transform.position = player.GetCenterPoint();
-            gameObject.transform.localScale = new Vector3(size, size, size);
-            Collider collider = gameObject.GetComponent<Collider>();
-            collider.isTrigger = true;
-            var material = gameObject.GetComponent<Renderer>().material;
-            material.SetTransparent();
-            material.SetColor("_Color", new Color(0, 0, 0, 0.65f));
             var darkZone = gameObject.AddComponent<EnvZone>();
             darkZone.m_environment = "Darkness";
 
+            var statusEffect = ScriptableObject.CreateInstance<SE_DarknessStealth>();
+            statusEffect.m_stealthModifier = baseStealth * _Effectiveness;
+            if (_Quality == RuneQuality.Dark)
+                statusEffect.m_noiseModifier = -1;
+            statusEffect.name = Guid.NewGuid().ToString();
+            ObjectDB.instance.m_StatusEffects.Add(statusEffect);
+
             var darkAoe = gameObject.AddComponent<AoeDarknessStealth>();
-            typeof(Aoe).GetField("m_owner", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(darkAoe, baseAttack.GetCharacter());
             darkAoe.m_ttl = ttl;
-            darkAoe.m_radius = size / 2;
-            darkAoe.m_statusEffect = statusEffect;
+            darkAoe.m_radius = radius * (_Quality == RuneQuality.Ancient ? 2 : 1);
+            darkAoe.m_statusEffect = statusEffect.name;
             darkAoe.m_hitOwner = true;
             darkAoe.m_hitSame = true;
             darkAoe.Invoke("OnStop", ttl);
@@ -64,8 +85,8 @@ namespace Runestones.RuneEffects
         {
             m_name = "Darkness",
             m_alwaysDark = true,
-            m_ambColorDay = Color.black,
-            m_ambColorNight = Color.black,
+            m_ambColorDay = new Color(0.3f, 0.4f, 0.55f),
+            m_ambColorNight = new Color(0.15f, 0.2f, 0.25f),
             m_fogColorDay = Color.black,
             m_fogColorNight = Color.black,
             m_fogColorEvening = Color.black,
@@ -74,12 +95,12 @@ namespace Runestones.RuneEffects
             m_fogColorSunNight = Color.black,
             m_fogColorSunEvening = Color.black,
             m_fogColorSunMorning = Color.black,
-            m_lightIntensityDay = 0,
-            m_lightIntensityNight = 0,
-            m_fogDensityDay = 0.25f,
-            m_fogDensityNight = 0.25f,
-            m_fogDensityEvening = 0.25f,
-            m_fogDensityMorning = 0.25f,
+            m_lightIntensityDay = 1,
+            m_lightIntensityNight = 0.5f,
+            m_fogDensityDay = 0.1f,
+            m_fogDensityNight = 0.1f,
+            m_fogDensityEvening = 0.1f,
+            m_fogDensityMorning = 0.1f,
             
             m_psystems = new GameObject[0]
         };
@@ -108,28 +129,16 @@ namespace Runestones.RuneEffects
             }
         }
 
-        public class SE_DarknessStealth : SE_Stats
+        public class SE_DarknessStealth : RuneStatusEffect
         {
             float m_hiddenTtl = 1;
             public SE_DarknessStealth()
             {
                 name = "SE_DarknessStealth";
                 m_name = "Darkness";
-                m_tooltip = "+25% Stealth";
+                //m_tooltip = "+25% Stealth";
                 m_icon = Sprite.Create((from Texture2D s in Resources.FindObjectsOfTypeAll<Texture2D>() where s.name == "space" select s).FirstOrDefault(), new Rect(256, 256, 256, 256), new Vector2());
                 m_stealthModifier = -0.25f;
-            }
-
-            public override void SetAttacker(Character attacker)
-            {
-                base.SetAttacker(attacker);
-                m_stealthModifier = baseStealth * (1 + attacker.GetSkillFactor(MagicSkill.MagicSkillDef.m_skill));
-            }
-
-            public override void Setup(Character character)
-            {
-                base.Setup(character);
-                Debug.Log($"setting up effect {name}");
             }
 
             public override bool IsDone()
@@ -149,7 +158,7 @@ namespace Runestones.RuneEffects
             public SE_DarknessStealthQuiet() : base()
             {
                 name = "SE_DarknessStealthQuiet";
-                m_tooltip = "+25% Stealth; Footsteps silenced";
+                //m_tooltip = "+25% Stealth; Footsteps silenced";
                 m_noiseModifier = -1;
             }
         }
@@ -161,25 +170,6 @@ namespace Runestones.RuneEffects
         public static void Prefix(EnvMan __instance)
         {
             __instance.m_environments.Add(DarknessRuneEffect.darkEnvSetup);
-        }
-    }
-
-    public static class MatTransExt
-    {
-        public static void SetTransparent(this Material material)
-        {
-            material.SetFloat("_Mode", 3);
-            material.SetOverrideTag("RenderType", "Transparent");
-            material.SetInt("_SrcBlend", (int)BlendMode.One);
-            material.SetInt("_DstBlend", (int)BlendMode.OneMinusSrcAlpha);
-            material.SetInt("_ZWrite", 0);
-            material.DisableKeyword("_ALPHATEST_ON");
-            material.DisableKeyword("_ALPHABLEND_ON");
-            material.EnableKeyword("_ALPHAPREMULTIPLY_ON");
-            material.DisableKeyword("_SPECULARHIGHLIGHTS_OFF");
-            material.DisableKeyword("_GLOSSYREFLECTIONS_OFF");
-            material.SetFloat("_SpecularHighlights", 1f);
-            material.renderQueue = (int)RenderQueue.Transparent;
         }
     }
 }

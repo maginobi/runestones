@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Runestones.RuneEffects
 {
@@ -127,6 +128,25 @@ namespace Runestones.RuneEffects
                 m_character.gameObject.layer = characterLayer;
                 ResetMaterials.Invoke();
             }
+        }
+    }
+
+    public static class MatTransExt
+    {
+        public static void SetTransparent(this Material material)
+        {
+            material.SetFloat("_Mode", 3);
+            material.SetOverrideTag("RenderType", "Transparent");
+            material.SetInt("_SrcBlend", (int)BlendMode.One);
+            material.SetInt("_DstBlend", (int)BlendMode.OneMinusSrcAlpha);
+            material.SetInt("_ZWrite", 0);
+            material.DisableKeyword("_ALPHATEST_ON");
+            material.DisableKeyword("_ALPHABLEND_ON");
+            material.EnableKeyword("_ALPHAPREMULTIPLY_ON");
+            material.DisableKeyword("_SPECULARHIGHLIGHTS_OFF");
+            material.DisableKeyword("_GLOSSYREFLECTIONS_OFF");
+            material.SetFloat("_SpecularHighlights", 1f);
+            material.renderQueue = (int)RenderQueue.Transparent;
         }
     }
 }
