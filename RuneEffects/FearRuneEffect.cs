@@ -9,7 +9,7 @@ namespace Runestones.RuneEffects
 {
     public class FearRuneEffect : RuneEffect
     {
-        public const string vfxName = "vfx_bow_fire";
+        public const string vfxName = "vfx_greydwarf_shaman_pray";
         public const float baseRange = 5;
         public const float baseAngle = 25;
         public const float baseDuration = 30;
@@ -34,7 +34,12 @@ namespace Runestones.RuneEffects
             maxHealth = baseAttack.GetCharacter().GetHealth();
 
             var vfx = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == vfxName select prefab).FirstOrDefault();
-            GameObject.Instantiate(vfx, baseAttack.GetAttackOrigin().position, Quaternion.LookRotation(castDir));
+            var instanced = GameObject.Instantiate(vfx, baseAttack.GetCharacter().GetCenterPoint(), Quaternion.LookRotation(castDir));
+            var actualVfx = instanced.transform.Find("flames_world");
+            actualVfx.transform.position = Vector3.zero;
+            var particles = actualVfx.GetComponent<ParticleSystem>();
+            var shapeSettings = particles.shape;
+            shapeSettings.angle = baseAngle * (_Quality == RuneQuality.Ancient ? 2 : 1);
 
             var project = new ConeVolumeProjectile
             {
