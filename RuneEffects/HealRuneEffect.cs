@@ -16,8 +16,8 @@ namespace Runestones.RuneEffects
             _FlavorText = "True strength is helping others";
             _EffectText = new List<string> { "Heals others", "5m radius" };
             _QualityEffectText[RuneQuality.Ancient] = new List<string> { "+100% Heal" };
-            _QualityEffectText[RuneQuality.Dark] = new List<string> { "+200% Heal" };
-            _RelativeStats = new Dictionary<string, Func<string>> { { "Heal", () => $"{baseHeal * _Effectiveness * ((int)_Quality+1) :F1}" } };
+            _QualityEffectText[RuneQuality.Dark] = new List<string> { "+200% Heal", "Spell effectiveness twice as effective" };
+            _RelativeStats = new Dictionary<string, Func<string>> { { "Heal", () => $"{baseHeal * _Effectiveness * ((int)_Quality+1) * (_Quality==RuneQuality.Dark ? _Effectiveness : 1) :F1}" } };
             targetLock = true;
             speed = CastingAnimations.CastSpeed.Medium;
         }
@@ -30,7 +30,7 @@ namespace Runestones.RuneEffects
             aoe.m_hitProps = false;
             aoe.m_hitOwner = true;
             aoe.m_hitFriendly = true;
-            aoe.m_damage.m_damage = -baseHeal*_Effectiveness* ((int)_Quality + 1);
+            aoe.m_damage.m_damage = -baseHeal * _Effectiveness * ((int)_Quality + 1) * (_Quality == RuneQuality.Dark ? _Effectiveness : 1);
             aoe.Setup(baseAttack.GetCharacter(), Vector3.zero, 0, null, null);
 
             var go = GameObject.Instantiate(aoePrefab, targetLocation, Quaternion.identity);

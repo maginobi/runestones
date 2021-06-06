@@ -215,9 +215,9 @@ namespace Runestones
                 },
             new Rune { Name = "Heal", EffectClass = typeof(HealRuneEffect), DiscoveryToken = "$lore_mountains_random05", AssetIndex = 25, Reagents =
                     new List < Dictionary < string, int > > {
-                        new Dictionary < string, int > { { "MeadHealthMinor", 3 }, { "Thistle", 3 } },
-                        new Dictionary<string, int> { { "MeadHealthMinor", 3 }, { "Thistle", 6 }, { "TrophyGreydwarfShaman", 1 } },
-                        new Dictionary<string, int> { { "MeadHealthMinor", 3 }, { "Thistle", 9 }, { "TrophyLeech", 3 } }
+                        new Dictionary < string, int > { { "MeadHealthMinor", 2 }, { "Thistle", 3 } },
+                        new Dictionary<string, int> { { "MeadHealthMedium", 2 }, { "Thistle", 6 }, { "TrophyGreydwarfShaman", 1 } },
+                        new Dictionary<string, int> { { "MeadHealthMedium", 3 }, { "Thistle", 9 }, { "TrophyLeech", 2 } }
                     }
                 },
             new Rune { Name = "Weather", EffectClass = typeof(WeatherRuneEffect), DiscoveryToken = "$lore_mountains_random06", AssetIndex = 26, Reagents =
