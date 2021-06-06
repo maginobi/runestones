@@ -12,7 +12,8 @@ namespace Runestones.RuneEffects
         public const float baseForce = 50;
         public const float baseAngle = 25;
         public const float baseRange = 5;
-        public const string vfxName = "vfx_bow_fire";
+        public const string baseVfxName = "vfx_dragon_coldbreath";
+        public const string customName = "ForceEffect";
         private float force = baseForce;
         private Vector3 castDir;
         public ForceRuneEffect()
@@ -28,8 +29,17 @@ namespace Runestones.RuneEffects
             castDir = baseAttack.BetterAttackDir();
             force = baseForce * _Effectiveness * (_Quality == RuneQuality.Dark ? 3 : 1);
 
-            var vfx = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == vfxName select prefab).FirstOrDefault();
-            GameObject.Instantiate(vfx, baseAttack.GetAttackOrigin().position, Quaternion.LookRotation(castDir));
+            var vfx = ConstructGameObject();
+            if (_Quality == RuneQuality.Ancient)
+            {
+                var particles = vfx.GetComponent<ParticleSystem>();
+                var mainSettings = particles.main;
+                var shapeSettings = particles.shape;
+                mainSettings.startLifetime = 2 * mainSettings.startLifetime.constant;
+                mainSettings.duration *= 2;
+                shapeSettings.angle *= 2;
+            }
+            GameObject.Instantiate(vfx, baseAttack.GetCharacter().GetCenterPoint(), Quaternion.LookRotation(castDir));
             
             var project = new ConeVolumeProjectile
             {
@@ -70,6 +80,26 @@ namespace Runestones.RuneEffects
                 }
             }
         }
-        
+        public static GameObject ConstructGameObject()
+        {
+            var baseVfx = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == baseVfxName select prefab).FirstOrDefault();
+            var preVfx = GameObject.Instantiate(baseVfx.transform.Find("clouds").gameObject);
+
+            var particles = preVfx.GetComponent<ParticleSystem>();
+            var mainSettings = particles.main;
+            var emissionSettings = particles.emission;
+            var shapeSettings = particles.shape;
+            mainSettings.startSpeed = 10;
+            mainSettings.duration = 0.5f;
+            mainSettings.startLifetime = 0.5f;
+            emissionSettings.rateOverTime = 100;
+            shapeSettings.angle = baseAngle;
+
+            var destruct = preVfx.AddComponent<TimedDestruction>();
+            destruct.m_timeout = 1;
+
+            preVfx.name = customName;
+            return preVfx;
+        }
     }
 }
