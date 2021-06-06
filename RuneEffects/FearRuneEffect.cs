@@ -36,7 +36,7 @@ namespace Runestones.RuneEffects
             var vfx = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == vfxName select prefab).FirstOrDefault();
             var instanced = GameObject.Instantiate(vfx, baseAttack.GetCharacter().GetCenterPoint(), Quaternion.LookRotation(castDir));
             var actualVfx = instanced.transform.Find("flames_world");
-            actualVfx.transform.position = Vector3.zero;
+            actualVfx.transform.localPosition = Vector3.zero;
             var particles = actualVfx.GetComponent<ParticleSystem>();
             var shapeSettings = particles.shape;
             shapeSettings.angle = baseAngle * (_Quality == RuneQuality.Ancient ? 2 : 1);
