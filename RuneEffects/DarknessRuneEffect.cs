@@ -38,7 +38,16 @@ namespace Runestones.RuneEffects
             var preVfx = GameObject.Instantiate(ZNetScene.instance.GetPrefab(baseVfxPrefabName));
             var particles = preVfx.GetComponentInChildren<ParticleSystem>();
             var mainSettings = particles.main;
-            mainSettings.maxParticles = 15;
+            if (_Quality == RuneQuality.Ancient)
+            {
+                mainSettings.maxParticles = 60;
+                var emission = particles.emission;
+                emission.rateOverTime = 4;
+            }
+            else
+            {
+                mainSettings.maxParticles = 15;
+            }
             var shapeSettings = particles.shape;
             shapeSettings.shapeType = ParticleSystemShapeType.Circle;
             shapeSettings.scale = new Vector3(adjRad / 2, adjRad / 2, 0.5f);

@@ -21,15 +21,39 @@ namespace Runestones
             }
         }
         public List<GameObject> Prefabs = new List<GameObject>();
+        private static GameObject PrefabContainer;
+
+        private CustomEffectPrefabs()
+        {
+            PrefabContainer = new GameObject("PrefabContainer");
+            PrefabContainer.SetActive(false);
+            PrefabContainer.transform.SetParent(null);
+            GameObject.DontDestroyOnLoad(PrefabContainer);
+        }
+
+        public void AddPrefab(GameObject prefab)
+        {
+            if (prefab != null)
+            {
+                var tempGameObject = GameObject.Instantiate(prefab);
+                var zView = tempGameObject.AddComponent<ZNetView>();
+                zView.m_persistent = true;
+                var gameObject = GameObject.Instantiate(tempGameObject, PrefabContainer.transform);
+                gameObject.name = prefab.name;
+                Prefabs.Add(gameObject);
+            }
+            else
+            {
+                Debug.LogWarning("Attempted to register custom effect prefab that is null");
+            }
+        }
 
         public void Load()
         {
             GameObject forcefieldPrefab = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == "ForceField" select prefab).FirstOrDefault();
-            if (forcefieldPrefab != null)
-            {
-                forcefieldPrefab.AddComponent<ZNetView>();
-                Prefabs.Add(forcefieldPrefab);
-            }
+            AddPrefab(forcefieldPrefab);
+            GameObject cultivatePrefab = RuneEffects.FarmRuneEffect.ConstructGameObject();
+            AddPrefab(cultivatePrefab);
         }
 
         [HarmonyPatch(typeof(ZNet), "LoadWorld")]

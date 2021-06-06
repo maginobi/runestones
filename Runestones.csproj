@@ -79,6 +79,7 @@
     <Compile Include="CastingAnimations.cs" />
     <Compile Include="CustomEffectPrefabs.cs" />
     <Compile Include="HelpfulOdin.cs" />
+    <Compile Include="DebugUtilities.cs" />
     <Compile Include="RuneEffects\DispelRuneEffect.cs" />
     <Compile Include="RuneEffects\MeteorRuneEffect.cs" />
     <Compile Include="RuneEffects\WraithRuneEffect.cs" />

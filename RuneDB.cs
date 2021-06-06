@@ -289,7 +289,7 @@ namespace Runestones
                     new List < Dictionary < string, int > > {
                         new Dictionary < string, int > { { "BlackMetal", 10 }, { "Flametal", 10 }, { "SurtlingCore", 10 } },
                         new Dictionary < string, int > { { "BlackMetal", 10 }, { "Flametal", 10 }, { "Crystal", 5 } },
-                        new Dictionary < string, int > { { "BlackMetal", 18 }, { "Flametal", 20 }, { "Crystal", 5 }, { "YmirRemains", 5 } }
+                        new Dictionary < string, int > { { "BlackMetal", 18 }, { "Flametal", 20 }, { "Crystal", 5 }, { "TrophyGoblinKing", 1 } }
                     }
                 }
         };

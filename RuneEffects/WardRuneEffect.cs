@@ -36,6 +36,8 @@ namespace Runestones.RuneEffects
             sphere.transform.localScale = new Vector3(size, size, size);
             if (_Quality != RuneQuality.Dark)
             {
+                var zView = sphere.GetComponent<ZNetView>();
+                zView.m_persistent = false;
                 var timeout = sphere.AddComponent<TimedDestruction>();
                 timeout.m_timeout = baseDuration * _Effectiveness * (_Quality == RuneQuality.Ancient ? 4 : 1);
                 timeout.m_triggerOnAwake = true;
