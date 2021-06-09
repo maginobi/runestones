@@ -64,7 +64,7 @@ namespace Runestones.RuneEffects
                 m_skill = Skills.SkillType.None;
                 m_hitInterval = -1;
                 m_ttl = 2;
-                m_radius = 5;
+                m_radius = 3;
             }
         };
 
@@ -85,14 +85,6 @@ namespace Runestones.RuneEffects
                 var vfxPrefab = DebuffVfx.ConstructStatusVfx();
                 m_startEffects.m_effectPrefabs = new EffectList.EffectData[] { new EffectList.EffectData { m_prefab = vfxPrefab, m_enabled = true, m_attach = true, m_scale = true } };
             }
-            /*
-            public override void SetAttacker(Character attacker)
-            {
-                base.SetAttacker(attacker);
-                float effectiveness = (1 + attacker.GetSkillFactor(MagicSkill.MagicSkillDef.m_skill));
-                m_ttl = baseDuration * effectiveness;
-            }
-            */
 
             public override void ModifyDamageMods(ref DamageModifiers modifiers)
             {

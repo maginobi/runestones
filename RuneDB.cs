@@ -87,7 +87,7 @@ namespace Runestones
                     new List < Dictionary < string, int > > {
                         new Dictionary < string, int > { { "Flint", 8 }, { "GreydwarfEye", 3 } },
                         new Dictionary < string, int > { { "Iron", 2 }, { "GreydwarfEye", 6 } },
-                        new Dictionary < string, int > { { "Silver", 1 }, { "SurtlingCore", 1 }, { "FreezeGland", 1 }, { "Ooze", 1 } }
+                        new Dictionary < string, int > { { "SurtlingCore", 2 }, { "FreezeGland", 2 }, { "Ooze", 2 } }
                     }
                 },
             new Rune { Name = "Pyrolyze", _FixedEffect = new AlchemyRuneEffect(){

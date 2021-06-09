@@ -36,7 +36,7 @@ namespace Runestones.RuneEffects
 
             aoe.m_statusEffect = curseEffect.Serialize();
             aoe.m_ttl = 2;
-            aoe.m_radius = 5;
+            aoe.m_radius = 3;
             aoe.m_hitOwner = false;
 
             var go = GameObject.Instantiate(gameObject, targetLocation, Quaternion.identity);
@@ -49,14 +49,13 @@ namespace Runestones.RuneEffects
             {
                 name = "SE_Curse";
                 m_name = "Cursed";
-                m_tooltip = "-90% Damage dealt";
                 m_startMessage = "You have been cursed";
                 m_time = 0;
                 m_repeatInterval = 60;
                 m_ttl = baseDuration;
                 m_icon = (from Sprite s in Resources.FindObjectsOfTypeAll<Sprite>() where s.name == "jackoturnip" select s).FirstOrDefault();
                 m_modifyAttackSkill = Skills.SkillType.All;
-                m_damageModifier = 0.75f;
+                m_damageModifier = baseDamageMod;
                 m_startEffects = new EffectList();
 
                 var vfxPrefab = DebuffVfx.ConstructStatusVfx();

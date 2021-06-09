@@ -54,7 +54,7 @@ namespace Runestones.RuneEffects
                 m_skill = Skills.SkillType.None;
                 m_hitInterval = -1;
                 m_ttl = 2;
-                m_radius = 5;
+                m_radius = 3;
             }
         };
 
@@ -68,7 +68,7 @@ namespace Runestones.RuneEffects
                 m_startMessage = "Slowed";
                 m_time = 0;
                 m_ttl = baseDuration;
-                m_icon = (from Sprite s in Resources.FindObjectsOfTypeAll<Sprite>() where s.name == "CorpseRun" select s).FirstOrDefault();
+                m_icon = (from Sprite s in Resources.FindObjectsOfTypeAll<Sprite>() where s.name == "jackoturnip" select s).FirstOrDefault();
 
                 var vfxPrefab = DebuffVfx.ConstructStatusVfx();
                 m_startEffects.m_effectPrefabs = new EffectList.EffectData[] { new EffectList.EffectData { m_prefab = vfxPrefab, m_enabled = true, m_attach = true, m_scale = true } };
@@ -78,16 +78,6 @@ namespace Runestones.RuneEffects
             {
                 return $"-{1-speedMod :P0} Speed";
             }
-
-            /*
-            public override void SetAttacker(Character attacker)
-            {
-                base.SetAttacker(attacker);
-                float effectiveness = (1 + attacker.GetSkillFactor(MagicSkill.MagicSkillDef.m_skill));
-                m_ttl = baseDuration * effectiveness;
-                speedMod = baseSpeedMod / effectiveness;
-            }
-            */
 
             override public void ModifySpeed(ref float speed)
             {
