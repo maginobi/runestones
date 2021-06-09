@@ -10,7 +10,7 @@ namespace Runestones.RuneEffects
 {
     public class CurseRuneEffect : RuneEffect
     {
-        public const float baseDuration = 60;
+        public const float baseDuration = 20;
         public const float baseDamageMod = 0.75f;
 
         public CurseRuneEffect()

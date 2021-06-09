@@ -11,7 +11,7 @@ namespace Runestones.RuneEffects
     public class SlowRuneEffect : RuneEffect
     {
         public const float baseSpeedMod = 0.5f;
-        public const float baseDuration = 30;
+        public const float baseDuration = 20;
         public const float darkSpeedMod = 0.1f;
         public SlowRuneEffect()
         {

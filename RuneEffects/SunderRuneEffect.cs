@@ -11,7 +11,7 @@ namespace Runestones.RuneEffects
 {
     public class SunderRuneEffect : RuneEffect
     {
-        public const float baseDuration = 30;
+        public const float baseDuration = 20;
         public SunderRuneEffect()
         {
             _FlavorText = "No armor is without cracks";
@@ -80,7 +80,7 @@ namespace Runestones.RuneEffects
                 m_startMessage = "Damage resistances reduced";
                 m_time = 0;
                 m_ttl = baseDuration;
-                m_icon = (from Sprite s in Resources.FindObjectsOfTypeAll<Sprite>() where s.name == "CorpseRun" select s).FirstOrDefault();
+                m_icon = (from Sprite s in Resources.FindObjectsOfTypeAll<Sprite>() where s.name == "jackoturnip" select s).FirstOrDefault();
 
                 var vfxPrefab = DebuffVfx.ConstructStatusVfx();
                 m_startEffects.m_effectPrefabs = new EffectList.EffectData[] { new EffectList.EffectData { m_prefab = vfxPrefab, m_enabled = true, m_attach = true, m_scale = true } };
