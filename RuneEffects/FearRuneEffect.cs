@@ -79,8 +79,8 @@ namespace Runestones.RuneEffects
                 m_time = 0;
                 m_ttl = baseDuration;
                 m_icon = (from Sprite s in Resources.FindObjectsOfTypeAll<Sprite>() where s.name == "CorpseRun" select s).FirstOrDefault();
-                
-                var vfxPrefab = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == CurseRuneEffect.curseVfxName select prefab).FirstOrDefault();
+
+                var vfxPrefab = DebuffVfx.ConstructStatusVfx();
                 m_startEffects.m_effectPrefabs = new EffectList.EffectData[] { new EffectList.EffectData { m_prefab = vfxPrefab, m_enabled = true, m_attach = true, m_scale = true } };
             }
 

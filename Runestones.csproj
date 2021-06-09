@@ -78,6 +78,7 @@
   <ItemGroup>
     <Compile Include="CastingAnimations.cs" />
     <Compile Include="CustomEffectPrefabs.cs" />
+    <Compile Include="DebuffVfx.cs" />
     <Compile Include="HelpfulOdin.cs" />
     <Compile Include="DebugUtilities.cs" />
     <Compile Include="RuneEffects\DispelRuneEffect.cs" />

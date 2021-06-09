@@ -10,15 +10,13 @@ namespace Runestones.RuneEffects
 {
     public class CurseRuneEffect : RuneEffect
     {
-        const string hitVfxName = "vfx_blob_hit";
-        public const string curseVfxName = "vfx_Wet";
         public const float baseDuration = 60;
         public const float baseDamageMod = 0.75f;
 
         public CurseRuneEffect()
         {
             _FlavorText = "Revenge is a dish best served with raspberries";
-            _EffectText = new List<string> { "Reduces enemy damage dealt", "1m radius" };
+            _EffectText = new List<string> { "Reduces enemy damage dealt" };
             _QualityEffectText[RuneQuality.Ancient] = new List<string> { "+100% Duration" };
             _QualityEffectText[RuneQuality.Dark] = new List<string> { "+100% More damage reduction" };
             _RelativeStats = new Dictionary<string, Func<string>> { { "Damage", () => $"-{1-(baseDamageMod / _Effectiveness / (_Quality==RuneQuality.Dark ? 2 : 1)) :P1}"},
@@ -28,7 +26,7 @@ namespace Runestones.RuneEffects
 
         public override void DoMagicAttack(Attack baseAttack)
         {
-            var vfxPrefab = ZNetScene.instance.GetPrefab(hitVfxName);
+            var vfxPrefab = DebuffVfx.ConstructAoeVfx();
             var gameObject = GameObject.Instantiate(vfxPrefab);
             var aoe = gameObject.AddComponent<Aoe>();
 
@@ -37,8 +35,8 @@ namespace Runestones.RuneEffects
             curseEffect.m_damageModifier = baseDamageMod / _Effectiveness / (_Quality == RuneQuality.Dark ? 2 : 1);
 
             aoe.m_statusEffect = curseEffect.Serialize();
-            aoe.m_ttl = 1;
-            aoe.m_radius = 1;
+            aoe.m_ttl = 2;
+            aoe.m_radius = 5;
             aoe.m_hitOwner = false;
 
             var go = GameObject.Instantiate(gameObject, targetLocation, Quaternion.identity);
@@ -61,7 +59,7 @@ namespace Runestones.RuneEffects
                 m_damageModifier = 0.75f;
                 m_startEffects = new EffectList();
 
-                var vfxPrefab = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == curseVfxName select prefab).FirstOrDefault();
+                var vfxPrefab = DebuffVfx.ConstructStatusVfx();
                 m_startEffects.m_effectPrefabs = new EffectList.EffectData[] { new EffectList.EffectData { m_prefab = vfxPrefab, m_enabled = true, m_attach = true, m_scale = true } };
             }
         }

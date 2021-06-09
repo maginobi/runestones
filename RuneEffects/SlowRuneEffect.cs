@@ -10,14 +10,13 @@ namespace Runestones.RuneEffects
 {
     public class SlowRuneEffect : RuneEffect
     {
-        private const string vfxName = "vfx_blob_hit";
         public const float baseSpeedMod = 0.5f;
         public const float baseDuration = 30;
         public const float darkSpeedMod = 0.1f;
         public SlowRuneEffect()
         {
             _FlavorText = "Stop and smell the roses";
-            _EffectText = new List<string> { "Slows enemies", "1m radius" };
+            _EffectText = new List<string> { "Slows enemies" };
             _QualityEffectText[RuneQuality.Ancient] = new List<string> { "+200% Duration" };
             _QualityEffectText[RuneQuality.Dark] = new List<string> { "+40% Slow (before spell effectiveness)" };
             _RelativeStats = new Dictionary<string, Func<string>> { { "Slow", () => $"{1 - (_Quality==RuneQuality.Dark ? darkSpeedMod : baseSpeedMod) / _Effectiveness :P1}"},
@@ -26,10 +25,7 @@ namespace Runestones.RuneEffects
         }
         public override void DoMagicAttack(Attack baseAttack)
         {
-            var vfxPrefab = ZNetScene.instance.GetPrefab(vfxName);
-            Debug.Log($"fetched prefab {vfxPrefab.name}");
-            var gameObject = GameObject.Instantiate(vfxPrefab);
-            Debug.Log("vfx instantiated");
+            var gameObject = DebuffVfx.ConstructAoeVfx();
 
             var statusEffect = ScriptableObject.CreateInstance<SE_Slow>();
             statusEffect.m_ttl = baseDuration * _Effectiveness * (_Quality == RuneQuality.Ancient ? 3 : 1);
@@ -57,7 +53,8 @@ namespace Runestones.RuneEffects
                 m_hitEnemy = true;
                 m_skill = Skills.SkillType.None;
                 m_hitInterval = -1;
-                m_ttl = 1;
+                m_ttl = 2;
+                m_radius = 5;
             }
         };
 
@@ -73,7 +70,7 @@ namespace Runestones.RuneEffects
                 m_ttl = baseDuration;
                 m_icon = (from Sprite s in Resources.FindObjectsOfTypeAll<Sprite>() where s.name == "CorpseRun" select s).FirstOrDefault();
 
-                var vfxPrefab = (from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == CurseRuneEffect.curseVfxName select prefab).FirstOrDefault();
+                var vfxPrefab = DebuffVfx.ConstructStatusVfx();
                 m_startEffects.m_effectPrefabs = new EffectList.EffectData[] { new EffectList.EffectData { m_prefab = vfxPrefab, m_enabled = true, m_attach = true, m_scale = true } };
             }
 
