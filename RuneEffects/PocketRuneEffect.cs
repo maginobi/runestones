@@ -21,9 +21,9 @@ namespace Runestones.RuneEffects
         {
             var player = baseAttack.GetCharacter() as Player;
             if (player == Player.m_localPlayer)
-                Debug.Log("Caster is local player");
+                Debug.Log("Pocket rune caster is local player");
             else
-                Debug.Log("Caster not local player");
+                throw new Exception("Pocket rune caster not local player");
             MagicInventory.OpenMagicInventory(InventoryGui.instance, (int)(baseWidth * _Effectiveness), (int)_Quality+1);
         }
 

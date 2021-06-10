@@ -18,8 +18,8 @@ namespace Runestones
 
         public static Dictionary<CastSpeed, string> SpeedAnimations = new Dictionary<CastSpeed, string>
         {
-            { CastSpeed.Instant, "knife_slash0" },
-            { CastSpeed.Fast, "Standing 1H Magic Attack 01" }, //1H, directional; also note CastFireball for longer 1H directional
+            { CastSpeed.Instant, "Zombie_Attack2" }, // "knife_slash0" },
+            { CastSpeed.Fast, "axe_swing" }, //"Standing 1H Magic Attack 01" }, //1H, directional; also note CastFireball for longer 1H directional
             { CastSpeed.Medium, "Standing 1H Magic Attack 03" }, //1H, vertical; also note Standing 1H Cast Spell 01 for less dramatic 1H vertical
             { CastSpeed.Slow, "ProtectiveSpell" }, //2H, long; 'CastFireball' similar length. //Check out 'Standing 2H Magic Attack 04' for this as well
             { CastSpeed.Super, "CastFireball" }

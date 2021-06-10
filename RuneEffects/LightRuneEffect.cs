@@ -77,7 +77,7 @@ namespace Runestones.RuneEffects
                 m_time = 0;
                 m_ttl = baseDuration;
                 m_icon = Sprite.Create((from Texture2D s in Resources.FindObjectsOfTypeAll<Texture2D>() where s.name == "bam2" select s).FirstOrDefault(), new Rect(0,0,256,256), new Vector2());
-                Debug.Log($"light status effect icon: {m_icon}");
+                
                 m_startEffects = new EffectList();
 
                 m_stealthModifier = 1f;

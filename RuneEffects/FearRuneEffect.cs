@@ -12,7 +12,7 @@ namespace Runestones.RuneEffects
         public const string vfxName = "vfx_greydwarf_shaman_pray";
         public const float baseRange = 5;
         public const float baseAngle = 25;
-        public const float baseDuration = 30;
+        public const float baseDuration = 20;
         public const float baseSpeedMod = 1.5f;
         public const float darkSpeedMod = 0.75f;
         private float duration = baseDuration;

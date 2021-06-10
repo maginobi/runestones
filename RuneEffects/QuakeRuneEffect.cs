@@ -19,7 +19,7 @@ namespace Runestones.RuneEffects
             _FlavorText = "The earth shook whenever the venom fell on Loki's face";
             _EffectText = new List<string> { "Stagger enemies at range", "10m range", "5m radius", "Duration: 10 sec" };
             _QualityEffectText[RuneQuality.Ancient] = new List<string> { "+300% Stagger Power" };
-            _QualityEffectText[RuneQuality.Dark] = new List<string> { "5 Bludgeoning damage per second" };
+            _QualityEffectText[RuneQuality.Dark] = new List<string> { "15 Bludgeoning damage per second" };
             _RelativeStats = new Dictionary<string, Func<string>> { { "Stagger Power", () => $"{baseStaggerDamage * _Effectiveness * (_Quality==RuneQuality.Ancient ? 4 : 1) :F0}" } };
             targetLock = true;
             speed = CastingAnimations.CastSpeed.Medium;
@@ -31,7 +31,7 @@ namespace Runestones.RuneEffects
             var aoe = (QuakeAoe)gameObject.AddComponent<QuakeAoe>();
             aoe.staggerDamage = baseStaggerDamage * _Effectiveness * (_Quality == RuneQuality.Ancient ? 4 : 1);
             if (_Quality == RuneQuality.Dark)
-                aoe.m_damage.m_blunt = 5 * aoe.m_hitInterval;
+                aoe.m_damage.m_blunt = 15 * aoe.m_hitInterval;
             gameObject.GetComponent<TimedDestruction>().m_timeout = 10;
             var particles = gameObject.GetComponent<ParticleSystem>().main;
             particles.loop = true;
@@ -77,29 +77,6 @@ namespace Runestones.RuneEffects
                     typeof(Character).GetMethod("AddStaggerDamage", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(character, new object[] { staggerDamage, randDir });
                 }
             }
-        };
-
-        //[HarmonyPatch(typeof(Aoe), "CheckHits")]
-        //public static class QuakeOnHitMod
-        //{
-        //    public static void Postfix(Aoe __instance, List<GameObject> ___m_hitList)
-        //    {
-        //        if (__instance is QuakeAoe _)
-        //        {
-        //            Debug.Log("Checking quake hits");
-        //            foreach (GameObject gameObject in ___m_hitList)
-        //            {
-        //                IDestructible component = gameObject.GetComponent<IDestructible>();
-        //                Character character = component as Character;
-        //                if (character != null)
-        //                {
-        //                    var randAngle = UnityEngine.Random.Range(0, (float)(2 * Math.PI));
-        //                    Vector3 randDir = new Vector3((float)Math.Cos(randAngle), 0, (float)Math.Sin(randAngle));
-        //                    typeof(Character).GetMethod("AddStaggerDamage", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(character, new object[] { staggerDamage, randDir });
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
+        }
     }
 }

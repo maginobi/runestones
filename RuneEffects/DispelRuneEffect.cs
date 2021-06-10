@@ -22,7 +22,6 @@ namespace Runestones.RuneEffects
             _QualityEffectText[RuneQuality.Ancient] = new List<string> { "Faster casting", "Briefly makes you very resistant to elemental damage" };
             _QualityEffectText[RuneQuality.Dark] = new List<string> { "Faster casting", "Removes status effects from targeted enemy instead", "100% dispel chance" };
             _RelativeStats = new Dictionary<string, Func<string>> { { "Dispel chance", () => $"{(_Quality == RuneQuality.Dark ? 1 : Math.Min(1, baseProbability * _Effectiveness)) :P0}" } };
-            speed = CastingAnimations.CastSpeed.Medium;
         }
         public override void DoMagicAttack(Attack baseAttack)
         {

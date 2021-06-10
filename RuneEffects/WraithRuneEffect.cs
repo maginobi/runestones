@@ -21,7 +21,7 @@ namespace Runestones.RuneEffects
 
         public WraithRuneEffect()
         {
-            _FlavorText = "Wraith";
+            _FlavorText = "It's not a ghost, it's a wraith; that's totally different";
             _EffectText = new List<string> { "Allows you to pass through solid objects", "+20% Movement speed" };
             _QualityEffectText[RuneQuality.Ancient] = new List<string> { "Adds 12 spirit damage to all your attacks" };
             _QualityEffectText[RuneQuality.Dark] = new List<string> { "Gain resistance to physical damage", "Adds 5 poison damage to all your attacks", "+10% More movement speed" };

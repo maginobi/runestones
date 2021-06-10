@@ -36,7 +36,7 @@ namespace Runestones.RuneEffects
             baseAttack.m_attackProjectile = GameObject.Instantiate(baseProjectilePrefab);
             var projectile = baseAttack.m_attackProjectile.GetComponent<Projectile>();
             projectile.m_aoe = baseRadius;
-            //vfx scaling not working, damage radius correct
+
             projectile.m_hitEffects.m_effectPrefabs[0].m_prefab.transform.localScale = new Vector3(projectile.m_aoe * 2, projectile.m_aoe * 2, projectile.m_aoe * 2);
             baseAttack.m_projectileAccuracy = baseAccuracy;
             baseAttack.m_useCharacterFacing = true;

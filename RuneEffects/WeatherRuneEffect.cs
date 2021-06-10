@@ -31,7 +31,7 @@ namespace Runestones.RuneEffects
             _FlavorText = "So, you want to harness lightning. Best start with a stiff breeze";
             _EffectText = new List<string> { "Changes wind direction, for a time" };
             _QualityEffectText[RuneQuality.Ancient] = new List<string> { "Stronger wind", "Clear skies" };
-            _QualityEffectText[RuneQuality.Dark] = new List<string> { "Full strength wind", "Summons a storm", "Lightning Bolt!" };
+            _QualityEffectText[RuneQuality.Dark] = new List<string> { "Full strength wind", "Summons a storm", "Lightning Bolt!!!" };
             _RelativeStats = new Dictionary<string, Func<string>> { { "Duration", () => $"{baseDuration * _Effectiveness :F0} sec" } };
         }
 
@@ -40,11 +40,7 @@ namespace Runestones.RuneEffects
             base.Precast(baseAttack);
             var player = baseAttack.GetCharacter();
             var lookDir = (Quaternion)typeof(Character).GetField("m_lookYaw", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(player);
-            Debug.Log("Weather rune");
-            Debug.Log($"Player facing: {lookDir.eulerAngles}");
-            Debug.Log($"Current environment: {EnvMan.instance.GetCurrentEnvironment().m_name}");
-            Debug.Log("All environments:");
-            Debug.Log($"{(from EnvSetup env in EnvMan.instance.m_environments select env.m_name).ToList()}");
+
             CancellationTokenSource.Cancel();
             EnvMan.instance.ResetDebugWind();
             EnvMan.instance.SetDebugWind(lookDir.eulerAngles.y, baseWindStrength * ((int)_Quality + 1));
@@ -85,7 +81,7 @@ namespace Runestones.RuneEffects
                 {
                     m_damage = new HitData.DamageTypes
                     {
-                        m_lightning = 50
+                        m_lightning = 123
                     }
                 };
                 gameObject.GetComponent<IDestructible>().Damage(hitData);

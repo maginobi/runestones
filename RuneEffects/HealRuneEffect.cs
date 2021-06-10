@@ -14,7 +14,7 @@ namespace Runestones.RuneEffects
         public HealRuneEffect()
         {
             _FlavorText = "True strength is helping others";
-            _EffectText = new List<string> { "Heals others", "5m radius" };
+            _EffectText = new List<string> { "Heals allies", "5m radius" };
             _QualityEffectText[RuneQuality.Ancient] = new List<string> { "+100% Heal" };
             _QualityEffectText[RuneQuality.Dark] = new List<string> { "+200% Heal", "Spell effectiveness twice as effective" };
             _RelativeStats = new Dictionary<string, Func<string>> { { "Heal", () => $"{baseHeal * _Effectiveness * ((int)_Quality+1) * (_Quality==RuneQuality.Dark ? _Effectiveness : 1) :F1}" } };

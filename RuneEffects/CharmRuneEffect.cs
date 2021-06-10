@@ -13,7 +13,7 @@ namespace Runestones.RuneEffects
         const string projectileName = "projectile_beam";
         const string charmStartVfxName = "vfx_boar_love";
         const string charmContinueVfxName = "vfx_creature_soothed";
-        const float baseDuration = 30;
+        const float baseDuration = 20;
         public CharmRuneEffect()
         {
             _FlavorText = "You can catch more flies with honey than with vinegar";

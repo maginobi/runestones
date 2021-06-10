@@ -26,7 +26,7 @@ namespace Runestones.RuneEffects
             baseAttack.m_attackType = Attack.AttackType.Projectile;
             baseAttack.m_attackProjectile = GameObject.Instantiate((from GameObject prefab in Resources.FindObjectsOfTypeAll<GameObject>() where prefab.name == projectileName select prefab).FirstOrDefault());
             if (_Quality == RuneQuality.Ancient || _Quality == RuneQuality.Dark)
-                baseAttack.m_attackProjectile.GetComponent<Projectile>().m_statusEffect = "Frost"; //"$se_frost_name";
+                baseAttack.m_attackProjectile.GetComponent<Projectile>().m_statusEffect = "Frost";
             if (_Quality == RuneQuality.Dark)
                 baseAttack.m_projectiles = 3;
             baseAttack.m_projectileAccuracy = _Quality == RuneQuality.Dark ? darkAccuracy : baseAccuracy;

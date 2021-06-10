@@ -27,21 +27,16 @@ namespace Runestones.RuneEffects
         {
             var player = (Player)baseAttack.GetCharacter();
 
-            //debug logging
-            Debug.Log("Revive rune triggered");
             if (player == Player.m_localPlayer)
-                Debug.Log("Caster is local player");
+                Debug.Log("Revive rune caster is local player");
             else
-                Debug.Log("Caster not local player");
-            Debug.Log($"HardDeath: {typeof(Player).GetMethod("HardDeath", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(player, null)}");
-            Debug.Log($"lastDeathDict: {localLastDeathSkills}");
+                throw new Exception("Revive rune caster not local player");
             
             if (!(bool)typeof(Player).GetMethod("HardDeath", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(player, null) && player == Player.m_localPlayer)
             {
                 var playerSkills = (Dictionary<Skills.SkillType, Skills.Skill>)typeof(Skills).GetField("m_skillData", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(player.GetSkills());
                 foreach (var keyValue in localLastDeathSkills)
                 {
-                    Debug.Log($"difference between {keyValue.Value} and {playerSkills[keyValue.Key].m_level}");
                     float difference = keyValue.Value - playerSkills[keyValue.Key].m_level;
                     playerSkills[keyValue.Key].m_level += difference * (_Quality==RuneQuality.Common ? 0.5f : 1);
                     /*
@@ -50,7 +45,6 @@ namespace Runestones.RuneEffects
                     */
                 }
                 typeof(Player).GetField("m_timeSinceDeath", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(player, 999999f);
-                Debug.Log($"time since death: {typeof(Player).GetField("m_timeSinceDeath", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(player)}");
                 if (_Quality == RuneQuality.Dark)
                 {
                     var deathPoint = Game.instance.GetPlayerProfile().GetDeathPoint();
@@ -74,10 +68,9 @@ namespace Runestones.RuneEffects
         {
             public static void Prefix(Player ___m_player, Dictionary<Skills.SkillType, Skills.Skill> ___m_skillData)
             {
-                Debug.Log("Skill death mod triggered");
                 if (___m_player == Player.m_localPlayer)
                 {
-                    Debug.Log("player is local");
+                    Debug.Log("Local player died. Recording skill levels for future revival...");
                     localLastDeathSkills = ___m_skillData.ToDictionary<KeyValuePair<Skills.SkillType, Skills.Skill>, Skills.SkillType, float>(pair => pair.Key, pair => pair.Value.m_level);
                 }
             }

@@ -18,8 +18,8 @@ namespace Runestones.RuneEffects
             _FlavorText = "Revenge is a dish best served with raspberries";
             _EffectText = new List<string> { "Reduces enemy damage dealt" };
             _QualityEffectText[RuneQuality.Ancient] = new List<string> { "+100% Duration" };
-            _QualityEffectText[RuneQuality.Dark] = new List<string> { "+100% More damage reduction" };
-            _RelativeStats = new Dictionary<string, Func<string>> { { "Damage", () => $"-{1-(baseDamageMod / _Effectiveness / (_Quality==RuneQuality.Dark ? 2 : 1)) :P1}"},
+            _QualityEffectText[RuneQuality.Dark] = new List<string> { "-25% Enemy damage (before spell effectiveness)" };
+            _RelativeStats = new Dictionary<string, Func<string>> { { "Enemy Damage", () => $"-{1-(baseDamageMod / _Effectiveness / (_Quality==RuneQuality.Dark ? 2 : 1)) :P1}"},
                                                                     { "Duration", () => $"{baseDuration * _Effectiveness * (_Quality==RuneQuality.Ancient ? 2 : 1) :F1} sec" } };
             targetLock = true;
         }

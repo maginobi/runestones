@@ -14,7 +14,7 @@ namespace Runestones.RuneEffects
         private List<string> pieceList = new List<string> { "$piece_woodwallhalf", "$piece_stakewall", "$piece_stonewall4x2" };
         public WallRuneEffect()
         {
-            _FlavorText = "Keeps out your enemies";
+            _FlavorText = "Does it protect you from the wilds, or does it protect the wilds from you?";
             _EffectText = new List<string> { "Conjures a wall" };
             _QualityEffectText[RuneQuality.Ancient] = new List<string> { "Conjures a stakewall instead" };
             _QualityEffectText[RuneQuality.Dark] = new List<string> { "Conjures a stone wall instead" };

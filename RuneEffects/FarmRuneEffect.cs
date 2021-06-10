@@ -96,7 +96,6 @@ namespace Runestones.RuneEffects
 
             public override void OnHit(GameObject gameObject)
             {
-                Debug.Log("Farm Rune OnHit");
                 var plant = gameObject.GetComponent<Plant>();
                 if (plant != null)
                 {
@@ -106,7 +105,7 @@ namespace Runestones.RuneEffects
                         var currentPlantTime = new DateTime(plantView.GetZDO().GetLong("plantTime", ZNet.instance.GetTime().Ticks));
                         var newPlantTime = currentPlantTime.AddSeconds(-m_hitInterval*m_accelerationFactor);
                         plantView.GetZDO().Set("plantTime", newPlantTime.Ticks);
-                        Debug.Log($"Accelerated plant growth from {currentPlantTime} to {newPlantTime}");
+                        //Debug.Log($"Accelerated plant growth from {currentPlantTime} to {newPlantTime}");
                     }
                 }
             }

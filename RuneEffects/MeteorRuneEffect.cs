@@ -14,10 +14,10 @@ namespace Runestones.RuneEffects
         const float baseDelay = 3f;
         public MeteorRuneEffect()
         {
-            _FlavorText = "'It's OK guys; I've called in an airstrike on our exact location.' 'What do you mean our *exact* location?'";
+            _FlavorText = "Safe... as long as you're faster than a dinosaur";
             _EffectText = new List<string> { "Summons a meteor to your location after a 3 second delay", "Meteor will hurt you", "40 Blunt, 140 Fire damage" };
             _QualityEffectText[RuneQuality.Ancient] = new List<string> { "No more delay after spell completion. Run." };
-            _QualityEffectText[RuneQuality.Dark] = new List<string> { "Dear gods! Ragnarok approaches" };
+            _QualityEffectText[RuneQuality.Dark] = new List<string> { "Dear gods! Ragnarok approaches!" };
             speed = CastingAnimations.CastSpeed.Slow;
             targetLock = true;
         }
