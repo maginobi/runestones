@@ -76,7 +76,7 @@ namespace Runestones
             overrideController[overrideAnimName] = animation;
             animator.runtimeAnimatorController = overrideController;
             animator.SetTrigger(overrideAnimTrigger);
-            Debug.Log("animation trigger set, playing animation");
+
             isCasting = true;
             Invoke("FinishAnim", Mathf.Max(animation?.length ?? 0, instantSpellDelay));
         }

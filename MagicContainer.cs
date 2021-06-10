@@ -57,9 +57,8 @@ namespace Runestones
             if ((bool)player)
             {
                 ZNetView nview = (ZNetView)typeof(Player).GetField("m_nview", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy).GetValue(player);
-                Debug.Log($"ZNetView: {nview}");
+                
                 long playerID = nview.GetZDO().GetLong("playerID");
-                Debug.Log($"Player id: {playerID}");
 
                 MagicContainer magicContainer = player.gameObject.GetComponent<MagicInventory.MagicContainer>();
                 bool newContainer = magicContainer == null;
@@ -69,11 +68,10 @@ namespace Runestones
                 }
 
                 MagicInventory.AllContainers.TryGetValue(playerID, out var magicInventory);
-                Debug.Log($"Container: {magicInventory}");
+
                 if (magicInventory == null)
                 {
                     magicInventory = MagicInventory.Create(playerID);
-                    Debug.Log($"Container: {magicInventory}");
                 }
                 magicInventory.Width = width;
                 magicInventory.Height = height;
@@ -103,7 +101,6 @@ namespace Runestones
 
         public void LoadOverride()
         {
-            Debug.Log("Magic load triggered");
             ZPackage zPackage;
             using (StreamReader saveFile = new StreamReader(Path.Combine(PocketContainerPath, PlayerID.ToString() + "_pocket.txt")))
             {
@@ -114,7 +111,6 @@ namespace Runestones
 
         public void SaveOverride(ZPackage zPackage)
         {
-            Debug.Log("Magic save triggered");
             using (StreamWriter saveFile = new StreamWriter(Path.Combine(PocketContainerPath, PlayerID.ToString() + "_pocket.txt")))
             {
                 saveFile.Write(zPackage.GetBase64());
@@ -154,13 +150,12 @@ namespace Runestones
     {
         public static void Postfix()
         {
-            Debug.Log(Player.m_localPlayer);
             if (Player.m_localPlayer == null)
                 return;
             ZNetView nview = (ZNetView)typeof(Player).GetField("m_nview", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy).GetValue(Player.m_localPlayer);
-            Debug.Log($"ZNetView: {nview}");
+            
             long playerID = nview.GetZDO().GetLong("playerID");
-            Debug.Log($"player id: {playerID}");
+
             if (File.Exists(Path.Combine(MagicInventory.PocketContainerPath, playerID.ToString() + "_pocket.txt")))
             {
                 var inv = MagicInventory.Create(playerID);

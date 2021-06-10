@@ -21,19 +21,16 @@ namespace Runestones
 
         public static void Postfix(Skills __instance)
         {
-            MagicSkillDef.m_icon = (from Sprite s in Resources.FindObjectsOfTypeAll<Sprite>() where s.name == "jackoturnip" select s).FirstOrDefault();
+            MagicSkillDef.m_icon = (from Sprite s in Resources.FindObjectsOfTypeAll<Sprite>() where s.name == "walknut_bw" select s).FirstOrDefault();
             __instance.m_skills.Add(MagicSkillDef);
             var translationField = typeof(Localization).GetField("m_translations", BindingFlags.NonPublic | BindingFlags.Instance);
             Dictionary<string, string> translations = (Dictionary<string, string>)translationField.GetValue(Localization.instance);
             var token = "skill_" + MagicSkillDef.m_skill.ToString();
-            Debug.Log($"token {token}");
+
             if (!translations.ContainsKey(token))
             {
                 translations.Add(token, skillName);
-                //translationField.SetValue(Localization.instance, translations);
-                //Debug.Log("set translations success");
             }
-            Debug.Log($"localized skill token: {Localization.instance.Localize("$" + token)}");
         }
     }
 

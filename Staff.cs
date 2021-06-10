@@ -13,7 +13,7 @@ namespace Runestones
         private const string TokenValue = "Staff";
 
         private const string TokenDescriptionName = "$custom_item_staff_description";
-        private const string TokenDescriptionValue = "A ritual staff used for Seidr";
+        private const string TokenDescriptionValue = "A magic staff needed to cast spells with runes";
 
         public static void Load(AssetBundle assets)
         {

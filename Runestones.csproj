@@ -86,7 +86,6 @@
     <Compile Include="RuneEffects\WraithRuneEffect.cs" />
     <Compile Include="RuneEffects\VineRuneEffect.cs" />
     <Compile Include="RuneStatusEffect.cs" />
-    <Compile Include="ExtendedStatusEffect.cs" />
     <Compile Include="ConeVolumeProjectile.cs" />
     <Compile Include="MagicSkill.cs" />
     <Compile Include="RuneDescriptions.cs" />

@@ -26,7 +26,6 @@ namespace Runestones
         {
             Vector3 attackOrigin = origin.position + origin.forward * m_attackOffset.x + origin.up * m_attackOffset.y + origin.right * m_attackOffset.z;
             Vector3 localSpaceDir = origin.InverseTransformDirection(direction);
-            Debug.Log($"attack direction: {direction} local space direction: {localSpaceDir}");
             float startAngle = -m_attackSpread / 2;
             int mask = (int)typeof(Attack).GetField("m_attackMaskTerrain", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.FlattenHierarchy).GetValue(null);
             List<RaycastHit> hits = new List<RaycastHit>();
