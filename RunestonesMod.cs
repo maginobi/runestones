@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Runestones
 {
-    [BepInPlugin("Maginobi.Runestones", "Runestones", "0.9.1")]
+    [BepInPlugin("Maginobi.Runestones", "Runestones", "1.0.0")]
     [BepInProcess("valheim.exe")]
     public class RunestonesMod : BaseUnityPlugin
     {
