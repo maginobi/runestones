@@ -325,12 +325,16 @@ namespace Runestones
     {
         public static void Postfix(InventoryGui __instance, KeyValuePair<Recipe, ItemDrop.ItemData> ___m_selectedRecipe, ref int ___m_selectedVariant)
         {
+            
             var item = ___m_selectedRecipe.Key?.m_item?.m_itemData;
             if ((item?.m_shared?.m_ammoType ?? "") == "rune")
             {
-                RuneDB.Instance.RunesByName.TryGetValue(item.m_shared.m_name, out Rune selectedRune);
-                item.m_variant = selectedRune.AssetIndex;
-                ___m_selectedVariant = selectedRune.AssetIndex;
+                if (RuneDB.Instance.RunesByName.TryGetValue(item.m_shared.m_name, out Rune selectedRune))
+                {
+                    item.m_variant = selectedRune.AssetIndex;
+                    ___m_selectedVariant = selectedRune.AssetIndex;
+                }
+                
             }
         }
     }
