@@ -54,7 +54,7 @@ namespace Runestones
                         new Dictionary < string, int > { { "GreydwarfEye", 15 }, { "Thistle", 15 }, { "LinenThread", 10 } }
                     }
                 }, //rearranges hotkeys for easier spellcasting, inventory effect
-            new Rune { Name = "Light", EffectClass = typeof(LightRuneEffect), DiscoveryToken = "$lore_mountain_random04", AssetIndex = 4, Reagents =
+            new Rune { Name = "Light", EffectClass = typeof(LightRuneEffect), DiscoveryToken = "$lore_meadows_random04", AssetIndex = 4, Reagents =
                     new List < Dictionary < string, int > > {
                         new Dictionary < string, int > { { "Resin", 5 }, { "Dandelion", 3 } },
                         new Dictionary < string, int > { { "Coal", 5 }, { "Dandelion", 3 } },
